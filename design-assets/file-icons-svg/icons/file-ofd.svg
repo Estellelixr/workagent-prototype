@@ -1,0 +1,20 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="OFD document icon">
+  <defs>
+    <linearGradient id="ofd-page" x1="15" y1="8" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#FFF2F4"/>
+    </linearGradient>
+    <filter id="ofd-shadow" x="6" y="5" width="52" height="58" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#345986" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <g filter="url(#ofd-shadow)">
+    <path d="M18 8h21.5L50 18.5V52a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4Z" fill="url(#ofd-page)"/>
+    <path d="M39.5 8v10.5H50" fill="#FFF2F4"/>
+    <path d="M18 8h21.5L50 18.5V52a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4Z" stroke="#C8102E" stroke-opacity="0.52" stroke-width="2"/>
+    <path d="M39.5 8v10.5H50" stroke="#C8102E" stroke-opacity="0.44" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="31" cy="32" r="11" fill="#C8102E" opacity=".12"/><path d="M31 20l3.2 6.5 7.1 1-5.1 5 1.2 7.1L31 36.2l-6.4 3.4 1.2-7.1-5.1-5 7.1-1L31 20Z" fill="none" stroke="#C8102E" stroke-width="2.8" stroke-linejoin="round"/>
+    <rect x="30" y="45" width="24" height="15" rx="5" fill="#C8102E"/>
+    <text x="42" y="55.5" fill="white" font-family="Inter, Arial, sans-serif" font-size="7.5" font-weight="800" text-anchor="middle">OFD</text>
+  </g>
+</svg>

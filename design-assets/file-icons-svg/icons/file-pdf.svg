@@ -1,0 +1,20 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PDF document icon">
+  <defs>
+    <linearGradient id="pdf-page" x1="15" y1="8" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#FFF0F2"/>
+    </linearGradient>
+    <filter id="pdf-shadow" x="6" y="5" width="52" height="58" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#345986" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <g filter="url(#pdf-shadow)">
+    <path d="M18 8h21.5L50 18.5V52a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4Z" fill="url(#pdf-page)"/>
+    <path d="M39.5 8v10.5H50" fill="#FFF0F2"/>
+    <path d="M18 8h21.5L50 18.5V52a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4Z" stroke="#E94B5F" stroke-opacity="0.52" stroke-width="2"/>
+    <path d="M39.5 8v10.5H50" stroke="#E94B5F" stroke-opacity="0.44" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M18 41c5.2-8.1 8.4-15.5 8.8-22.2.2-3.5 5.5-3.8 5.8-.3.4 5.8-5 15.7-10.3 21.8 7.8-3.4 17.2-5.4 21.1-2.4 2.5 1.9.7 6.2-2.6 5.2-6.2-1.9-13.7-2.2-22.8-2.1Z" fill="none" stroke="#E94B5F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="30" y="45" width="24" height="15" rx="5" fill="#E94B5F"/>
+    <text x="42" y="55.5" fill="white" font-family="Inter, Arial, sans-serif" font-size="7.5" font-weight="800" text-anchor="middle">PDF</text>
+  </g>
+</svg>

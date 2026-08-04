@@ -1,0 +1,1438 @@
+{
+  "version": "2.0.0",
+  "size": 64,
+  "style": "knowledge-directory-soft-tile",
+  "designReference": "知识库目录图标风格：圆角色块、浅渐变、轻阴影、线面结合",
+  "icons": [
+    {
+      "key": "nav-home",
+      "label": "Home",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 主入口",
+      "tone": "blue",
+      "glyph": "home",
+      "file": "icons/nav-home.svg",
+      "usageZh": "首页入口、顶部或侧边栏首页图标"
+    },
+    {
+      "key": "nav-new-task",
+      "label": "New task",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 主入口",
+      "tone": "red",
+      "glyph": "penSpark",
+      "file": "icons/nav-new-task.svg",
+      "usageZh": "新建任务入口"
+    },
+    {
+      "key": "nav-smart-doc",
+      "label": "Smart document",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 主入口",
+      "tone": "red",
+      "glyph": "documentAi",
+      "file": "icons/nav-smart-doc.svg",
+      "usageZh": "智能公文一级菜单"
+    },
+    {
+      "key": "nav-ai-write",
+      "label": "AI writing",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 主入口",
+      "tone": "red",
+      "glyph": "pen",
+      "file": "icons/nav-ai-write.svg",
+      "usageZh": "AI写作菜单项"
+    },
+    {
+      "key": "nav-ai-copy",
+      "label": "AI imitation",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 主入口",
+      "tone": "violet",
+      "glyph": "layers",
+      "file": "icons/nav-ai-copy.svg",
+      "usageZh": "AI仿写菜单项"
+    },
+    {
+      "key": "nav-ai-polish",
+      "label": "AI polish",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 主入口",
+      "tone": "orange",
+      "glyph": "spark",
+      "file": "icons/nav-ai-polish.svg",
+      "usageZh": "AI润色菜单项"
+    },
+    {
+      "key": "nav-layout",
+      "label": "Smart layout",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 主入口",
+      "tone": "teal",
+      "glyph": "stamp",
+      "file": "icons/nav-layout.svg",
+      "usageZh": "智能排版菜单项"
+    },
+    {
+      "key": "nav-proofread",
+      "label": "Proofread",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 主入口",
+      "tone": "green",
+      "glyph": "checkDoc",
+      "file": "icons/nav-proofread.svg",
+      "usageZh": "智能校对菜单项"
+    },
+    {
+      "key": "nav-knowledge",
+      "label": "Knowledge base",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 主入口",
+      "tone": "blue",
+      "glyph": "folder",
+      "file": "icons/nav-knowledge.svg",
+      "usageZh": "知识库主菜单入口"
+    },
+    {
+      "key": "nav-expert",
+      "label": "Expert management",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 主入口",
+      "tone": "violet",
+      "glyph": "briefcase",
+      "file": "icons/nav-expert.svg",
+      "usageZh": "专家管理入口"
+    },
+    {
+      "key": "nav-admin",
+      "label": "Admin console",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 主入口",
+      "tone": "slate",
+      "glyph": "settings",
+      "file": "icons/nav-admin.svg",
+      "usageZh": "后台管理入口"
+    },
+    {
+      "key": "nav-history",
+      "label": "History",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 主入口",
+      "tone": "slate",
+      "glyph": "history",
+      "file": "icons/nav-history.svg",
+      "usageZh": "历史对话入口"
+    },
+    {
+      "key": "feature-smart-qa",
+      "label": "Smart Q&A",
+      "category": "feature",
+      "categoryZh": "首页与功能卡片",
+      "tone": "cyan",
+      "glyph": "message",
+      "file": "icons/feature-smart-qa.svg",
+      "usageZh": "首页问答输入区或智能问答能力卡片"
+    },
+    {
+      "key": "feature-ai-write",
+      "label": "AI write card",
+      "category": "feature",
+      "categoryZh": "首页与功能卡片",
+      "tone": "red",
+      "glyph": "penSpark",
+      "file": "icons/feature-ai-write.svg",
+      "usageZh": "首页 AI 写作功能卡片"
+    },
+    {
+      "key": "feature-ai-copy",
+      "label": "AI imitate card",
+      "category": "feature",
+      "categoryZh": "首页与功能卡片",
+      "tone": "violet",
+      "glyph": "copyStyle",
+      "file": "icons/feature-ai-copy.svg",
+      "usageZh": "首页 AI 仿写功能卡片"
+    },
+    {
+      "key": "feature-ai-polish",
+      "label": "AI polish card",
+      "category": "feature",
+      "categoryZh": "首页与功能卡片",
+      "tone": "orange",
+      "glyph": "spark",
+      "file": "icons/feature-ai-polish.svg",
+      "usageZh": "首页 AI 润色功能卡片"
+    },
+    {
+      "key": "feature-proofread",
+      "label": "Proofread card",
+      "category": "feature",
+      "categoryZh": "首页与功能卡片",
+      "tone": "green",
+      "glyph": "shieldCheck",
+      "file": "icons/feature-proofread.svg",
+      "usageZh": "首页智能校对功能卡片"
+    },
+    {
+      "key": "feature-layout",
+      "label": "Layout card",
+      "category": "feature",
+      "categoryZh": "首页与功能卡片",
+      "tone": "teal",
+      "glyph": "stamp",
+      "file": "icons/feature-layout.svg",
+      "usageZh": "首页智能排版功能卡片"
+    },
+    {
+      "key": "feature-ppt",
+      "label": "PPT creation",
+      "category": "feature",
+      "categoryZh": "首页与功能卡片",
+      "tone": "orange",
+      "glyph": "presentation",
+      "file": "icons/feature-ppt.svg",
+      "usageZh": "PPT汇报大纲 / PPT生成入口"
+    },
+    {
+      "key": "feature-table",
+      "label": "Smart table",
+      "category": "feature",
+      "categoryZh": "首页与功能卡片",
+      "tone": "green",
+      "glyph": "table",
+      "file": "icons/feature-table.svg",
+      "usageZh": "表格数据提取 / 智能表格入口"
+    },
+    {
+      "key": "feature-web-office",
+      "label": "WebOffice editor",
+      "category": "feature",
+      "categoryZh": "首页与功能卡片",
+      "tone": "blue",
+      "glyph": "editor",
+      "file": "icons/feature-web-office.svg",
+      "usageZh": "WebOffice 编辑器入口"
+    },
+    {
+      "key": "feature-red-template",
+      "label": "Red header template",
+      "category": "feature",
+      "categoryZh": "首页与功能卡片",
+      "tone": "red",
+      "glyph": "template",
+      "file": "icons/feature-red-template.svg",
+      "usageZh": "红头模板、公文模板入口"
+    },
+    {
+      "key": "write-mode-full",
+      "label": "Generate full text",
+      "category": "writing",
+      "categoryZh": "智能公文写作流程",
+      "tone": "red",
+      "glyph": "documentAi",
+      "file": "icons/write-mode-full.svg",
+      "usageZh": "AI写作第一步：生成全文卡片"
+    },
+    {
+      "key": "write-mode-outline",
+      "label": "Generate outline",
+      "category": "writing",
+      "categoryZh": "智能公文写作流程",
+      "tone": "blue",
+      "glyph": "list",
+      "file": "icons/write-mode-outline.svg",
+      "usageZh": "AI写作第一步：生成大纲卡片"
+    },
+    {
+      "key": "write-mode-outline-to-text",
+      "label": "Outline to text",
+      "category": "writing",
+      "categoryZh": "智能公文写作流程",
+      "tone": "teal",
+      "glyph": "mergeDoc",
+      "file": "icons/write-mode-outline-to-text.svg",
+      "usageZh": "AI写作第一步：大纲成文卡片"
+    },
+    {
+      "key": "write-mode-continue",
+      "label": "Continue writing",
+      "category": "writing",
+      "categoryZh": "智能公文写作流程",
+      "tone": "violet",
+      "glyph": "continueWrite",
+      "file": "icons/write-mode-continue.svg",
+      "usageZh": "AI写作第一步：继续写卡片"
+    },
+    {
+      "key": "write-mode-conclusion",
+      "label": "Conclusion",
+      "category": "writing",
+      "categoryZh": "智能公文写作流程",
+      "tone": "orange",
+      "glyph": "ending",
+      "file": "icons/write-mode-conclusion.svg",
+      "usageZh": "AI写作第一步：生成结语卡片"
+    },
+    {
+      "key": "write-step-mode",
+      "label": "Writing mode step",
+      "category": "writing",
+      "categoryZh": "智能公文写作流程",
+      "tone": "red",
+      "glyph": "target",
+      "file": "icons/write-step-mode.svg",
+      "usageZh": "起草公文流程步骤：写作模式"
+    },
+    {
+      "key": "write-step-scene",
+      "label": "Scene selection step",
+      "category": "writing",
+      "categoryZh": "智能公文写作流程",
+      "tone": "blue",
+      "glyph": "compass",
+      "file": "icons/write-step-scene.svg",
+      "usageZh": "起草公文流程步骤：场景选择"
+    },
+    {
+      "key": "write-step-info",
+      "label": "Basic info step",
+      "category": "writing",
+      "categoryZh": "智能公文写作流程",
+      "tone": "teal",
+      "glyph": "clipboard",
+      "file": "icons/write-step-info.svg",
+      "usageZh": "起草公文流程步骤：基础信息"
+    },
+    {
+      "key": "write-step-materials",
+      "label": "Reference material step",
+      "category": "writing",
+      "categoryZh": "智能公文写作流程",
+      "tone": "orange",
+      "glyph": "folderPlus",
+      "file": "icons/write-step-materials.svg",
+      "usageZh": "起草公文流程步骤：参考素材"
+    },
+    {
+      "key": "write-step-result",
+      "label": "Generate result step",
+      "category": "writing",
+      "categoryZh": "智能公文写作流程",
+      "tone": "violet",
+      "glyph": "rocket",
+      "file": "icons/write-step-result.svg",
+      "usageZh": "起草公文流程步骤：生成结果"
+    },
+    {
+      "key": "knowledge-personal",
+      "label": "Personal knowledge",
+      "category": "knowledge",
+      "categoryZh": "知识库目录与素材管理",
+      "tone": "blue",
+      "glyph": "userFolder",
+      "file": "icons/knowledge-personal.svg",
+      "usageZh": "知识库目录：个人知识库一级节点"
+    },
+    {
+      "key": "knowledge-department",
+      "label": "Department knowledge",
+      "category": "knowledge",
+      "categoryZh": "知识库目录与素材管理",
+      "tone": "violet",
+      "glyph": "orgFolder",
+      "file": "icons/knowledge-department.svg",
+      "usageZh": "知识库目录：部门知识库一级节点"
+    },
+    {
+      "key": "knowledge-resource",
+      "label": "Resource library",
+      "category": "knowledge",
+      "categoryZh": "知识库目录与素材管理",
+      "tone": "teal",
+      "glyph": "archive",
+      "file": "icons/knowledge-resource.svg",
+      "usageZh": "知识库目录：资源素材库一级节点"
+    },
+    {
+      "key": "knowledge-public",
+      "label": "Public library",
+      "category": "knowledge",
+      "categoryZh": "知识库目录与素材管理",
+      "tone": "green",
+      "glyph": "globe",
+      "file": "icons/knowledge-public.svg",
+      "usageZh": "知识库目录：公共素材库一级节点"
+    },
+    {
+      "key": "knowledge-recent",
+      "label": "Recent files",
+      "category": "knowledge",
+      "categoryZh": "知识库目录与素材管理",
+      "tone": "slate",
+      "glyph": "clock",
+      "file": "icons/knowledge-recent.svg",
+      "usageZh": "知识库目录：最近入口"
+    },
+    {
+      "key": "knowledge-folder",
+      "label": "Folder",
+      "category": "knowledge",
+      "categoryZh": "知识库目录与素材管理",
+      "tone": "blue",
+      "glyph": "folder",
+      "file": "icons/knowledge-folder.svg",
+      "usageZh": "知识库目录：普通文件夹"
+    },
+    {
+      "key": "knowledge-folder-open",
+      "label": "Open folder",
+      "category": "knowledge",
+      "categoryZh": "知识库目录与素材管理",
+      "tone": "blue",
+      "glyph": "folderOpen",
+      "file": "icons/knowledge-folder-open.svg",
+      "usageZh": "知识库目录：展开状态文件夹"
+    },
+    {
+      "key": "knowledge-new-file",
+      "label": "New file",
+      "category": "knowledge",
+      "categoryZh": "知识库目录与素材管理",
+      "tone": "red",
+      "glyph": "filePlus",
+      "file": "icons/knowledge-new-file.svg",
+      "usageZh": "知识库：添加文件 / 新建文件"
+    },
+    {
+      "key": "knowledge-import",
+      "label": "Import file",
+      "category": "knowledge",
+      "categoryZh": "知识库目录与素材管理",
+      "tone": "green",
+      "glyph": "upload",
+      "file": "icons/knowledge-import.svg",
+      "usageZh": "知识库：导入文件"
+    },
+    {
+      "key": "knowledge-smart-search",
+      "label": "Smart retrieval",
+      "category": "knowledge",
+      "categoryZh": "知识库目录与素材管理",
+      "tone": "violet",
+      "glyph": "smartSearch",
+      "file": "icons/knowledge-smart-search.svg",
+      "usageZh": "知识库搜索框：智能检索开关"
+    },
+    {
+      "key": "knowledge-readonly",
+      "label": "Readonly public",
+      "category": "knowledge",
+      "categoryZh": "知识库目录与素材管理",
+      "tone": "slate",
+      "glyph": "lock",
+      "file": "icons/knowledge-readonly.svg",
+      "usageZh": "知识库：只读公共资料标识"
+    },
+    {
+      "key": "knowledge-storage",
+      "label": "Storage usage",
+      "category": "knowledge",
+      "categoryZh": "知识库目录与素材管理",
+      "tone": "cyan",
+      "glyph": "database",
+      "file": "icons/knowledge-storage.svg",
+      "usageZh": "知识库：存储容量、资料库统计"
+    },
+    {
+      "key": "admin-users",
+      "label": "Users",
+      "category": "admin",
+      "categoryZh": "后台管理",
+      "tone": "blue",
+      "glyph": "users",
+      "file": "icons/admin-users.svg",
+      "usageZh": "后台管理：用户管理"
+    },
+    {
+      "key": "admin-org",
+      "label": "Organization",
+      "category": "admin",
+      "categoryZh": "后台管理",
+      "tone": "teal",
+      "glyph": "org",
+      "file": "icons/admin-org.svg",
+      "usageZh": "后台管理：组织架构"
+    },
+    {
+      "key": "admin-role",
+      "label": "Role management",
+      "category": "admin",
+      "categoryZh": "后台管理",
+      "tone": "violet",
+      "glyph": "badge",
+      "file": "icons/admin-role.svg",
+      "usageZh": "后台管理：角色权限"
+    },
+    {
+      "key": "admin-menu",
+      "label": "Menu management",
+      "category": "admin",
+      "categoryZh": "后台管理",
+      "tone": "slate",
+      "glyph": "menuTree",
+      "file": "icons/admin-menu.svg",
+      "usageZh": "后台管理：菜单管理"
+    },
+    {
+      "key": "admin-model",
+      "label": "Model management",
+      "category": "admin",
+      "categoryZh": "后台管理",
+      "tone": "cyan",
+      "glyph": "cpu",
+      "file": "icons/admin-model.svg",
+      "usageZh": "后台管理：模型管理"
+    },
+    {
+      "key": "admin-prompt",
+      "label": "Prompt management",
+      "category": "admin",
+      "categoryZh": "后台管理",
+      "tone": "red",
+      "glyph": "prompt",
+      "file": "icons/admin-prompt.svg",
+      "usageZh": "后台管理：提示词管理"
+    },
+    {
+      "key": "admin-template",
+      "label": "Template management",
+      "category": "admin",
+      "categoryZh": "后台管理",
+      "tone": "orange",
+      "glyph": "template",
+      "file": "icons/admin-template.svg",
+      "usageZh": "后台管理：模板管理"
+    },
+    {
+      "key": "admin-material",
+      "label": "Material library",
+      "category": "admin",
+      "categoryZh": "后台管理",
+      "tone": "blue",
+      "glyph": "library",
+      "file": "icons/admin-material.svg",
+      "usageZh": "后台管理：素材管理"
+    },
+    {
+      "key": "admin-agent",
+      "label": "Agent management",
+      "category": "admin",
+      "categoryZh": "后台管理",
+      "tone": "violet",
+      "glyph": "bot",
+      "file": "icons/admin-agent.svg",
+      "usageZh": "后台管理：智能体管理"
+    },
+    {
+      "key": "admin-connector",
+      "label": "Connector management",
+      "category": "admin",
+      "categoryZh": "后台管理",
+      "tone": "teal",
+      "glyph": "link",
+      "file": "icons/admin-connector.svg",
+      "usageZh": "后台管理：接口 / 连接器管理"
+    },
+    {
+      "key": "admin-audit",
+      "label": "Audit log",
+      "category": "admin",
+      "categoryZh": "后台管理",
+      "tone": "gold",
+      "glyph": "audit",
+      "file": "icons/admin-audit.svg",
+      "usageZh": "后台管理：审计日志"
+    },
+    {
+      "key": "admin-system",
+      "label": "System settings",
+      "category": "admin",
+      "categoryZh": "后台管理",
+      "tone": "slate",
+      "glyph": "settings",
+      "file": "icons/admin-system.svg",
+      "usageZh": "后台管理：系统设置"
+    },
+    {
+      "key": "model-main",
+      "label": "Main model",
+      "category": "model",
+      "categoryZh": "模型配置与深度思考",
+      "tone": "cyan",
+      "glyph": "cpu",
+      "file": "icons/model-main.svg",
+      "usageZh": "模型选择下拉框：主模型"
+    },
+    {
+      "key": "model-deep-thinking",
+      "label": "Deep thinking",
+      "category": "model",
+      "categoryZh": "模型配置与深度思考",
+      "tone": "violet",
+      "glyph": "brain",
+      "file": "icons/model-deep-thinking.svg",
+      "usageZh": "深度思考开关"
+    },
+    {
+      "key": "model-reasoning",
+      "label": "Reasoning chain",
+      "category": "model",
+      "categoryZh": "模型配置与深度思考",
+      "tone": "red",
+      "glyph": "network",
+      "file": "icons/model-reasoning.svg",
+      "usageZh": "推理链 / 解析过程"
+    },
+    {
+      "key": "model-test",
+      "label": "Connectivity test",
+      "category": "model",
+      "categoryZh": "模型配置与深度思考",
+      "tone": "green",
+      "glyph": "pulse",
+      "file": "icons/model-test.svg",
+      "usageZh": "模型连通性测试"
+    },
+    {
+      "key": "model-key",
+      "label": "API key",
+      "category": "model",
+      "categoryZh": "模型配置与深度思考",
+      "tone": "gold",
+      "glyph": "key",
+      "file": "icons/model-key.svg",
+      "usageZh": "API Key / 密钥配置"
+    },
+    {
+      "key": "model-secure",
+      "label": "Secure model",
+      "category": "model",
+      "categoryZh": "模型配置与深度思考",
+      "tone": "green",
+      "glyph": "shieldCheck",
+      "file": "icons/model-secure.svg",
+      "usageZh": "安全模型 / 内网可信模型"
+    },
+    {
+      "key": "action-add",
+      "label": "Add",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "red",
+      "glyph": "plus",
+      "file": "icons/action-add.svg",
+      "usageZh": "通用操作：新增"
+    },
+    {
+      "key": "action-upload",
+      "label": "Upload",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "green",
+      "glyph": "upload",
+      "file": "icons/action-upload.svg",
+      "usageZh": "通用操作：上传"
+    },
+    {
+      "key": "action-download",
+      "label": "Download",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "blue",
+      "glyph": "download",
+      "file": "icons/action-download.svg",
+      "usageZh": "通用操作：下载"
+    },
+    {
+      "key": "action-save",
+      "label": "Save",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "teal",
+      "glyph": "save",
+      "file": "icons/action-save.svg",
+      "usageZh": "通用操作：保存"
+    },
+    {
+      "key": "action-edit",
+      "label": "Edit",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "orange",
+      "glyph": "edit",
+      "file": "icons/action-edit.svg",
+      "usageZh": "通用操作：编辑"
+    },
+    {
+      "key": "action-delete",
+      "label": "Delete",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "red",
+      "glyph": "trash",
+      "file": "icons/action-delete.svg",
+      "usageZh": "通用操作：删除"
+    },
+    {
+      "key": "action-search",
+      "label": "Search",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "slate",
+      "glyph": "search",
+      "file": "icons/action-search.svg",
+      "usageZh": "通用操作：搜索"
+    },
+    {
+      "key": "action-refresh",
+      "label": "Refresh",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "blue",
+      "glyph": "refresh",
+      "file": "icons/action-refresh.svg",
+      "usageZh": "通用操作：刷新"
+    },
+    {
+      "key": "action-send",
+      "label": "Send",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "red",
+      "glyph": "send",
+      "file": "icons/action-send.svg",
+      "usageZh": "通用操作：发送"
+    },
+    {
+      "key": "action-back",
+      "label": "Back",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "slate",
+      "glyph": "back",
+      "file": "icons/action-back.svg",
+      "usageZh": "通用操作：返回"
+    },
+    {
+      "key": "action-next",
+      "label": "Next",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "red",
+      "glyph": "next",
+      "file": "icons/action-next.svg",
+      "usageZh": "通用操作：下一步"
+    },
+    {
+      "key": "action-close",
+      "label": "Close",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "slate",
+      "glyph": "close",
+      "file": "icons/action-close.svg",
+      "usageZh": "通用操作：关闭"
+    },
+    {
+      "key": "action-more",
+      "label": "More",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "slate",
+      "glyph": "more",
+      "file": "icons/action-more.svg",
+      "usageZh": "通用操作：更多"
+    },
+    {
+      "key": "action-filter",
+      "label": "Filter",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "violet",
+      "glyph": "filter",
+      "file": "icons/action-filter.svg",
+      "usageZh": "通用操作：筛选"
+    },
+    {
+      "key": "action-pin",
+      "label": "Pin",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "gold",
+      "glyph": "pin",
+      "file": "icons/action-pin.svg",
+      "usageZh": "通用操作：置顶 / 固定"
+    },
+    {
+      "key": "action-copy",
+      "label": "Copy",
+      "category": "action",
+      "categoryZh": "通用操作按钮",
+      "tone": "blue",
+      "glyph": "copy",
+      "file": "icons/action-copy.svg",
+      "usageZh": "通用操作：复制"
+    },
+    {
+      "key": "status-success",
+      "label": "Success",
+      "category": "status",
+      "categoryZh": "状态提示",
+      "tone": "green",
+      "glyph": "check",
+      "file": "icons/status-success.svg",
+      "usageZh": "状态提示：成功"
+    },
+    {
+      "key": "status-warning",
+      "label": "Warning",
+      "category": "status",
+      "categoryZh": "状态提示",
+      "tone": "gold",
+      "glyph": "warning",
+      "file": "icons/status-warning.svg",
+      "usageZh": "状态提示：警告"
+    },
+    {
+      "key": "status-error",
+      "label": "Error",
+      "category": "status",
+      "categoryZh": "状态提示",
+      "tone": "red",
+      "glyph": "error",
+      "file": "icons/status-error.svg",
+      "usageZh": "状态提示：错误"
+    },
+    {
+      "key": "status-info",
+      "label": "Info",
+      "category": "status",
+      "categoryZh": "状态提示",
+      "tone": "blue",
+      "glyph": "info",
+      "file": "icons/status-info.svg",
+      "usageZh": "状态提示：信息"
+    },
+    {
+      "key": "status-loading",
+      "label": "Loading",
+      "category": "status",
+      "categoryZh": "状态提示",
+      "tone": "cyan",
+      "glyph": "loading",
+      "file": "icons/status-loading.svg",
+      "usageZh": "状态提示：加载中"
+    },
+    {
+      "key": "security-shield",
+      "label": "Security shield",
+      "category": "security",
+      "categoryZh": "安全与可信标识",
+      "tone": "green",
+      "glyph": "shield",
+      "file": "icons/security-shield.svg",
+      "usageZh": "安全办公、安全防护标识"
+    },
+    {
+      "key": "security-lock",
+      "label": "Lock",
+      "category": "security",
+      "categoryZh": "安全与可信标识",
+      "tone": "slate",
+      "glyph": "lock",
+      "file": "icons/security-lock.svg",
+      "usageZh": "权限锁定、私密内容"
+    },
+    {
+      "key": "security-trusted",
+      "label": "Trusted intranet",
+      "category": "security",
+      "categoryZh": "安全与可信标识",
+      "tone": "red",
+      "glyph": "trusted",
+      "file": "icons/security-trusted.svg",
+      "usageZh": "安全办公 · 内网可信徽标"
+    },
+    {
+      "key": "user-avatar",
+      "label": "User avatar",
+      "category": "user",
+      "categoryZh": "用户与专家头像",
+      "tone": "blue",
+      "glyph": "user",
+      "file": "icons/user-avatar.svg",
+      "usageZh": "侧边栏用户头像 / 默认用户"
+    },
+    {
+      "key": "expert-avatar",
+      "label": "Expert avatar",
+      "category": "user",
+      "categoryZh": "用户与专家头像",
+      "tone": "violet",
+      "glyph": "expert",
+      "file": "icons/expert-avatar.svg",
+      "usageZh": "专家头像 / 专家库默认头像"
+    }
+  ],
+  "categories": {
+    "navigation": [
+      {
+        "key": "nav-home",
+        "label": "Home",
+        "tone": "blue",
+        "usageZh": "首页入口、顶部或侧边栏首页图标"
+      },
+      {
+        "key": "nav-new-task",
+        "label": "New task",
+        "tone": "red",
+        "usageZh": "新建任务入口"
+      },
+      {
+        "key": "nav-smart-doc",
+        "label": "Smart document",
+        "tone": "red",
+        "usageZh": "智能公文一级菜单"
+      },
+      {
+        "key": "nav-ai-write",
+        "label": "AI writing",
+        "tone": "red",
+        "usageZh": "AI写作菜单项"
+      },
+      {
+        "key": "nav-ai-copy",
+        "label": "AI imitation",
+        "tone": "violet",
+        "usageZh": "AI仿写菜单项"
+      },
+      {
+        "key": "nav-ai-polish",
+        "label": "AI polish",
+        "tone": "orange",
+        "usageZh": "AI润色菜单项"
+      },
+      {
+        "key": "nav-layout",
+        "label": "Smart layout",
+        "tone": "teal",
+        "usageZh": "智能排版菜单项"
+      },
+      {
+        "key": "nav-proofread",
+        "label": "Proofread",
+        "tone": "green",
+        "usageZh": "智能校对菜单项"
+      },
+      {
+        "key": "nav-knowledge",
+        "label": "Knowledge base",
+        "tone": "blue",
+        "usageZh": "知识库主菜单入口"
+      },
+      {
+        "key": "nav-expert",
+        "label": "Expert management",
+        "tone": "violet",
+        "usageZh": "专家管理入口"
+      },
+      {
+        "key": "nav-admin",
+        "label": "Admin console",
+        "tone": "slate",
+        "usageZh": "后台管理入口"
+      },
+      {
+        "key": "nav-history",
+        "label": "History",
+        "tone": "slate",
+        "usageZh": "历史对话入口"
+      }
+    ],
+    "feature": [
+      {
+        "key": "feature-smart-qa",
+        "label": "Smart Q&A",
+        "tone": "cyan",
+        "usageZh": "首页问答输入区或智能问答能力卡片"
+      },
+      {
+        "key": "feature-ai-write",
+        "label": "AI write card",
+        "tone": "red",
+        "usageZh": "首页 AI 写作功能卡片"
+      },
+      {
+        "key": "feature-ai-copy",
+        "label": "AI imitate card",
+        "tone": "violet",
+        "usageZh": "首页 AI 仿写功能卡片"
+      },
+      {
+        "key": "feature-ai-polish",
+        "label": "AI polish card",
+        "tone": "orange",
+        "usageZh": "首页 AI 润色功能卡片"
+      },
+      {
+        "key": "feature-proofread",
+        "label": "Proofread card",
+        "tone": "green",
+        "usageZh": "首页智能校对功能卡片"
+      },
+      {
+        "key": "feature-layout",
+        "label": "Layout card",
+        "tone": "teal",
+        "usageZh": "首页智能排版功能卡片"
+      },
+      {
+        "key": "feature-ppt",
+        "label": "PPT creation",
+        "tone": "orange",
+        "usageZh": "PPT汇报大纲 / PPT生成入口"
+      },
+      {
+        "key": "feature-table",
+        "label": "Smart table",
+        "tone": "green",
+        "usageZh": "表格数据提取 / 智能表格入口"
+      },
+      {
+        "key": "feature-web-office",
+        "label": "WebOffice editor",
+        "tone": "blue",
+        "usageZh": "WebOffice 编辑器入口"
+      },
+      {
+        "key": "feature-red-template",
+        "label": "Red header template",
+        "tone": "red",
+        "usageZh": "红头模板、公文模板入口"
+      }
+    ],
+    "writing": [
+      {
+        "key": "write-mode-full",
+        "label": "Generate full text",
+        "tone": "red",
+        "usageZh": "AI写作第一步：生成全文卡片"
+      },
+      {
+        "key": "write-mode-outline",
+        "label": "Generate outline",
+        "tone": "blue",
+        "usageZh": "AI写作第一步：生成大纲卡片"
+      },
+      {
+        "key": "write-mode-outline-to-text",
+        "label": "Outline to text",
+        "tone": "teal",
+        "usageZh": "AI写作第一步：大纲成文卡片"
+      },
+      {
+        "key": "write-mode-continue",
+        "label": "Continue writing",
+        "tone": "violet",
+        "usageZh": "AI写作第一步：继续写卡片"
+      },
+      {
+        "key": "write-mode-conclusion",
+        "label": "Conclusion",
+        "tone": "orange",
+        "usageZh": "AI写作第一步：生成结语卡片"
+      },
+      {
+        "key": "write-step-mode",
+        "label": "Writing mode step",
+        "tone": "red",
+        "usageZh": "起草公文流程步骤：写作模式"
+      },
+      {
+        "key": "write-step-scene",
+        "label": "Scene selection step",
+        "tone": "blue",
+        "usageZh": "起草公文流程步骤：场景选择"
+      },
+      {
+        "key": "write-step-info",
+        "label": "Basic info step",
+        "tone": "teal",
+        "usageZh": "起草公文流程步骤：基础信息"
+      },
+      {
+        "key": "write-step-materials",
+        "label": "Reference material step",
+        "tone": "orange",
+        "usageZh": "起草公文流程步骤：参考素材"
+      },
+      {
+        "key": "write-step-result",
+        "label": "Generate result step",
+        "tone": "violet",
+        "usageZh": "起草公文流程步骤：生成结果"
+      }
+    ],
+    "knowledge": [
+      {
+        "key": "knowledge-personal",
+        "label": "Personal knowledge",
+        "tone": "blue",
+        "usageZh": "知识库目录：个人知识库一级节点"
+      },
+      {
+        "key": "knowledge-department",
+        "label": "Department knowledge",
+        "tone": "violet",
+        "usageZh": "知识库目录：部门知识库一级节点"
+      },
+      {
+        "key": "knowledge-resource",
+        "label": "Resource library",
+        "tone": "teal",
+        "usageZh": "知识库目录：资源素材库一级节点"
+      },
+      {
+        "key": "knowledge-public",
+        "label": "Public library",
+        "tone": "green",
+        "usageZh": "知识库目录：公共素材库一级节点"
+      },
+      {
+        "key": "knowledge-recent",
+        "label": "Recent files",
+        "tone": "slate",
+        "usageZh": "知识库目录：最近入口"
+      },
+      {
+        "key": "knowledge-folder",
+        "label": "Folder",
+        "tone": "blue",
+        "usageZh": "知识库目录：普通文件夹"
+      },
+      {
+        "key": "knowledge-folder-open",
+        "label": "Open folder",
+        "tone": "blue",
+        "usageZh": "知识库目录：展开状态文件夹"
+      },
+      {
+        "key": "knowledge-new-file",
+        "label": "New file",
+        "tone": "red",
+        "usageZh": "知识库：添加文件 / 新建文件"
+      },
+      {
+        "key": "knowledge-import",
+        "label": "Import file",
+        "tone": "green",
+        "usageZh": "知识库：导入文件"
+      },
+      {
+        "key": "knowledge-smart-search",
+        "label": "Smart retrieval",
+        "tone": "violet",
+        "usageZh": "知识库搜索框：智能检索开关"
+      },
+      {
+        "key": "knowledge-readonly",
+        "label": "Readonly public",
+        "tone": "slate",
+        "usageZh": "知识库：只读公共资料标识"
+      },
+      {
+        "key": "knowledge-storage",
+        "label": "Storage usage",
+        "tone": "cyan",
+        "usageZh": "知识库：存储容量、资料库统计"
+      }
+    ],
+    "admin": [
+      {
+        "key": "admin-users",
+        "label": "Users",
+        "tone": "blue",
+        "usageZh": "后台管理：用户管理"
+      },
+      {
+        "key": "admin-org",
+        "label": "Organization",
+        "tone": "teal",
+        "usageZh": "后台管理：组织架构"
+      },
+      {
+        "key": "admin-role",
+        "label": "Role management",
+        "tone": "violet",
+        "usageZh": "后台管理：角色权限"
+      },
+      {
+        "key": "admin-menu",
+        "label": "Menu management",
+        "tone": "slate",
+        "usageZh": "后台管理：菜单管理"
+      },
+      {
+        "key": "admin-model",
+        "label": "Model management",
+        "tone": "cyan",
+        "usageZh": "后台管理：模型管理"
+      },
+      {
+        "key": "admin-prompt",
+        "label": "Prompt management",
+        "tone": "red",
+        "usageZh": "后台管理：提示词管理"
+      },
+      {
+        "key": "admin-template",
+        "label": "Template management",
+        "tone": "orange",
+        "usageZh": "后台管理：模板管理"
+      },
+      {
+        "key": "admin-material",
+        "label": "Material library",
+        "tone": "blue",
+        "usageZh": "后台管理：素材管理"
+      },
+      {
+        "key": "admin-agent",
+        "label": "Agent management",
+        "tone": "violet",
+        "usageZh": "后台管理：智能体管理"
+      },
+      {
+        "key": "admin-connector",
+        "label": "Connector management",
+        "tone": "teal",
+        "usageZh": "后台管理：接口 / 连接器管理"
+      },
+      {
+        "key": "admin-audit",
+        "label": "Audit log",
+        "tone": "gold",
+        "usageZh": "后台管理：审计日志"
+      },
+      {
+        "key": "admin-system",
+        "label": "System settings",
+        "tone": "slate",
+        "usageZh": "后台管理：系统设置"
+      }
+    ],
+    "model": [
+      {
+        "key": "model-main",
+        "label": "Main model",
+        "tone": "cyan",
+        "usageZh": "模型选择下拉框：主模型"
+      },
+      {
+        "key": "model-deep-thinking",
+        "label": "Deep thinking",
+        "tone": "violet",
+        "usageZh": "深度思考开关"
+      },
+      {
+        "key": "model-reasoning",
+        "label": "Reasoning chain",
+        "tone": "red",
+        "usageZh": "推理链 / 解析过程"
+      },
+      {
+        "key": "model-test",
+        "label": "Connectivity test",
+        "tone": "green",
+        "usageZh": "模型连通性测试"
+      },
+      {
+        "key": "model-key",
+        "label": "API key",
+        "tone": "gold",
+        "usageZh": "API Key / 密钥配置"
+      },
+      {
+        "key": "model-secure",
+        "label": "Secure model",
+        "tone": "green",
+        "usageZh": "安全模型 / 内网可信模型"
+      }
+    ],
+    "action": [
+      {
+        "key": "action-add",
+        "label": "Add",
+        "tone": "red",
+        "usageZh": "通用操作：新增"
+      },
+      {
+        "key": "action-upload",
+        "label": "Upload",
+        "tone": "green",
+        "usageZh": "通用操作：上传"
+      },
+      {
+        "key": "action-download",
+        "label": "Download",
+        "tone": "blue",
+        "usageZh": "通用操作：下载"
+      },
+      {
+        "key": "action-save",
+        "label": "Save",
+        "tone": "teal",
+        "usageZh": "通用操作：保存"
+      },
+      {
+        "key": "action-edit",
+        "label": "Edit",
+        "tone": "orange",
+        "usageZh": "通用操作：编辑"
+      },
+      {
+        "key": "action-delete",
+        "label": "Delete",
+        "tone": "red",
+        "usageZh": "通用操作：删除"
+      },
+      {
+        "key": "action-search",
+        "label": "Search",
+        "tone": "slate",
+        "usageZh": "通用操作：搜索"
+      },
+      {
+        "key": "action-refresh",
+        "label": "Refresh",
+        "tone": "blue",
+        "usageZh": "通用操作：刷新"
+      },
+      {
+        "key": "action-send",
+        "label": "Send",
+        "tone": "red",
+        "usageZh": "通用操作：发送"
+      },
+      {
+        "key": "action-back",
+        "label": "Back",
+        "tone": "slate",
+        "usageZh": "通用操作：返回"
+      },
+      {
+        "key": "action-next",
+        "label": "Next",
+        "tone": "red",
+        "usageZh": "通用操作：下一步"
+      },
+      {
+        "key": "action-close",
+        "label": "Close",
+        "tone": "slate",
+        "usageZh": "通用操作：关闭"
+      },
+      {
+        "key": "action-more",
+        "label": "More",
+        "tone": "slate",
+        "usageZh": "通用操作：更多"
+      },
+      {
+        "key": "action-filter",
+        "label": "Filter",
+        "tone": "violet",
+        "usageZh": "通用操作：筛选"
+      },
+      {
+        "key": "action-pin",
+        "label": "Pin",
+        "tone": "gold",
+        "usageZh": "通用操作：置顶 / 固定"
+      },
+      {
+        "key": "action-copy",
+        "label": "Copy",
+        "tone": "blue",
+        "usageZh": "通用操作：复制"
+      }
+    ],
+    "status": [
+      {
+        "key": "status-success",
+        "label": "Success",
+        "tone": "green",
+        "usageZh": "状态提示：成功"
+      },
+      {
+        "key": "status-warning",
+        "label": "Warning",
+        "tone": "gold",
+        "usageZh": "状态提示：警告"
+      },
+      {
+        "key": "status-error",
+        "label": "Error",
+        "tone": "red",
+        "usageZh": "状态提示：错误"
+      },
+      {
+        "key": "status-info",
+        "label": "Info",
+        "tone": "blue",
+        "usageZh": "状态提示：信息"
+      },
+      {
+        "key": "status-loading",
+        "label": "Loading",
+        "tone": "cyan",
+        "usageZh": "状态提示：加载中"
+      }
+    ],
+    "security": [
+      {
+        "key": "security-shield",
+        "label": "Security shield",
+        "tone": "green",
+        "usageZh": "安全办公、安全防护标识"
+      },
+      {
+        "key": "security-lock",
+        "label": "Lock",
+        "tone": "slate",
+        "usageZh": "权限锁定、私密内容"
+      },
+      {
+        "key": "security-trusted",
+        "label": "Trusted intranet",
+        "tone": "red",
+        "usageZh": "安全办公 · 内网可信徽标"
+      }
+    ],
+    "user": [
+      {
+        "key": "user-avatar",
+        "label": "User avatar",
+        "tone": "blue",
+        "usageZh": "侧边栏用户头像 / 默认用户"
+      },
+      {
+        "key": "expert-avatar",
+        "label": "Expert avatar",
+        "tone": "violet",
+        "usageZh": "专家头像 / 专家库默认头像"
+      }
+    ]
+  }
+}

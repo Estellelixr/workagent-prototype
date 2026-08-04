@@ -1,0 +1,283 @@
+{
+  "version": "1.0.0",
+  "size": 64,
+  "default": "unknown",
+  "icons": [
+    {
+      "key": "doc",
+      "label": "DOC",
+      "name": "Word document",
+      "exts": [
+        "doc",
+        "docx",
+        "wps",
+        "rtf"
+      ],
+      "color": "#3B82D6"
+    },
+    {
+      "key": "pdf",
+      "label": "PDF",
+      "name": "PDF document",
+      "exts": [
+        "pdf"
+      ],
+      "color": "#E94B5F"
+    },
+    {
+      "key": "xls",
+      "label": "XLS",
+      "name": "Spreadsheet",
+      "exts": [
+        "xls",
+        "xlsx",
+        "et",
+        "csv"
+      ],
+      "color": "#27A86C"
+    },
+    {
+      "key": "ppt",
+      "label": "PPT",
+      "name": "Presentation",
+      "exts": [
+        "ppt",
+        "pptx",
+        "dps"
+      ],
+      "color": "#EA7A45"
+    },
+    {
+      "key": "txt",
+      "label": "TXT",
+      "name": "Plain text",
+      "exts": [
+        "txt"
+      ],
+      "color": "#64748B"
+    },
+    {
+      "key": "ofd",
+      "label": "OFD",
+      "name": "OFD document",
+      "exts": [
+        "ofd"
+      ],
+      "color": "#C8102E"
+    },
+    {
+      "key": "image",
+      "label": "IMG",
+      "name": "Image",
+      "exts": [
+        "png",
+        "jpg",
+        "jpeg",
+        "gif",
+        "webp",
+        "svg",
+        "bmp"
+      ],
+      "color": "#8B5CF6"
+    },
+    {
+      "key": "zip",
+      "label": "ZIP",
+      "name": "Archive",
+      "exts": [
+        "zip",
+        "rar",
+        "7z",
+        "tar",
+        "gz"
+      ],
+      "color": "#B7791F"
+    },
+    {
+      "key": "html",
+      "label": "HTML",
+      "name": "HTML file",
+      "exts": [
+        "html",
+        "htm"
+      ],
+      "color": "#F97316"
+    },
+    {
+      "key": "json",
+      "label": "JSON",
+      "name": "JSON data",
+      "exts": [
+        "json"
+      ],
+      "color": "#D99A00"
+    },
+    {
+      "key": "xml",
+      "label": "XML",
+      "name": "XML data",
+      "exts": [
+        "xml"
+      ],
+      "color": "#2563EB"
+    },
+    {
+      "key": "md",
+      "label": "MD",
+      "name": "Markdown",
+      "exts": [
+        "md",
+        "markdown"
+      ],
+      "color": "#334155"
+    },
+    {
+      "key": "audio",
+      "label": "AUD",
+      "name": "Audio",
+      "exts": [
+        "mp3",
+        "wav",
+        "aac",
+        "flac",
+        "m4a"
+      ],
+      "color": "#DB2777"
+    },
+    {
+      "key": "video",
+      "label": "VID",
+      "name": "Video",
+      "exts": [
+        "mp4",
+        "mov",
+        "avi",
+        "mkv",
+        "wmv"
+      ],
+      "color": "#6366F1"
+    },
+    {
+      "key": "folder",
+      "label": "",
+      "name": "Folder",
+      "exts": [
+        "folder"
+      ],
+      "color": "#4E9DE6"
+    },
+    {
+      "key": "unknown",
+      "label": "FILE",
+      "name": "Unknown file",
+      "exts": [
+        "unknown"
+      ],
+      "color": "#94A3B8"
+    },
+    {
+      "key": "link",
+      "label": "URL",
+      "name": "Link",
+      "exts": [
+        "url",
+        "link"
+      ],
+      "color": "#0891B2"
+    },
+    {
+      "key": "db",
+      "label": "DB",
+      "name": "Database",
+      "exts": [
+        "db",
+        "sql",
+        "sqlite"
+      ],
+      "color": "#0F766E"
+    },
+    {
+      "key": "template",
+      "label": "TPL",
+      "name": "Template",
+      "exts": [
+        "dot",
+        "dotx",
+        "pot",
+        "potx",
+        "xlt",
+        "xltx"
+      ],
+      "color": "#B453D9"
+    },
+    {
+      "key": "signature",
+      "label": "SIGN",
+      "name": "Signed file",
+      "exts": [
+        "sig",
+        "p7s"
+      ],
+      "color": "#D97706"
+    }
+  ],
+  "extensions": {
+    "doc": "doc",
+    "docx": "doc",
+    "wps": "doc",
+    "rtf": "doc",
+    "pdf": "pdf",
+    "xls": "xls",
+    "xlsx": "xls",
+    "et": "xls",
+    "csv": "xls",
+    "ppt": "ppt",
+    "pptx": "ppt",
+    "dps": "ppt",
+    "txt": "txt",
+    "ofd": "ofd",
+    "png": "image",
+    "jpg": "image",
+    "jpeg": "image",
+    "gif": "image",
+    "webp": "image",
+    "svg": "image",
+    "bmp": "image",
+    "zip": "zip",
+    "rar": "zip",
+    "7z": "zip",
+    "tar": "zip",
+    "gz": "zip",
+    "html": "html",
+    "htm": "html",
+    "json": "json",
+    "xml": "xml",
+    "md": "md",
+    "markdown": "md",
+    "mp3": "audio",
+    "wav": "audio",
+    "aac": "audio",
+    "flac": "audio",
+    "m4a": "audio",
+    "mp4": "video",
+    "mov": "video",
+    "avi": "video",
+    "mkv": "video",
+    "wmv": "video",
+    "folder": "folder",
+    "unknown": "unknown",
+    "url": "link",
+    "link": "link",
+    "db": "db",
+    "sql": "db",
+    "sqlite": "db",
+    "dot": "template",
+    "dotx": "template",
+    "pot": "template",
+    "potx": "template",
+    "xlt": "template",
+    "xltx": "template",
+    "sig": "signature",
+    "p7s": "signature"
+  }
+}

@@ -1,0 +1,20 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="XML data icon">
+  <defs>
+    <linearGradient id="xml-page" x1="15" y1="8" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EEF4FF"/>
+    </linearGradient>
+    <filter id="xml-shadow" x="6" y="5" width="52" height="58" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#345986" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <g filter="url(#xml-shadow)">
+    <path d="M18 8h21.5L50 18.5V52a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4Z" fill="url(#xml-page)"/>
+    <path d="M39.5 8v10.5H50" fill="#EEF4FF"/>
+    <path d="M18 8h21.5L50 18.5V52a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4Z" stroke="#2563EB" stroke-opacity="0.52" stroke-width="2"/>
+    <path d="M39.5 8v10.5H50" stroke="#2563EB" stroke-opacity="0.44" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M25 24l-7 8 7 8M37 24l7 8-7 8" fill="none" stroke="#2563EB" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 22l-6 20" fill="none" stroke="#2563EB" stroke-width="2.8" stroke-linecap="round" opacity=".72"/>
+    <rect x="30" y="45" width="24" height="15" rx="5" fill="#2563EB"/>
+    <text x="42" y="55.5" fill="white" font-family="Inter, Arial, sans-serif" font-size="7.5" font-weight="800" text-anchor="middle">XML</text>
+  </g>
+</svg>

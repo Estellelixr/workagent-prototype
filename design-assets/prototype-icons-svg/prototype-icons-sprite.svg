@@ -1,0 +1,664 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="prototype-icon-nav-home" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M18 31 32 19l14 12v17a3 3 0 0 1-3 3h-7V39h-8v12h-7a3 3 0 0 1-3-3V31Z" fill="#58A9EE" fill-opacity=".18" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-nav-new-task" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M22 43l3-10 16-16a5 5 0 0 1 7 7L32 40l-10 3Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M41 13l2-5 2 5 5 2-5 2-2 5-2-5-5-2 5-2Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-nav-smart-doc" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M21 13h17l8 8v28a3 3 0 0 1-3 3H21a3 3 0 0 1-3-3V16a3 3 0 0 1 3-3Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M38 13v8h8" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 31h16M24 38h12M25 45h17" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-nav-ai-write" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M20 44l4-12 19-19a5 5 0 0 1 7 7L31 39l-11 5Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M36 17l11 11" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-nav-ai-copy" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F7F5FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#8B79E6" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 14 49 23 32 32 15 23 32 14Z" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15 32l17 9 17-9" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15 41l17 9 17-9" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-nav-ai-polish" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF5EE"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#EF8A55" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 13l4 12 12 4-12 4-4 12-4-12-12-4 12-4 4-12Z" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M47 12l1.8 5.2L54 19l-5.2 1.8L47 26l-1.8-5.2L40 19l5.2-1.8L47 12Z" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-nav-layout" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#ECFBF8"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#53B7AA" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M27 15h10v15l5 8v4H22v-4l5-8V15Z" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M19 48h26" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 42h16" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-nav-proofread" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBF4"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#51B77A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M21 13h17l8 8v28a3 3 0 0 1-3 3H21a3 3 0 0 1-3-3V16a3 3 0 0 1 3-3Z" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M38 13v8h8" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 39l6 6 13-15" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-nav-knowledge" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M13 23a4 4 0 0 1 4-4h11l4 4h15a4 4 0 0 1 4 4v3H13Z" fill="#58A9EE" fill-opacity=".18" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M13 29h38l-4 18a5 5 0 0 1-5 4H20a5 5 0 0 1-5-4L13 29Z" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-nav-expert" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F7F5FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#8B79E6" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M22 24v-5a4 4 0 0 1 4-4h12a4 4 0 0 1 4 4v5" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15 24h34v23a4 4 0 0 1-4 4H19a4 4 0 0 1-4-4V24Z" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15 33h34M28 33v4h8v-4" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-nav-admin" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F5F7FA"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#7D899A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 24a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 12v7M32 45v7M18 18l5 5M41 41l5 5M12 32h7M45 32h7M18 46l5-5M41 23l5-5" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-nav-history" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F5F7FA"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#7D899A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M18 30a14 14 0 1 1 4 10" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 30h-8v-8" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 22v11l8 5" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-feature-smart-qa" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBFF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#42A7C4" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M16 18h32a4 4 0 0 1 4 4v19a4 4 0 0 1-4 4H28l-11 7v-7h-1a4 4 0 0 1-4-4V22a4 4 0 0 1 4-4Z" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 29h18M23 36h12" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-feature-ai-write" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M22 43l3-10 16-16a5 5 0 0 1 7 7L32 40l-10 3Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M41 13l2-5 2 5 5 2-5 2-2 5-2-5-5-2 5-2Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-feature-ai-copy" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F7F5FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#8B79E6" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M21 19h21a4 4 0 0 1 4 4v24a4 4 0 0 1-4 4H21a4 4 0 0 1-4-4V23a4 4 0 0 1 4-4Z" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M28 13h21v26" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M25 31h14M25 39h10" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-feature-ai-polish" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF5EE"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#EF8A55" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 13l4 12 12 4-12 4-4 12-4-12-12-4 12-4 4-12Z" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M47 12l1.8 5.2L54 19l-5.2 1.8L47 26l-1.8-5.2L40 19l5.2-1.8L47 12Z" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-feature-proofread" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBF4"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#51B77A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 13l17 6v12c0 10-7 18-17 22-10-4-17-12-17-22V19l17-6Z" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 33l6 6 12-14" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-feature-layout" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#ECFBF8"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#53B7AA" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M27 15h10v15l5 8v4H22v-4l5-8V15Z" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M19 48h26" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 42h16" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-feature-ppt" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF5EE"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#EF8A55" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M16 16h32v23H16V16Z" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 39v12M24 51h16" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M25 32l5-6 5 4 5-8" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-feature-table" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBF4"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#51B77A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M16 17h32v30H16V17Z" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M16 27h32M16 37h32M27 17v30M38 17v30" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-feature-web-office" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M17 15h30v34H17V15Z" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 24h18M23 32h18M23 40h10" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40 42l8-8 4 4-8 8-6 2 2-6Z" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-feature-red-template" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M18 14h28v36H18V14Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 23h16M24 31h8M36 31h4M24 39h16" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-write-mode-full" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M21 13h17l8 8v28a3 3 0 0 1-3 3H21a3 3 0 0 1-3-3V16a3 3 0 0 1 3-3Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M38 13v8h8" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 31h16M24 38h12M25 45h17" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-write-mode-outline" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M22 22h24M22 32h24M22 42h24" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15 22h1M15 32h1M15 42h1" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-write-mode-outline-to-text" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#ECFBF8"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#53B7AA" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M20 14h17l7 7v13" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M37 14v8h7" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M21 44h20" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M36 37l8 7-8 7" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-write-mode-continue" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F7F5FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#8B79E6" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M18 38c6-13 13-18 23-14" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40 18l8 8-8 8" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M22 46h23" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-write-mode-conclusion" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF5EE"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#EF8A55" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M19 18h26v28H19V18Z" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M25 27h14M25 35h9" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M39 42l5 5 8-11" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-write-step-mode" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 15a17 17 0 1 0 0 34 17 17 0 0 0 0-34Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 23a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 29v6M29 32h6" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-write-step-scene" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 14a18 18 0 1 0 0 36 18 18 0 0 0 0-36Z" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M39 25l-5 12-10 4 5-12 10-4Z" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-write-step-info" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#ECFBF8"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#53B7AA" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M24 18h16M25 14h14v8H25v-8Z" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M21 18h-2a4 4 0 0 0-4 4v25a4 4 0 0 0 4 4h26a4 4 0 0 0 4-4V22a4 4 0 0 0-4-4h-2" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 32h18M23 40h13" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-write-step-materials" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF5EE"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#EF8A55" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M13 24h15l4 4h19v19a4 4 0 0 1-4 4H17a4 4 0 0 1-4-4V24Z" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 34v12M26 40h12" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-write-step-result" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F7F5FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#8B79E6" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 45c11-6 17-17 17-31-14 0-25 6-31 17l7 7 7 7Z" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M39 22a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 39l-7 9 9-7" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-knowledge-personal" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M13 25h14l4 4h20v18a4 4 0 0 1-4 4H17a4 4 0 0 1-4-4V25Z" fill="#58A9EE" fill-opacity=".18" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M31 34a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 49c2-5 14-5 16 0" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-knowledge-department" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F7F5FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#8B79E6" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M13 25h14l4 4h20v18a4 4 0 0 1-4 4H17a4 4 0 0 1-4-4V25Z" fill="#8B79E6" fill-opacity=".18" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 33v12M24 45h16M24 39h16" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-knowledge-resource" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#ECFBF8"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#53B7AA" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M15 21h34v8H15V21Z" fill="#53B7AA" fill-opacity=".18" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 29h28v20H18V29Z" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M27 36h10" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-knowledge-public" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBF4"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#51B77A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 14a18 18 0 1 0 0 36 18 18 0 0 0 0-36Z" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M14 32h36M32 14c5 5 8 11 8 18s-3 13-8 18M32 14c-5 5-8 11-8 18s3 13 8 18" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-knowledge-recent" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F5F7FA"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#7D899A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 14a18 18 0 1 0 0 36 18 18 0 0 0 0-36Z" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 23v10l8 5" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-knowledge-folder" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M13 23a4 4 0 0 1 4-4h11l4 4h15a4 4 0 0 1 4 4v3H13Z" fill="#58A9EE" fill-opacity=".18" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M13 29h38l-4 18a5 5 0 0 1-5 4H20a5 5 0 0 1-5-4L13 29Z" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-knowledge-folder-open" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M12 27h16l4 4h20l-5 17a4 4 0 0 1-4 3H18a4 4 0 0 1-4-3L12 27Z" fill="#58A9EE" fill-opacity=".18" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M14 24h14l4 4h17" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-knowledge-new-file" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M22 14h16l8 8v28H22V14Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M38 14v8h8" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 31v14M25 38h14" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-knowledge-import" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBF4"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#51B77A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 45V22" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 31l9-9 9 9" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 48h28" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-knowledge-smart-search" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F7F5FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#8B79E6" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M28 17a12 12 0 1 0 0 24 12 12 0 0 0 0-24Z" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M37 37l10 10" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M44 15l2 5 5 2-5 2-2 5-2-5-5-2 5-2Z" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-knowledge-readonly" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F5F7FA"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#7D899A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M22 29v-6a10 10 0 0 1 20 0v6" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M19 29h26v20H19V29Z" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 37v5" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-knowledge-storage" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBFF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#42A7C4" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M17 21c0-4 7-7 15-7s15 3 15 7-7 7-15 7-15-3-15-7Z" fill="#42A7C4" fill-opacity=".18" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M17 21v20c0 4 7 7 15 7s15-3 15-7V21" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M17 31c0 4 7 7 15 7s15-3 15-7" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-admin-users" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M25 30a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M13 49c2-9 22-9 24 0" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M42 30a6 6 0 1 0 0-12" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40 37c6 1 10 5 11 12" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-admin-org" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#ECFBF8"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#53B7AA" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 15v11M22 32h20M22 32v13M42 32v13" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M25 15h14v10H25V15Z" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15 45h14v8H15v-8Z" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M35 45h14v8H35v-8Z" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-admin-role" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F7F5FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#8B79E6" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 14l14 8v15c0 8-6 13-14 17-8-4-14-9-14-17V22l14-8Z" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M25 31h14M25 38h14" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-admin-menu" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F5F7FA"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#7D899A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M18 18h12v10H18V18Z" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M34 18h12v10H34V18Z" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 38h12v10H18V38Z" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M34 38h12v10H34V38Z" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M30 23h4M30 43h4" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-admin-model" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBFF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#42A7C4" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M22 22h20v20H22V22Z" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M28 28h8v8h-8V28Z" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 26h4M18 34h4M42 26h4M42 34h4M26 18v4M34 18v4M26 42v4M34 42v4" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-admin-prompt" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M17 18h30v28H17V18Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 27l6 5-6 5" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 38h9" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-admin-template" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF5EE"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#EF8A55" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M18 14h28v36H18V14Z" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 23h16M24 31h8M36 31h4M24 39h16" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-admin-material" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M18 18h10v30H18V18Z" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M28 18h10v30H28V18Z" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M39 21l8 25" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M21 26h4M31 26h4" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-admin-agent" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F7F5FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#8B79E6" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M22 24h20a7 7 0 0 1 7 7v11a7 7 0 0 1-7 7H22a7 7 0 0 1-7-7V31a7 7 0 0 1 7-7Z" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 15v9" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M25 35h.1M39 35h.1" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M26 43h12" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-admin-connector" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#ECFBF8"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#53B7AA" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M27 39l-3 3a8 8 0 0 1-11-11l5-5a8 8 0 0 1 11 0" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M37 25l3-3a8 8 0 0 1 11 11l-5 5a8 8 0 0 1-11 0" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M25 37l14-14" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-admin-audit" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF8E5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#D99A00" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M20 15h24v36H20V15Z" fill="none" stroke="#D99A00" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M26 25h12M26 33h12M26 41h7" fill="none" stroke="#D99A00" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M39 43l3 3 6-9" fill="none" stroke="#D99A00" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-admin-system" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F5F7FA"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#7D899A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 24a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 12v7M32 45v7M18 18l5 5M41 41l5 5M12 32h7M45 32h7M18 46l5-5M41 23l5-5" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-model-main" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBFF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#42A7C4" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M22 22h20v20H22V22Z" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M28 28h8v8h-8V28Z" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 26h4M18 34h4M42 26h4M42 34h4M26 18v4M34 18v4M26 42v4M34 42v4" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-model-deep-thinking" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F7F5FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#8B79E6" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M25 18c-6 2-8 12-3 17-5 6 0 15 8 14M39 18c6 2 8 12 3 17 5 6 0 15-8 14" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M31 18v31M26 30h10M28 39h8" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-model-reasoning" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M20 24a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M44 24a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 50a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 22l6 18M40 22l-6 18M25 19h14" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-model-test" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBF4"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#51B77A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M15 35h9l4-13 8 24 4-11h9" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-model-key" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF8E5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#D99A00" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M24 38a10 10 0 1 1 8-4l17 17-5 0v-5h-5v-5h-5l-4-4a10 10 0 0 1-6 1Z" fill="none" stroke="#D99A00" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M22 26h.1" fill="none" stroke="#D99A00" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-model-secure" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBF4"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#51B77A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 13l17 6v12c0 10-7 18-17 22-10-4-17-12-17-22V19l17-6Z" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 33l6 6 12-14" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-add" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 17v30M17 32h30" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-upload" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBF4"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#51B77A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 45V22" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 31l9-9 9 9" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 48h28" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-download" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 17v26" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 34l9 9 9-9" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 49h28" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-save" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#ECFBF8"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#53B7AA" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M18 16h24l6 6v26H18V16Z" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 16v12h16V16" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M25 40h14" fill="none" stroke="#53B7AA" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-edit" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF5EE"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#EF8A55" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M20 44l4-11 18-18 7 7-18 18-11 4Z" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M37 20l7 7" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-delete" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M20 23h24" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M26 23v-6h12v6" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 23l2 27h12l2-27" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M30 30v13M36 30v13" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-search" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F5F7FA"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#7D899A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M28 18a11 11 0 1 0 0 22 11 11 0 0 0 0-22Z" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M37 37l10 10" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-refresh" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M44 24a14 14 0 0 0-24-5l-4 5" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M16 24h10" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M20 40a14 14 0 0 0 24 5l4-5" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M48 40H38" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-send" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M15 32l35-16-10 32-8-13-17-3Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 35l18-19" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-back" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F5F7FA"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#7D899A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M38 20 26 32l12 12" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M27 32h24" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-next" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M26 20l12 12-12 12" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M13 32h25" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-close" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F5F7FA"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#7D899A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M22 22l20 20M42 22 22 42" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-more" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F5F7FA"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#7D899A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M21 32h.1M32 32h.1M43 32h.1" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-filter" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F7F5FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#8B79E6" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M17 20h30L36 33v14l-8 4V33L17 20Z" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-pin" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF8E5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#D99A00" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M35 13l16 16-8 2-8 12-5-5 12-8-7-7Z" fill="none" stroke="#D99A00" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M29 39 18 50" fill="none" stroke="#D99A00" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-action-copy" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M24 20h22v26H24V20Z" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 28v18h18" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-status-success" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBF4"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#51B77A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M20 33l8 8 17-18" fill="none" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-status-warning" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF8E5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#D99A00" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 15l20 35H12L32 15Z" fill="none" stroke="#D99A00" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 27v10M32 43h.1" fill="none" stroke="#D99A00" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-status-error" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 14a18 18 0 1 0 0 36 18 18 0 0 0 0-36Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M25 25l14 14M39 25 25 39" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-status-info" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 14a18 18 0 1 0 0 36 18 18 0 0 0 0-36Z" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 29v12M32 23h.1" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-status-loading" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBFF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#42A7C4" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 14a18 18 0 0 1 18 18" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 50a18 18 0 0 1-18-18" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M45 19l5 1-1-5" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-security-shield" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFFBF4"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#51B77A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 13l17 6v12c0 10-7 18-17 22-10-4-17-12-17-22V19l17-6Z" fill="#51B77A" fill-opacity=".18" stroke="#51B77A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-security-lock" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F5F7FA"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#7D899A" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M22 29v-6a10 10 0 0 1 20 0v6" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M19 29h26v20H19V29Z" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 37v5" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-security-trusted" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#FFF2F5"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#E84D63" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M17 24h30v20a4 4 0 0 1-4 4H21a4 4 0 0 1-4-4V24Z" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 24v-4a8 8 0 0 1 16 0v4" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M27 36l4 4 8-9" fill="none" stroke="#E84D63" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-user-avatar" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#EFF8FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#58A9EE" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 31a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 50c3-12 25-12 28 0" fill="none" stroke="#58A9EE" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="prototype-icon-expert-avatar" viewBox="0 0 64 64">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="#F7F5FF"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#8B79E6" stroke-opacity=".10" stroke-width=".8"/>
+    <path d="M32 30a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 50c3-12 25-12 28 0" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M44 15l2 5 5 2-5 2-2 5-2-5-5-2 5-2Z" fill="none" stroke="#8B79E6" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</svg>

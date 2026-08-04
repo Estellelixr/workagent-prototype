@@ -1,0 +1,25 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lock icon">
+  <defs>
+    <linearGradient id="security-lock-bg" x1="12" y1="9" x2="52" y2="55" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset=".48" stop-color="#F5F7FA"/>
+      <stop offset="1" stop-color="#E8EEF5"/>
+    </linearGradient>
+    <radialGradient id="security-lock-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(28 24) rotate(47) scale(28 24)">
+      <stop stop-color="#FFFFFF" stop-opacity=".92"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="security-lock-shadow" x="0" y="0" width="64" height="64" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#526070" flood-opacity=".12"/>
+    </filter>
+  </defs>
+  <g filter="url(#security-lock-shadow)">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="url(#security-lock-bg)"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#7D899A" stroke-opacity=".10" stroke-width=".8"/>
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="url(#security-lock-glow)"/>
+    <path d="M22 29v-6a10 10 0 0 1 20 0v6" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M19 29h26v20H19V29Z" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 37v5" fill="none" stroke="#7D899A" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

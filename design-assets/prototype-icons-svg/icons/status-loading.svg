@@ -1,0 +1,25 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Loading icon">
+  <defs>
+    <linearGradient id="status-loading-bg" x1="12" y1="9" x2="52" y2="55" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset=".48" stop-color="#EFFBFF"/>
+      <stop offset="1" stop-color="#D9F3FA"/>
+    </linearGradient>
+    <radialGradient id="status-loading-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(28 24) rotate(47) scale(28 24)">
+      <stop stop-color="#FFFFFF" stop-opacity=".92"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="status-loading-shadow" x="0" y="0" width="64" height="64" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#14758D" flood-opacity=".12"/>
+    </filter>
+  </defs>
+  <g filter="url(#status-loading-shadow)">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="url(#status-loading-bg)"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#42A7C4" stroke-opacity=".10" stroke-width=".8"/>
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="url(#status-loading-glow)"/>
+    <path d="M32 14a18 18 0 0 1 18 18" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 50a18 18 0 0 1-18-18" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M45 19l5 1-1-5" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,20 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Database icon">
+  <defs>
+    <linearGradient id="db-page" x1="15" y1="8" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EBFAF7"/>
+    </linearGradient>
+    <filter id="db-shadow" x="6" y="5" width="52" height="58" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#345986" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <g filter="url(#db-shadow)">
+    <path d="M18 8h21.5L50 18.5V52a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4Z" fill="url(#db-page)"/>
+    <path d="M39.5 8v10.5H50" fill="#EBFAF7"/>
+    <path d="M18 8h21.5L50 18.5V52a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4Z" stroke="#0F766E" stroke-opacity="0.52" stroke-width="2"/>
+    <path d="M39.5 8v10.5H50" stroke="#0F766E" stroke-opacity="0.44" stroke-width="2" stroke-linejoin="round"/>
+    <ellipse cx="31" cy="23" rx="12" ry="5" fill="#0F766E" opacity=".16" stroke="#0F766E" stroke-width="2.8"/><path d="M19 23v16c0 2.8 5.4 5 12 5s12-2.2 12-5V23M19 31c0 2.8 5.4 5 12 5s12-2.2 12-5" fill="none" stroke="#0F766E" stroke-width="2.8"/>
+    <rect x="30" y="45" width="24" height="15" rx="5" fill="#0F766E"/>
+    <text x="42" y="55.5" fill="white" font-family="Inter, Arial, sans-serif" font-size="7.5" font-weight="800" text-anchor="middle">DB</text>
+  </g>
+</svg>

@@ -1,0 +1,181 @@
+{
+  "success": true,
+  "code": "0",
+  "msg": "成功",
+  "total": 15,
+  "data": [
+    {
+      "name": "通知",
+      "id": "d44caf79a1a84680abe471aae845292a",
+      "children": [
+        { "name": "工作事务通知", "suggestedTitle": "（单位/部门名称）关于做好XXX工作事务的通知", "id": "3a08bce30d444265904326e06d5270a9", "imitate": true },
+        { "name": "开展活动通知", "suggestedTitle": "（单位/部门名称）关于开展/组织/举办/召开XXX活动的通知", "id": "c20cd170c0824057b2faa1f5702a5372", "imitate": true },
+        { "name": "召开会议通知", "suggestedTitle": "（单位/部门名称）关于召开XXX会议的通知", "id": "8aecdfaa9f4546c59cdf09168d7f9ce0", "imitate": true },
+        { "name": "举办比赛通知", "suggestedTitle": "（单位/部门名称）关于举办/开展/组织XXX比赛的通知", "id": "48d8e0cb10be4a0bb6065dfb3f7b5d89", "imitate": true },
+        { "name": "人事任免通知", "suggestedTitle": "（单位/部门名称）关于XXX同志的任免通知", "id": "3051a07f88e04e5aad7457e3de12d83f", "imitate": true },
+        { "name": "转发类通知", "suggestedTitle": "（单位/部门名称）关于转发《XXX》的通知", "id": "a642d9793d674f879f31392c45227b4f", "imitate": true },
+        { "name": "批转类通知", "suggestedTitle": "（单位/部门名称）关于批转《XXX》的通知", "id": "5d4376964b164f579cd0ec26273b37c4", "imitate": true },
+        { "name": "印发类通知", "suggestedTitle": "（单位/部门名称）关于印发《XXX》的通知", "id": "3a5e1cd559e44c368eaee34787b4f400", "imitate": true },
+        { "name": "其它通知", "suggestedTitle": "（单位/部门名称）关于XXX的通知", "id": "50582db7cadb40c4bbb1cebde6c9cb80", "imitate": false }
+      ]
+    },
+    {
+      "name": "讲话稿",
+      "id": "a223ba91722d4f08a3efec697f23f66e",
+      "children": [
+        { "name": "会议活动受邀致辞", "suggestedTitle": "XXX同志在XXX（会议/活动）上的讲话/致辞", "id": "be2a2b9e28e84953be9930296a1a8ecd", "imitate": false },
+        { "name": "会议总结讲话", "suggestedTitle": "XXX同志在XXX会议上的总结讲话", "id": "3f65aff062414d59ae09301b7657f461", "imitate": false },
+        { "name": "工作报告讲话", "suggestedTitle": "XXX同志在XXX工作会议上作报告讲话", "id": "1051dcd66bca4cc3862b5437fec4824f", "imitate": false },
+        { "name": "工作部署讲话", "suggestedTitle": "XXX同志在XXX工作部署会上的讲话", "id": "38c07e33f49d47e98ff376c933e778bd", "imitate": false },
+        { "name": "社会问题评论", "suggestedTitle": "XXX同志对XXX社会生活问题的点评", "id": "2f920cb840ea4d8ba6fab522b0f7a6e1", "imitate": false },
+        { "name": "节日庆典讲话", "suggestedTitle": "XXX同志在XXX（节日/庆典）上的致辞/讲话", "id": "133208c888104b7987d117e7ef339399", "imitate": false },
+        { "name": "政策解读讲话", "suggestedTitle": "XXX同志对《XXX》的解读讲话", "id": "1b809c2372e24cc1b08ab35515883449", "imitate": false },
+        { "name": "学术会议讲话", "suggestedTitle": "XXX同志在XXX学术研讨会上的致辞", "id": "aeccc64ddffb46a3ba98c45a08111ba5", "imitate": false },
+        { "name": "开幕式致辞", "suggestedTitle": "XXX同志在XXX（活动/会议名称）开幕式上的讲话", "id": "4960007f00c049fba5628efd9f7a4398", "imitate": false },
+        { "name": "闭幕式致辞", "suggestedTitle": "XXX同志在XXX（活动/会议名称）闭幕式上的讲话", "id": "36733cb4e9424391bc2674ab2295ca28", "imitate": false },
+        { "name": "追悼会致辞", "suggestedTitle": "XXX同志在XXX同志追悼大会上的悼词", "id": "a64def87931a430d91265800f07cb48c", "imitate": false },
+        { "name": "纪念会致辞", "suggestedTitle": "XXX同志在纪念XXX同志大会上的讲话", "id": "dccaad1ed68e443d9b2f02f2d892c412", "imitate": false },
+        { "name": "动员讲话稿", "suggestedTitle": "XXX同志在XXX（活动/会议）动员部署会上的发言", "id": "67b3cda01bfe490d85a9820f4f9a4bae", "imitate": false },
+        { "name": "其它讲话稿", "suggestedTitle": "在XXX大会/活动/会议上的发言", "id": "ee6a3083ea1e428787ee2727f8a607d9", "imitate": false }
+      ]
+    },
+    {
+      "name": "方案",
+      "id": "95b9f23e39024733b1ce73a89b5840eb",
+      "children": [
+        { "name": "工作方案", "suggestedTitle": "关于XXX工作的行动/实施方案", "id": "456975fb5b3b4607a5cf0e64740a7ca1", "imitate": false },
+        { "name": "活动方案", "suggestedTitle": "关于XXX工作的活动方案", "id": "8af198ff7f42497388ad706afc4a86f5", "imitate": false },
+        { "name": "整治方案", "suggestedTitle": "关于XXX问题/不合规事件的专项整治方案", "id": "ccec4bc8655b4e079711401c8a2df499", "imitate": false },
+        { "name": "调研方案", "suggestedTitle": "关于组织开展XXX的调研行动方案", "id": "6ae8574cd5fd47569e44203e3829f2d3", "imitate": false },
+        { "name": "会议方案", "suggestedTitle": "关于XXXX的会议工作方案", "id": "9c306b54cfba464ea43e83383af50872", "imitate": false },
+        { "name": "其它方案", "suggestedTitle": "关于XXXX的方案", "id": "9465193380ba484ab948d18d8af354db", "imitate": false }
+      ]
+    },
+    {
+      "name": "报告",
+      "id": "61c90a15a2984ed683d71de9a040e54f",
+      "children": [
+        { "name": "年度报告", "suggestedTitle": "（单位/部门名称）XXXX年XXX工作事项的年度报告", "id": "c56c113a7fcf4c0f9c23598b6dac5296", "imitate": false },
+        { "name": "季度报告", "suggestedTitle": "（单位/部门名称）XXXX年XX季度XXX工作事项的报告", "id": "054a7fec09884335a4b88cbab05e2082", "imitate": false },
+        { "name": "专项工作报告", "suggestedTitle": "（单位/部门名称）关于XXX专项工作事项的报告", "id": "f0d9e41104db48e0882b9785f7cb5ca9", "imitate": false },
+        { "name": "答复报告", "suggestedTitle": "（单位/部门名称）关于XXX工作事项的答复/回复报告", "id": "e181902978b149b98e56ab441fde50cd", "imitate": false },
+        { "name": "报送报告", "suggestedTitle": "关于报送《XXX》的报告", "id": "f97f6ea9ca85472d87b6792e633e3051", "imitate": false },
+        { "name": "会议情况报告", "suggestedTitle": "关于XXX会议情况的报告", "id": "39aa6253fbfd46b787d940645e35f067", "imitate": false },
+        { "name": "紧急报告", "suggestedTitle": "关于XXX紧急事件的紧急报告", "id": "7607b0344eba4ab68e115fb9a3174d99", "imitate": false },
+        { "name": "行业发展报告", "suggestedTitle": "XXX行业发展报告", "id": "a12e8fb2959248c19c273b971cacacaa", "imitate": false },
+        { "name": "其它报告", "suggestedTitle": "（单位/部门名称）关于XXX的报告", "id": "7006ff1cc1e74d65a44f0bf25b40acbd", "imitate": false }
+      ]
+    },
+    {
+      "name": "函",
+      "id": "7dd28835ea4f4a7c8805d686db6ba705",
+      "children": [
+        { "name": "工作商洽函", "suggestedTitle": "（部门/单位名称）关于商请XXX事宜的函", "id": "4ce8d6c731464c3b95d05f3aba73638e", "imitate": true },
+        { "name": "参观拜访函", "suggestedTitle": "（部门/单位名称）关于赴XXX（参观拜访地点）拜访的函", "id": "eb08837f34fa44c59edbb014b1be7f37", "imitate": true },
+        { "name": "问题询问函", "suggestedTitle": "（部门/单位名称）关于咨询/询问XXX事宜的函", "id": "ae64f19e4d554ee9ba849420174b1357", "imitate": true },
+        { "name": "问题答复函", "suggestedTitle": "（部门/单位名称）关于回复XXX问题的答复函", "id": "d56320a070fc4b32b71c9782d38680b4", "imitate": true },
+        { "name": "请求批准函", "suggestedTitle": "（部门/单位名称）关于请求/申请XXX事宜的函", "id": "613f612607de4150860a214c1c349fc3", "imitate": true },
+        { "name": "审批答复函", "suggestedTitle": "（部门/单位名称）关于（同意/不同意）XXX事项的复函", "id": "c5f78763f5ba4c22b7fb647355fc0ec5", "imitate": true },
+        { "name": "告知函", "suggestedTitle": "（部门/单位名称）关于XXX事项的告知函", "id": "ab58805dc63649b6aecc17124577c90e", "imitate": true },
+        { "name": "公开征求意见函", "suggestedTitle": "（部门/单位名称）关于公开征求《XXX（征求意见稿）》意见的函", "id": "622bb3c98be6456cb0e78501b801c3d8", "imitate": true },
+        { "name": "面向司局征求意见函", "suggestedTitle": "（部门/单位名称）关于征求《XXX（征求意见稿）》意见的函", "id": "9ba3954170f94d14a4ed0fa3c7a03e66", "imitate": true },
+        { "name": "邀请函", "suggestedTitle": "（活动/会议名称）+邀请函", "id": "ada823e3afe848cf9fdee647f3dd7c58", "imitate": true },
+        { "name": "复函", "suggestedTitle": "（XXX单位）关于对XXX事项意见的回复/的复函", "id": "7da56658654648afb776c8e49370eeae", "imitate": true },
+        { "name": "人大建议复文", "suggestedTitle": "对XXX会议第XXX号建议的答复", "id": "b01a04dad6da45828e48b1c6b90bb824", "imitate": true },
+        { "name": "政协提案复文", "suggestedTitle": "关于XXX会议XXX号提案答复的函", "id": "81b29aa2d5ea491599c539d5948561da", "imitate": true },
+        { "name": "其它函", "suggestedTitle": "（部门/单位名称）关于XXX事项的函", "id": "5469820fb77b40eaaff96a12a156f063", "imitate": false }
+      ]
+    },
+    {
+      "name": "会议纪要",
+      "id": "90d981f44fe64850b128974663ecb578",
+      "children": [
+        { "name": "工作例会会议纪要", "suggestedTitle": "XXX单位XXX年度工作例会会议纪要", "id": "d5d7ed43915b4827be0eafcd0436efc3", "imitate": false },
+        { "name": "专项工作会议纪要", "suggestedTitle": "（专项工作会议名称）+专题会议纪要", "id": "19420e32d2fa4e53a9f840abc66b118c", "imitate": false },
+        { "name": "问题研讨会会议纪要", "suggestedTitle": "关于XXX问题的会议纪要", "id": "18e644e2e2c0428e9ea93cce95408a63", "imitate": false },
+        { "name": "主题座谈会会议纪要", "suggestedTitle": "XXX工作/调研座谈会会议纪要", "id": "86eeb714e65c4d7ab312aef80d3fbb25", "imitate": false },
+        { "name": "培训会议纪要", "suggestedTitle": "XXX培训会议纪要", "id": "9eff41fafd6549d1ba441d0ea2272613", "imitate": false },
+        { "name": "常务会议纪要", "suggestedTitle": "会议名称+常务会议纪要", "id": "11ac8bf9f8c940159a2ff7b3d0aa13f2", "imitate": true },
+        { "name": "办公会议纪要", "suggestedTitle": "会议名称+办公会会议纪要", "id": "d8e8158420ed49db98d185e846c0d80c", "imitate": true },
+        { "name": "党组会议纪要", "suggestedTitle": "会议名称+党组会议纪要", "id": "80753700256a4b19bc0ba7df1d327ad2", "imitate": true },
+        { "name": "党政联席会议纪要", "suggestedTitle": "会议名称+党政联席会议纪要", "id": "8a3d9fac42b5456d9be008ba6ca91113", "imitate": true },
+        { "name": "党组（扩大）会议纪要", "suggestedTitle": "会议名称+党组（扩大）会议纪要", "id": "fe030b44166c431489774f9a7470dbc3", "imitate": true },
+        { "name": "专题会议纪要", "suggestedTitle": "关于XXX事宜的专题会议纪要", "id": "07e61d15e50b4532ab8bf8b5dd96431a", "imitate": true },
+        { "name": "协调性会议纪要", "suggestedTitle": "XXX单位关于XXX事宜的协调会议纪要", "id": "96d0c85e9b2043548d0633091742214e", "imitate": true },
+        { "name": "其它会议纪要", "suggestedTitle": "会议名称/会议事项+纪要", "id": "bcfec03a62ce436db365f0b3232fdbdb", "imitate": false }
+      ]
+    },
+    {
+      "name": "请示",
+      "id": "7df598df00d14c6bb746e58845daf252",
+      "children": [
+        { "name": "资金费用申请请示", "suggestedTitle": "（单位/部门名称）关于申请拨付XXXX经费的请示", "id": "1d697fa0ad8c4978ab63062f5c868767", "imitate": true },
+        { "name": "材料上报审定印发请示", "suggestedTitle": "（单位/部门名称）关于提请印发《XXX》的请示", "id": "65ad87ec446b4ebfa57c49e1e416a4ad", "imitate": true },
+        { "name": "重大决策事项请求审定请示", "suggestedTitle": "（单位/部门名称）关于提请审议/审批《XXX》的请示", "id": "5a0cab6808a046ff8f9fb8ca8dc0fd69", "imitate": true },
+        { "name": "回复意见请示", "suggestedTitle": "（单位/部门名称）关于回复《XXX》的请示", "id": "931d87a0dcff4d9ca4855070e91b99cf", "imitate": true },
+        { "name": "组织成立请示", "suggestedTitle": "（单位/部门名称）关于成立XXX组织机构的请示", "id": "caa98407b0034a5e959bbb9c412cb65f", "imitate": true },
+        { "name": "其它请示", "suggestedTitle": "（部门/单位名称）关于XXX事项的请示", "id": "6b6ed1cff6294701b97e25812f3c2cc4", "imitate": false }
+      ]
+    },
+    {
+      "name": "批复",
+      "id": "580b76e529fa4b89ae50dc7884b0975b",
+      "suggestedTitle": "（部门/单位名称）关于对XXX事项的批复",
+      "children": [
+        { "name": "表态式批复", "suggestedTitle": "XXX单位关于同意XXX事宜的批复", "id": "6f86aa4add4f4d9398b088f95ce979ba", "imitate": true },
+        { "name": "阐发式批复", "suggestedTitle": "关于XXX的批复", "id": "3587ca7126e0439783a7a8bbc64624b8", "imitate": true },
+        { "name": "否定性批复", "suggestedTitle": "XXX单位关于不同意XXX事宜的批复", "id": "323b144d33e3428580ead820ef508b4d", "imitate": true }
+      ]
+    },
+    {
+      "name": "决定",
+      "id": "09fb6a030cd14cf080f6c4a6cef0e563",
+      "suggestedTitle": "（部门/单位名称）关于对XXX事项的决定",
+      "children": []
+    },
+    {
+      "name": "意见",
+      "id": "b0eeaef4ec9849c2a8f2141ec1c1b035",
+      "suggestedTitle": "（部门/单位名称）关于XXX事项的意见",
+      "children": []
+    },
+    {
+      "name": "通告",
+      "id": "f6d1c16242644ae7837e077b370a0859",
+      "suggestedTitle": "（部门/单位名称）关于对XXX事项名称的通告",
+      "children": []
+    },
+    {
+      "name": "通报",
+      "id": "c51cf27b2794470f9b2aefb588470475",
+      "children": [
+        { "name": "表彰性通报", "suggestedTitle": "（部门/单位名称）关于对XXX事项名称的通报", "id": "0f31ae03c38448b696c6ba7a24a19d11", "imitate": false },
+        { "name": "批评性通报", "suggestedTitle": "XXX单位关于对XXX予以批评的通报", "id": "f43def2347414135ad33835628508857", "imitate": false },
+        { "name": "工作事务类情况通报", "suggestedTitle": "XXX单位关于XXX事宜的情况通报", "id": "bdfd55d8af47495896af89cce2710003", "imitate": false },
+        { "name": "事故处理类通报", "suggestedTitle": "XXXX单位关于对XXXX事故的通报", "id": "db46e1847ead40bb951e1bb9caac2032", "imitate": true },
+        { "name": "巡查整改情况通报", "suggestedTitle": "XXX单位关于巡查整改情况的通报", "id": "c4788d379f284b8d951d5b0dc5ea2892", "imitate": true }
+      ]
+    },
+    {
+      "name": "学习心得",
+      "id": "8fdc185f7b8b423098501b1eabc32d7f",
+      "suggestedTitle": "关于XXX事项的心得体会",
+      "children": []
+    },
+    {
+      "name": "命令",
+      "id": "97e554617bb146fbafa5a35b9e4e57a1",
+      "children": [
+        { "name": "公布令", "suggestedTitle": "XXX单位令", "id": "0bc2f70da3084961bf6d244936edb931", "imitate": true },
+        { "name": "嘉奖令", "suggestedTitle": "XXX单位关于对XXX的嘉奖令", "id": "1e0ebd38463d455caedd7131881a5ac2", "imitate": true },
+        { "name": "任免令", "suggestedTitle": "XXX单位任免令", "id": "bcc2fbd7cec548918cfa2b38fd774be5", "imitate": true }
+      ]
+    },
+    {
+      "name": "通用公文",
+      "id": "c7c05e749c7a4dcb8cf5e8ea372c093c",
+      "suggestedTitle": "关于XXX工作的行动/实施方案",
+      "children": []
+    }
+  ]
+}

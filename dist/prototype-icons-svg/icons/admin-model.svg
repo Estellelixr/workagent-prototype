@@ -1,0 +1,25 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Model management icon">
+  <defs>
+    <linearGradient id="admin-model-bg" x1="12" y1="9" x2="52" y2="55" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset=".48" stop-color="#EFFBFF"/>
+      <stop offset="1" stop-color="#D9F3FA"/>
+    </linearGradient>
+    <radialGradient id="admin-model-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(28 24) rotate(47) scale(28 24)">
+      <stop stop-color="#FFFFFF" stop-opacity=".92"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="admin-model-shadow" x="0" y="0" width="64" height="64" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#14758D" flood-opacity=".12"/>
+    </filter>
+  </defs>
+  <g filter="url(#admin-model-shadow)">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="url(#admin-model-bg)"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#42A7C4" stroke-opacity=".10" stroke-width=".8"/>
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="url(#admin-model-glow)"/>
+    <path d="M22 22h20v20H22V22Z" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M28 28h8v8h-8V28Z" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 26h4M18 34h4M42 26h4M42 34h4M26 18v4M34 18v4M26 42v4M34 42v4" fill="none" stroke="#42A7C4" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

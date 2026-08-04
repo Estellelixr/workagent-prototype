@@ -1,0 +1,20 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Word document icon">
+  <defs>
+    <linearGradient id="doc-page" x1="15" y1="8" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EAF4FF"/>
+    </linearGradient>
+    <filter id="doc-shadow" x="6" y="5" width="52" height="58" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#345986" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <g filter="url(#doc-shadow)">
+    <path d="M18 8h21.5L50 18.5V52a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4Z" fill="url(#doc-page)"/>
+    <path d="M39.5 8v10.5H50" fill="#EAF4FF"/>
+    <path d="M18 8h21.5L50 18.5V52a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4Z" stroke="#3B82D6" stroke-opacity="0.52" stroke-width="2"/>
+    <path d="M39.5 8v10.5H50" stroke="#3B82D6" stroke-opacity="0.44" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M19 27h22M19 34h18M19 41h24" fill="none" stroke="#3B82D6" stroke-width="3.2" stroke-linecap="round"/>
+    <rect x="30" y="45" width="24" height="15" rx="5" fill="#3B82D6"/>
+    <text x="42" y="55.5" fill="white" font-family="Inter, Arial, sans-serif" font-size="7.5" font-weight="800" text-anchor="middle">DOC</text>
+  </g>
+</svg>

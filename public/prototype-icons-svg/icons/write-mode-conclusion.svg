@@ -1,0 +1,25 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Conclusion icon">
+  <defs>
+    <linearGradient id="write-mode-conclusion-bg" x1="12" y1="9" x2="52" y2="55" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset=".48" stop-color="#FFF5EE"/>
+      <stop offset="1" stop-color="#FFE6D6"/>
+    </linearGradient>
+    <radialGradient id="write-mode-conclusion-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(28 24) rotate(47) scale(28 24)">
+      <stop stop-color="#FFFFFF" stop-opacity=".92"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="write-mode-conclusion-shadow" x="0" y="0" width="64" height="64" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#BA5626" flood-opacity=".12"/>
+    </filter>
+  </defs>
+  <g filter="url(#write-mode-conclusion-shadow)">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="url(#write-mode-conclusion-bg)"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#EF8A55" stroke-opacity=".10" stroke-width=".8"/>
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="url(#write-mode-conclusion-glow)"/>
+    <path d="M19 18h26v28H19V18Z" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M25 27h14M25 35h9" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M39 42l5 5 8-11" fill="none" stroke="#EF8A55" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
