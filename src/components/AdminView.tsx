@@ -38,6 +38,7 @@ import {
   Users
 } from 'lucide-react';
 import PrototypeIcon from './PrototypeIcon';
+import { DEFAULT_PRODUCT_ICON_URL, resolvePublicAssetUrl } from '../utils/publicAsset';
 
 interface AdminViewProps {
   section: AdminSection;
@@ -2443,7 +2444,7 @@ function SystemManagementAdmin({ subSection }: { subSection: AdminSubSection }) 
 
 const HOME_APPEARANCE_STORAGE_KEY = 'workagent-home-appearance';
 const DEFAULT_HOME_APPEARANCE = {
-  logoUrl: '/product-icon.jpg',
+  logoUrl: DEFAULT_PRODUCT_ICON_URL,
   productName: '金山政务一体机',
   slogan: '一步开启高效公文写作新体验',
 };
@@ -2509,7 +2510,7 @@ function AppearanceManagementPanel() {
           <div className="rounded-[14px] border border-black/[0.06] bg-[#fbfbfc] p-5">
             <p className="text-[13px] font-bold text-[#202124]">首页 Logo</p>
             <div className="mt-4 flex items-center gap-4">
-              <img src={appearanceDraft.logoUrl} alt="首页 Logo 预览" className="h-20 w-20 rounded-[22px] border border-white object-cover shadow-[0_16px_38px_rgba(176,64,70,0.16)]" />
+              <img src={resolvePublicAssetUrl(appearanceDraft.logoUrl)} alt="首页 Logo 预览" className="h-20 w-20 rounded-[22px] border border-white object-cover shadow-[0_16px_38px_rgba(176,64,70,0.16)]" />
               <div className="min-w-0 flex-1">
                 <label className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-[9px] border border-[var(--gov-red-line)] bg-white px-4 text-[12px] font-semibold text-[var(--gov-red-deep)] transition hover:bg-[var(--gov-red-soft)]">
                   <FileUp size={14} />
@@ -2543,14 +2544,14 @@ function AppearanceManagementPanel() {
           <div className="relative flex min-h-[420px] items-center justify-center">
             <div className="w-full max-w-[760px] rounded-[22px] border border-white/80 bg-white/82 p-8 shadow-[0_26px_80px_rgba(15,23,42,0.10)] backdrop-blur">
               <div className="flex items-center gap-3">
-                <img src={appearanceDraft.logoUrl} alt="首页 Logo" className="h-14 w-14 rounded-[17px] object-cover shadow-[0_12px_30px_rgba(176,64,70,0.14)]" />
+                <img src={resolvePublicAssetUrl(appearanceDraft.logoUrl)} alt="首页 Logo" className="h-14 w-14 rounded-[17px] object-cover shadow-[0_12px_30px_rgba(176,64,70,0.14)]" />
                 <div>
                   <p className="text-[16px] font-bold text-[#202124]">{appearanceDraft.productName || DEFAULT_HOME_APPEARANCE.productName}</p>
                   <p className="mt-1 text-[12px] text-[#98a2b3]">首页品牌预览</p>
                 </div>
               </div>
               <div className="mt-10 text-center">
-                <img src={appearanceDraft.logoUrl} alt="首页主 Logo" className="mx-auto h-20 w-20 rounded-[22px] border border-white object-cover shadow-[0_18px_38px_rgba(176,64,70,0.18)]" />
+                <img src={resolvePublicAssetUrl(appearanceDraft.logoUrl)} alt="首页主 Logo" className="mx-auto h-20 w-20 rounded-[22px] border border-white object-cover shadow-[0_18px_38px_rgba(176,64,70,0.18)]" />
                 <h2 className="mt-6 text-[30px] font-semibold leading-tight tracking-normal text-[#202124]">
                   全能助手，<span className="text-[var(--gov-red-deep)]">{appearanceDraft.slogan || DEFAULT_HOME_APPEARANCE.slogan}</span>
                 </h2>
@@ -2990,7 +2991,7 @@ function MenuManagementPanel() {
   const [expandedMenuIds, setExpandedMenuIds] = useState<Set<string>>(() => new Set(['menu-home', 'menu-doc', 'menu-write', 'menu-polish', 'menu-knowledge', 'menu-admin', 'menu-admin-user', 'menu-admin-role']));
   const [menuEditor, setMenuEditor] = useState<{ mode: 'create' | 'edit'; parentId?: string; menuId?: string } | null>(null);
   const [menuDraft, setMenuDraft] = useState<AdminMenuRecord | null>(null);
-  const defaultIconUrl = '/product-icon.jpg';
+  const defaultIconUrl = DEFAULT_PRODUCT_ICON_URL;
 
   const openMenuEditor = (mode: 'create' | 'edit', menu?: AdminMenuRecord, parentId?: string) => {
     setMenuEditor({ mode, menuId: menu?.id, parentId });

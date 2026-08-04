@@ -36,6 +36,7 @@ import WorkflowsView from './components/WorkflowsView';
 import AdminView from './components/AdminView';
 import PrototypeIcon from './components/PrototypeIcon';
 import { DEFAULT_HOME_EXPERT_ID, HOME_EXPERTS, HomeExpertId } from './homeExperts';
+import { DEFAULT_PRODUCT_ICON_URL, resolvePublicAssetUrl } from './utils/publicAsset';
 
 import { Bell, Bot, CheckCircle, ChevronDown, ChevronRight, ClipboardList, Clock, FileSearch, FileText, Folder, History, Home, KeyRound, Layers, Link2, LockKeyhole, LogOut, MessageCircle, MoreHorizontal, Network, PenTool, Pin, Plus, RefreshCw, Search, Settings, ShieldCheck, SlidersHorizontal, Sparkles, Stamp, Trash2, UserRound, Users } from 'lucide-react';
 
@@ -103,7 +104,7 @@ export type HomeAppearance = {
 };
 
 export const DEFAULT_HOME_APPEARANCE: HomeAppearance = {
-  logoUrl: '/product-icon.jpg',
+  logoUrl: DEFAULT_PRODUCT_ICON_URL,
   productName: '金山政务一体机',
   slogan: '一步开启高效公文写作新体验'
 };
@@ -686,7 +687,7 @@ export default function App() {
       return (
         <div className="flex min-h-full flex-col">
           <div className="mb-5 flex items-center gap-3 px-2">
-            <img src={homeAppearance.logoUrl} alt="产品 logo" className="h-11 w-11 rounded-[14px] object-cover shadow-[0_8px_20px_rgba(176,64,70,0.10)]" />
+            <img src={resolvePublicAssetUrl(homeAppearance.logoUrl)} alt="产品 logo" className="h-11 w-11 rounded-[14px] object-cover shadow-[0_8px_20px_rgba(176,64,70,0.10)]" />
             <span className="text-[15px] font-semibold text-[#1f2329]">{homeAppearance.productName}</span>
           </div>
 
@@ -1552,7 +1553,7 @@ function LoginView({ captcha, onRefreshCaptcha, onLogin }: LoginViewProps) {
       <div className="pointer-events-none absolute inset-0 opacity-[0.11] [background-image:linear-gradient(rgba(214,54,75,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(214,54,75,0.04)_1px,transparent_1px)] [background-size:42px_42px]" />
       <div className="pointer-events-none absolute bottom-[-20%] right-[-12%] h-[540px] w-[540px] rounded-full bg-[radial-gradient(circle,rgba(231,77,94,0.08)_0,rgba(231,77,94,0.01)_64%,transparent_74%)] blur-2xl" />
       <img
-        src="/product-icon.jpg"
+        src={DEFAULT_PRODUCT_ICON_URL}
         alt=""
         aria-hidden="true"
         className="pointer-events-none absolute bottom-[-150px] right-[-128px] h-[640px] w-[640px] select-none rounded-[150px] object-cover opacity-[0.12] saturate-[0.95] blur-[0.15px] md:h-[760px] md:w-[760px]"

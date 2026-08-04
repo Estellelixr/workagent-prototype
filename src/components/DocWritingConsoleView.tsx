@@ -38,6 +38,7 @@ import WebOfficeEditor from './WebOfficeEditor';
 import PrototypeIcon from './PrototypeIcon';
 import { DocumentInfo } from '../types';
 import { DEFAULT_HOME_EXPERT_ID, HOME_EXPERTS, HomeExpertId, getHomeExpertById } from '../homeExperts';
+import { DEFAULT_PRODUCT_ICON_URL, resolvePublicAssetUrl } from '../utils/publicAsset';
 
 interface DocWritingConsoleViewProps {
   role: string;
@@ -2288,7 +2289,7 @@ ${resultSummary}
       >
         <section className="mx-auto flex min-h-0 w-full max-w-[1320px] flex-1 flex-col items-center justify-start px-[clamp(28px,4vw,72px)] pb-5 pt-[clamp(48px,9vh,96px)]">
           <div className="mb-5 flex shrink-0 flex-col items-center text-center">
-            <div className="relative"><div className="absolute -inset-2 rounded-[24px] border border-[var(--gov-red-line)] bg-white/60" /><img src={appearance?.logoUrl ?? '/product-icon.jpg'} alt="产品 logo" className="relative h-20 w-20 rounded-[20px] border border-white object-cover shadow-[0_18px_38px_rgba(176,64,70,0.18)]" /><span className="absolute -bottom-2 -right-3 flex h-8 w-8 items-center justify-center rounded-[10px] border-2 border-white bg-[var(--gov-red)] text-white shadow-[0_7px_16px_rgba(181,47,61,0.28)]"><Sparkles size={15} /></span></div>
+            <div className="relative"><div className="absolute -inset-2 rounded-[24px] border border-[var(--gov-red-line)] bg-white/60" /><img src={resolvePublicAssetUrl(appearance?.logoUrl ?? DEFAULT_PRODUCT_ICON_URL)} alt="产品 logo" className="relative h-20 w-20 rounded-[20px] border border-white object-cover shadow-[0_18px_38px_rgba(176,64,70,0.18)]" /><span className="absolute -bottom-2 -right-3 flex h-8 w-8 items-center justify-center rounded-[10px] border-2 border-white bg-[var(--gov-red)] text-white shadow-[0_7px_16px_rgba(181,47,61,0.28)]"><Sparkles size={15} /></span></div>
             <h1 className="mt-5 text-[32px] font-semibold leading-tight tracking-normal">
               <span className="text-[#202124]">全能助手，</span>
               <span className="text-[var(--gov-red-deep)]">{appearance?.slogan ?? '一步开启高效公文写作新体验'}</span>
@@ -2729,7 +2730,7 @@ ${resultSummary}
                         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--gov-red-soft)] text-[12px] font-bold text-[var(--gov-red-deep)]">张</span>
                       </div>
                       <div className="flex items-start gap-3">
-                        <img src="/product-icon.jpg" alt="金山政务一体机" className="h-9 w-9 shrink-0 rounded-[10px] border border-black/[0.05] object-cover" />
+                        <img src={DEFAULT_PRODUCT_ICON_URL} alt="金山政务一体机" className="h-9 w-9 shrink-0 rounded-[10px] border border-black/[0.05] object-cover" />
                         <div className="min-w-0 flex-1 rounded-[16px] border border-black/[0.07] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
                           <div className="flex items-start justify-between gap-4">
                             <div>
@@ -2801,7 +2802,7 @@ ${resultSummary}
                         </div>
 
                         <div className="flex items-start gap-3">
-                          <img src="/product-icon.jpg" alt="金山政务一体机" className="h-9 w-9 shrink-0 rounded-[10px] border border-black/[0.05] object-cover" />
+                          <img src={DEFAULT_PRODUCT_ICON_URL} alt="金山政务一体机" className="h-9 w-9 shrink-0 rounded-[10px] border border-black/[0.05] object-cover" />
                           <div className="min-w-0 flex-1">
                             <div className="mb-3 flex items-center gap-2 text-[13px] font-semibold text-[#4b5563]">
                               {turn.status === 'processing' ? <Loader2 size={15} className="animate-spin text-[var(--gov-red)]" /> : <CheckCircle size={15} className="text-[#49a36d]" />}
