@@ -52,6 +52,7 @@ export default function DocumentsView({ documents, role: _role, onUpdateDocument
   const [openFileMenuId, setOpenFileMenuId] = useState<string | null>(null);
   const [libraryNotice, setLibraryNotice] = useState<string | null>(null);
   const [isNewMenuOpen, setIsNewMenuOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [permissionTargetDoc, setPermissionTargetDoc] = useState<VisualDoc | null>(null);
   const [permissionTargetBatchCount, setPermissionTargetBatchCount] = useState(0);
   const [permissionSelectedIds, setPermissionSelectedIds] = useState<Set<string>>(new Set(['dept-office', 'dept-office-admin', 'user-zhang', 'user-zhao']));
@@ -560,8 +561,27 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     return sizes[(number - 1) % sizes.length];
   };
 
-  const showIngestStatus = activeMenuId === 'personal' || activeMenuId.startsWith('personal-') || activeMenuId === 'department' || activeMenuId.startsWith('department-');
-  const libraryGridClass = showIngestStatus
+  const getDocSource = (doc: VisualDoc): '个人知识库' | '部门知识库' | '素材库' => {
+    const personalIds = new Set(librarySections.find((section) => section.id === 'personal')?.folders.flatMap((folder) => folder.docIds) ?? []);
+    const departmentIds = new Set(librarySections.find((section) => section.id === 'department')?.folders.flatMap((folder) => folder.docIds) ?? []);
+    const publicIds = new Set(librarySections.find((section) => section.id === 'public')?.folders.flatMap((folder) => folder.docIds) ?? []);
+    const personalLabels = new Set(['个人知识库', '我的文库', '历史写作稿件', '我的云文档']);
+    const departmentLabels = new Set(['部门知识库', '办公室常用材料', '政策制度汇编']);
+    const publicLabels = new Set(['公共素材库', '优秀范文案例', '数据与图表', '智算项目', '我收到的']);
+    if (personalIds.has(doc.id) || personalLabels.has(doc.location) || doc.creator === '我') return '个人知识库';
+    if (departmentIds.has(doc.id) || departmentLabels.has(doc.location)) return '部门知识库';
+    if (publicIds.has(doc.id) || publicLabels.has(doc.location)) return '素材库';
+    return '个人知识库';
+  };
+
+  const canDeleteDoc = (doc: VisualDoc) => getDocSource(doc) === '个人知识库';
+  const canManageDoc = (doc: VisualDoc) => getDocSource(doc) === '个人知识库';
+  const isRecentLibrary = activeMenuId === 'recent';
+  const showIngestStatus = activeMenuId !== 'personal-history' && (activeMenuId === 'personal' || activeMenuId.startsWith('personal-') || activeMenuId === 'department' || activeMenuId.startsWith('department-'));
+  const showSourceColumn = isRecentLibrary;
+  const libraryGridClass = showSourceColumn
+    ? 'grid-cols-[42px_minmax(320px,1fr)_120px_120px_110px_100px_48px]'
+    : showIngestStatus
     ? 'grid-cols-[42px_minmax(360px,1fr)_130px_130px_110px_120px_48px]'
     : 'grid-cols-[42px_minmax(360px,1fr)_140px_140px_100px_48px]';
   const getIngestStatus = (doc: VisualDoc) => {
@@ -582,6 +602,16 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
       );
     }
     return <span className="inline-flex h-7 items-center rounded-[7px] bg-[#edf8ee] px-2.5 text-[11px] font-semibold text-[#2f7a3d]">入库成功</span>;
+  };
+
+  const renderSourceBadge = (doc: VisualDoc) => {
+    const source = getDocSource(doc);
+    const className = source === '个人知识库'
+      ? 'border-[#ffd4dc] bg-[#fff1f4] text-[var(--gov-red-deep)]'
+      : source === '部门知识库'
+        ? 'border-[#c9defd] bg-[#eef6ff] text-[#2464b4]'
+        : 'border-[#cfeedd] bg-[#effaf3] text-[#278051]';
+    return <span className={`inline-flex h-7 w-fit items-center rounded-full border px-3 text-[11px] font-bold shadow-[0_5px_14px_rgba(15,23,42,0.04)] ${className}`}>{source}</span>;
   };
 
   const toggleFileSelection = (id: string) => {
@@ -618,8 +648,24 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     showLibraryNotice('文件已开始下载');
   };
 
+  const handleBatchDownloadDocs = () => {
+    const docsToDownload = visibleLibraryDocs.filter((doc) => selectedFileIds.has(doc.id));
+    if (docsToDownload.length === 0) return;
+    if (docsToDownload.length > 20) {
+      showLibraryNotice('批量下载最多支持 20 个文件，请减少选择后重试');
+      return;
+    }
+    docsToDownload.forEach(handleDownloadDoc);
+  };
+
   const handleDeleteDocs = (ids: Set<string>) => {
     if (ids.size === 0) return;
+    const docsToDelete = visualDocs.filter((doc) => ids.has(doc.id));
+    if (docsToDelete.some((doc) => !canDeleteDoc(doc))) {
+      showLibraryNotice('仅支持删除个人知识库中的文件');
+      setOpenFileMenuId(null);
+      return;
+    }
     setVisualDocs((items) => items.filter((item) => !ids.has(item.id)));
     setSelectedFileIds(new Set());
     setOpenFileMenuId(null);
@@ -629,6 +675,17 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
   const handleImportFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files ?? []);
     if (files.length === 0) return;
+    if (files.length > 20) {
+      showLibraryNotice('单次上传文件数量限制 20 个');
+      event.target.value = '';
+      return;
+    }
+    const totalSize = files.reduce((sum, file) => sum + file.size, 0);
+    if (totalSize > 100 * 1024 * 1024) {
+      showLibraryNotice('上传文件总大小不能超过 100M');
+      event.target.value = '';
+      return;
+    }
     const importedDocs = files.map((file, index): VisualDoc => ({
       id: `vd-import-${Date.now()}-${index}`,
       title: file.name,
@@ -643,6 +700,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     }));
     setVisualDocs((items) => [...importedDocs, ...items]);
     showLibraryNotice(`已导入 ${files.length} 个文件`);
+    setIsImportModalOpen(false);
     event.target.value = '';
   };
 
@@ -715,6 +773,13 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
   const visibleFolderEntries = librarySections.find((section) => section.id === activeMenuId)?.folders ?? [];
   const isPublicLibrary = activeMenuId === 'public' || activeMenuId.startsWith('public-');
   const isDepartmentLibrary = activeMenuId === 'department' || activeMenuId.startsWith('department-');
+  const isPersonalLibrary = activeMenuId === 'personal' || activeMenuId.startsWith('personal-');
+  const canCreateOrImport = !isRecentLibrary && !isPublicLibrary && activeMenuId !== 'personal-history';
+  const selectedDocs = visibleLibraryDocs.filter((doc) => selectedFileIds.has(doc.id));
+  const selectedAllDeletable = selectedDocs.length > 0 && selectedDocs.every(canDeleteDoc);
+  const showPermissionAction = isDepartmentLibrary;
+  const showMoveAction = !isRecentLibrary && !isPublicLibrary;
+  const canOperateFolder = (folderId: string) => !folderId.startsWith('personal-') && !folderId.startsWith('department-');
   const newItemOptions = [
     { id: 'doc', label: '新建文件', className: 'bg-[#2878f0] text-white' },
     { id: 'folder', label: '新建文件夹', className: 'bg-[#2f7cf4] text-white' },
@@ -875,19 +940,19 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
                 <div className="flex min-h-10 items-center justify-between gap-5">
                   <div className="flex min-w-0 items-center gap-2 text-[13px] text-[#667085]"><span className="font-semibold text-[#202124]">知识库</span><ChevronRight size={14} className="text-[#c0c6d0]" /><span className="truncate">{activeDirectoryLabel}</span></div>
                   {selectedCount === 0 ? (
-                    isPublicLibrary ? <span className="knowledge-readonly-badge inline-flex h-9 items-center rounded-[8px] bg-[#f5f5f5] px-3 text-[11px] font-semibold text-[#667085]"><Globe2 size={13} className="mr-1.5" />公共素材库为只读内容</span> : <div className="relative flex items-center gap-2">
+                    isPublicLibrary ? <span className="knowledge-readonly-badge inline-flex h-9 items-center rounded-[8px] bg-[#f5f5f5] px-3 text-[11px] font-semibold text-[#667085]"><Globe2 size={13} className="mr-1.5" />公共素材库为只读内容</span> : canCreateOrImport ? <div className="relative flex items-center gap-2">
                       <button type="button" onClick={() => setIsNewMenuOpen((value) => !value)} className="knowledge-action-button inline-flex h-9 items-center gap-2 rounded-[8px] border border-black/[0.08] bg-white px-4 text-[12px] font-semibold text-[#344054] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]"><FilePlus2 size={14} />新建<ChevronDown size={13} /></button>
-                      <label className="knowledge-action-button inline-flex h-9 cursor-pointer items-center gap-2 rounded-[8px] border border-black/[0.08] bg-white px-4 text-[12px] font-semibold text-[#344054] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]"><Upload size={14} />导入<input type="file" multiple accept=".doc,.docx,.pdf,.txt,.xls,.xlsx,.ppt,.pptx" className="sr-only" onChange={handleImportFiles} /></label>
+                      <button type="button" onClick={() => setIsImportModalOpen(true)} className="knowledge-action-button inline-flex h-9 items-center gap-2 rounded-[8px] border border-black/[0.08] bg-white px-4 text-[12px] font-semibold text-[#344054] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]"><Upload size={14} />导入</button>
                       <AnimatePresence>{isNewMenuOpen ? <motion.div initial={{ opacity: 0, y: -6, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6, scale: 0.98 }} className="absolute right-0 top-11 z-40 w-[240px] rounded-[12px] border border-black/[0.08] bg-white p-4 shadow-[0_20px_55px_rgba(15,23,42,0.16)]"><div className="mb-3 flex items-center justify-between"><span className="text-[12px] font-bold text-[#344054]">新建</span><button type="button" onClick={() => setIsNewMenuOpen(false)} className="rounded-[6px] p-1 text-[#98a2b3] hover:bg-[#f5f5f5]"><X size={14} /></button></div><div className="grid grid-cols-2 gap-2">{newItemOptions.map((item) => <button key={item.id} type="button" onClick={() => handleCreateLibraryItem(item.id)} className="flex min-h-[84px] flex-col items-center justify-center rounded-[9px] border border-transparent px-2 text-center transition hover:border-[var(--gov-red-line)] hover:bg-[var(--gov-red-soft)]/35"><span className="knowledge-create-icon">{item.id === 'folder' ? renderKnowledgeFolderIcon('tree') : renderIcon('doc')}</span><span className="mt-2 text-[11px] font-semibold text-[#596170]">{item.label}</span></button>)}</div></motion.div> : null}</AnimatePresence>
-                    </div>
+                    </div> : <span className="h-9" aria-hidden="true" />
                   ) : (
                     <div className="flex items-center gap-1.5 text-[12px]">
                       <span className="mr-1 font-semibold text-[#344054]">已选中 {selectedCount} 项</span>
                       <button type="button" onClick={() => setSelectedFileIds(new Set())} className="px-2 py-1.5 font-medium text-[var(--gov-red)] hover:underline">取消选择</button>
-                      {!isPublicLibrary ? <button type="button" onClick={() => { const firstSelectedDoc = visibleLibraryDocs.find((doc) => selectedFileIds.has(doc.id)); if (firstSelectedDoc) { setPermissionTargetBatchCount(selectedCount); setPermissionTargetDoc(firstSelectedDoc); } }} className="rounded-[7px] px-2.5 py-1.5 font-medium text-[#596170] hover:bg-[#f5f5f5]">设置权限</button> : null}
-                      {!isPublicLibrary ? <button type="button" onClick={() => showLibraryNotice(`已移动 ${selectedCount} 项`)} className="rounded-[7px] px-2.5 py-1.5 font-medium text-[#596170] hover:bg-[#f5f5f5]">移动到</button> : null}
-                      <button type="button" onClick={() => { visibleLibraryDocs.filter((doc) => selectedFileIds.has(doc.id)).forEach(handleDownloadDoc); }} className="rounded-[7px] px-2.5 py-1.5 font-medium text-[#596170] hover:bg-[#f5f5f5]">下载</button>
-                      {!isPublicLibrary ? <button type="button" onClick={() => handleDeleteDocs(selectedFileIds)} className="rounded-[7px] px-2.5 py-1.5 font-medium text-[#d92d20] hover:bg-[#fff1f0]">删除</button> : null}
+                      {showPermissionAction ? <button type="button" onClick={() => { const firstSelectedDoc = visibleLibraryDocs.find((doc) => selectedFileIds.has(doc.id)); if (firstSelectedDoc) { setPermissionTargetBatchCount(selectedCount); setPermissionTargetDoc(firstSelectedDoc); } }} className="rounded-[7px] px-2.5 py-1.5 font-medium text-[#596170] hover:bg-[#f5f5f5]">设置权限</button> : null}
+                      {showMoveAction ? <button type="button" onClick={() => showLibraryNotice(`已移动 ${selectedCount} 项`)} className="rounded-[7px] px-2.5 py-1.5 font-medium text-[#596170] hover:bg-[#f5f5f5]">移动到</button> : null}
+                      <button type="button" onClick={handleBatchDownloadDocs} className="rounded-[7px] px-2.5 py-1.5 font-medium text-[#596170] hover:bg-[#f5f5f5]">下载</button>
+                      {selectedDocs.some(canDeleteDoc) ? <button type="button" onClick={() => handleDeleteDocs(selectedFileIds)} className={`rounded-[7px] px-2.5 py-1.5 font-medium hover:bg-[#fff1f0] ${selectedAllDeletable ? 'text-[#d92d20]' : 'text-[#b42318]'}`}>删除</button> : null}
                     </div>
                   )}
                 </div>
@@ -912,23 +977,25 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
               <div className="knowledge-table-scroll min-h-0 flex-1 scroll-pb-32 overflow-auto px-6 pb-32">
                 <div className={`knowledge-table-head sticky top-0 z-10 grid min-w-[820px] ${libraryGridClass} items-center border-b border-black/[0.07] bg-white py-3 text-[11px] font-semibold text-[#98a2b3]`}>
                   <label className="flex items-center justify-center"><input type="checkbox" checked={allVisibleSelected} onChange={() => setSelectedFileIds(allVisibleSelected ? new Set() : new Set(visibleLibraryDocs.map((doc) => doc.id)))} className="h-4 w-4 accent-[var(--gov-red)]" aria-label="选择当前列表全部文件" /></label>
-                  <span>文件名称</span><span>创建者</span><span>最后修改</span><span>大小</span>{showIngestStatus ? <span>入库状态</span> : null}<span />
+                  <span>文件名称</span><span>创建者</span><span>最后修改</span><span>大小</span>{showSourceColumn ? <span>来源</span> : null}{showIngestStatus ? <span>入库状态</span> : null}<span />
                 </div>
-                {isRefreshing ? <div className="knowledge-empty-state flex h-64 items-center justify-center gap-2 text-[12px] text-[#98a2b3]"><RefreshCw size={18} className="animate-spin text-[var(--gov-red)]" />正在刷新文件列表</div> : visibleLibraryDocs.length === 0 && visibleFolderEntries.length === 0 ? <div className="knowledge-empty-state flex h-64 flex-col items-center justify-center text-[#98a2b3]">{renderKnowledgeFolderIcon('empty')}<p className="mt-3 text-[13px] font-semibold text-[#667085]">当前目录暂无文件</p><p className="mt-1 text-[11px]">可通过右上角新建或导入文件</p></div> : <div className="knowledge-table-body min-w-[820px] divide-y divide-black/[0.05]">
+                {isRefreshing ? <div className="knowledge-empty-state flex h-64 items-center justify-center gap-2 text-[12px] text-[#98a2b3]"><RefreshCw size={18} className="animate-spin text-[var(--gov-red)]" />正在刷新文件列表</div> : visibleLibraryDocs.length === 0 && visibleFolderEntries.length === 0 ? <div className="knowledge-empty-state flex h-64 flex-col items-center justify-center text-[#98a2b3]">{renderKnowledgeFolderIcon('empty')}<p className="mt-3 text-[13px] font-semibold text-[#667085]">当前目录暂无文件</p>{canCreateOrImport ? <p className="mt-1 text-[11px]">可通过右上角新建或导入文件</p> : null}</div> : <div className="knowledge-table-body min-w-[820px] divide-y divide-black/[0.05]">
                   {visibleFolderEntries.map((folder) => {
                     const folderMenuOpen = openFileMenuId === folder.id;
+                    const folderOperable = canOperateFolder(folder.id);
                     return <div key={folder.id} className={`knowledge-table-row group relative grid min-h-[64px] ${libraryGridClass} items-center rounded-[6px] transition hover:bg-[#fafafa] ${folderMenuOpen ? 'z-[70]' : 'z-0'}`}>
                       <span />
                       <button type="button" onClick={() => { setActiveMenuId(folder.id); setOpenFileMenuId(null); }} className="flex min-w-0 items-center gap-3 text-left">{renderKnowledgeFolderIcon('row')}<span className="truncate text-[13px] font-semibold text-[#344054] transition group-hover:text-[var(--gov-red-deep)]">{folder.label}</span></button>
                       <span className="text-[12px] text-[#667085]">系统</span><span className="text-[12px] text-[#667085]">刚刚</span><span className="text-[12px] text-[#98a2b3]">--</span>
+                      {showSourceColumn ? <span className="text-[12px] text-[#98a2b3]">--</span> : null}
                       {showIngestStatus ? <span className="text-[12px] text-[#98a2b3]">--</span> : null}
-                      <div className="relative flex justify-center"><button type="button" onClick={() => setOpenFileMenuId(folderMenuOpen ? null : folder.id)} className={`knowledge-row-more inline-flex h-8 w-8 items-center justify-center rounded-[7px] text-[#98a2b3] transition hover:bg-white hover:text-[#344054] ${folderMenuOpen ? 'bg-white text-[#344054] shadow-sm' : ''}`} aria-label={`${folder.label}更多操作`}><MoreHorizontal size={17} /></button>
-                        {folderMenuOpen ? <div className="absolute right-2 top-9 z-[90] w-36 rounded-[10px] border border-black/[0.08] bg-white p-1.5 shadow-[0_18px_46px_rgba(15,23,42,0.16)]">
+                      <div className="relative flex justify-center">{folderOperable ? <button type="button" onClick={() => setOpenFileMenuId(folderMenuOpen ? null : folder.id)} className={`knowledge-row-more inline-flex h-8 w-8 items-center justify-center rounded-[7px] text-[#98a2b3] transition hover:bg-white hover:text-[#344054] ${folderMenuOpen ? 'bg-white text-[#344054] shadow-sm' : ''}`} aria-label={`${folder.label}更多操作`}><MoreHorizontal size={17} /></button> : null}
+                        {folderOperable && folderMenuOpen ? <div className="absolute right-2 top-9 z-[90] w-36 rounded-[10px] border border-black/[0.08] bg-white p-1.5 shadow-[0_18px_46px_rgba(15,23,42,0.16)]">
                           <button type="button" onClick={() => { setActiveMenuId(folder.id); setOpenFileMenuId(null); }} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><Eye size={14} />查看</button>
                           {!isPublicLibrary ? <button type="button" onClick={() => { setOpenFileMenuId(null); showLibraryNotice('文件夹已重命名'); }} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><Pencil size={14} />重命名</button> : null}
-                          {!isPublicLibrary ? <button type="button" onClick={() => { setOpenFileMenuId(null); showLibraryNotice('文件夹已移动'); }} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><MoveRight size={14} />移动到</button> : null}
+                          {showMoveAction ? <button type="button" onClick={() => { setOpenFileMenuId(null); showLibraryNotice('文件夹已移动'); }} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><MoveRight size={14} />移动到</button> : null}
                           <button type="button" onClick={() => { setOpenFileMenuId(null); showLibraryNotice('文件夹正在打包下载'); }} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><Download size={14} />下载</button>
-                          {!isPublicLibrary ? <><div className="my-1 h-px bg-black/[0.06]" /><button type="button" onClick={() => { setOpenFileMenuId(null); showLibraryNotice('文件夹已删除'); }} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#d92d20] hover:bg-[#fff1f0]"><Trash2 size={14} />删除</button></> : null}
+                          {isPersonalLibrary ? <><div className="my-1 h-px bg-black/[0.06]" /><button type="button" onClick={() => { setOpenFileMenuId(null); showLibraryNotice('文件夹已删除'); }} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#d92d20] hover:bg-[#fff1f0]"><Trash2 size={14} />删除</button></> : null}
                         </div> : null}
                       </div>
                     </div>;
@@ -940,15 +1007,16 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
                       <label className="flex h-full items-center justify-center"><input type="checkbox" checked={selected} onChange={() => toggleFileSelection(doc.id)} className="h-4 w-4 accent-[var(--gov-red)]" aria-label={`选择${doc.title}`} /></label>
                       <button type="button" onClick={() => handleOpenDoc(doc)} className="flex min-w-0 items-center gap-3 text-left"><span className="knowledge-row-file-icon">{renderIcon(doc.iconType)}</span><span className="truncate text-[13px] font-semibold text-[#344054] transition group-hover:text-[var(--gov-red-deep)]">{doc.title}</span></button>
                       <span className="text-[12px] text-[#667085]">{doc.creator}</span><span className="text-[12px] text-[#667085]">{doc.lastModified}</span><span className="text-[12px] text-[#667085]">{fileSize(doc)}</span>
+                      {showSourceColumn ? renderSourceBadge(doc) : null}
                       {showIngestStatus ? <span>{renderIngestStatus(doc)}</span> : null}
                       <div className="relative flex justify-center"><button type="button" onClick={() => setOpenFileMenuId(menuOpen ? null : doc.id)} className={`knowledge-row-more inline-flex h-8 w-8 items-center justify-center rounded-[7px] text-[#98a2b3] transition hover:bg-white hover:text-[#344054] ${menuOpen ? 'bg-white text-[#344054] shadow-sm' : ''}`} aria-label={`${doc.title}更多操作`}><MoreHorizontal size={17} /></button>
                         {menuOpen ? <div className="absolute right-2 top-9 z-[90] w-36 rounded-[10px] border border-black/[0.08] bg-white p-1.5 shadow-[0_18px_46px_rgba(15,23,42,0.16)]">
                           <button type="button" onClick={() => { setOpenFileMenuId(null); handleOpenDoc(doc); }} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><Eye size={14} />查看</button>
-                          {!isPublicLibrary ? <button type="button" onClick={() => handleRenameDoc(doc)} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><Pencil size={14} />重命名</button> : null}
-                          {!isPublicLibrary ? <button type="button" onClick={() => { setVisualDocs((items) => items.map((item) => item.id === doc.id ? { ...item, location: '我的文库', lastModified: '刚刚' } : item)); setOpenFileMenuId(null); showLibraryNotice('已移动到“我的文库”'); }} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><MoveRight size={14} />移动到</button> : null}
-                          {!isPublicLibrary && isDepartmentLibrary ? <button type="button" onClick={() => { setOpenFileMenuId(null); setPermissionTargetBatchCount(0); setPermissionTargetDoc(doc); }} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><ShieldCheck size={14} />设置权限</button> : null}
+                          {canManageDoc(doc) ? <button type="button" onClick={() => handleRenameDoc(doc)} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><Pencil size={14} />重命名</button> : null}
+                          {showMoveAction ? <button type="button" onClick={() => { setVisualDocs((items) => items.map((item) => item.id === doc.id ? { ...item, location: '我的文库', lastModified: '刚刚' } : item)); setOpenFileMenuId(null); showLibraryNotice('已移动到“我的文库”'); }} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><MoveRight size={14} />移动到</button> : null}
+                          {showPermissionAction ? <button type="button" onClick={() => { setOpenFileMenuId(null); setPermissionTargetBatchCount(0); setPermissionTargetDoc(doc); }} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><ShieldCheck size={14} />设置权限</button> : null}
                           <button type="button" onClick={() => handleDownloadDoc(doc)} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><Download size={14} />下载</button>
-                          {!isPublicLibrary ? <><div className="my-1 h-px bg-black/[0.06]" /><button type="button" onClick={() => handleDeleteDocs(new Set([doc.id]))} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#d92d20] hover:bg-[#fff1f0]"><Trash2 size={14} />删除</button></> : null}
+                          {canManageDoc(doc) ? <><div className="my-1 h-px bg-black/[0.06]" /><button type="button" onClick={() => handleDeleteDocs(new Set([doc.id]))} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#d92d20] hover:bg-[#fff1f0]"><Trash2 size={14} />删除</button></> : null}
                         </div> : null}
                       </div>
                     </div>;
@@ -1010,6 +1078,48 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
             )}
           </motion.div>
         )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {isImportModalOpen ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[90] flex items-center justify-center bg-black/45 p-4"
+            onClick={() => setIsImportModalOpen(false)}
+          >
+            <motion.div
+              initial={{ y: 16, scale: 0.98 }}
+              animate={{ y: 0, scale: 1 }}
+              exit={{ y: 16, scale: 0.98 }}
+              className="w-full max-w-[520px] overflow-hidden rounded-[8px] bg-white shadow-[0_24px_72px_rgba(15,23,42,0.24)]"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="flex h-14 items-center justify-between border-b border-black/[0.08] px-6">
+                <h3 className="text-[18px] font-bold text-[#202124]">上传提示</h3>
+                <button
+                  type="button"
+                  onClick={() => setIsImportModalOpen(false)}
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-[7px] text-[#596170] transition hover:bg-[#f5f5f5] hover:text-[#202124]"
+                  aria-label="关闭上传提示"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="px-6 py-5">
+                <p className="mb-2 text-[13px] font-medium text-[#344054]">提示： 总大小不超过100M，单次上传文件数量限制20个</p>
+                <label className="flex h-[156px] cursor-pointer flex-col items-center justify-center rounded-[8px] border border-dashed border-[#cfd6df] bg-white text-center transition hover:border-[var(--gov-red-line)] hover:bg-[var(--gov-red-soft)]/20">
+                  <span className="mb-3 inline-flex h-6 w-6 items-center justify-center rounded-full border border-[var(--gov-red)] text-[var(--gov-red)]">
+                    <Plus size={15} />
+                  </span>
+                  <span className="text-[14px] font-semibold text-[var(--gov-red)]">选择上传</span>
+                  <input type="file" multiple accept=".doc,.docx,.pdf,.txt,.xls,.xlsx,.ppt,.pptx" className="sr-only" onChange={handleImportFiles} />
+                </label>
+                <p className="mt-4 text-[13px] font-medium text-[#667085]">提示： 总大小不超过100M，单次上传文件数量限制20个</p>
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
       </AnimatePresence>
       <AnimatePresence>
         {permissionTargetDoc ? (
