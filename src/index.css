@@ -1465,7 +1465,7 @@ button:hover .ai-dimensional-icon,
 }
 
 .ai-prompt-shell > .home-prompt-toolbar {
-  z-index: 10;
+  z-index: 160;
 }
 
 .home-prompt-mode-menu {
@@ -1475,6 +1475,11 @@ button:hover .ai-dimensional-icon,
 .home-prompt-mode-floating {
   position: absolute !important;
   z-index: 220 !important;
+}
+
+.home-prompt-reference-menu,
+.home-prompt-expert-menu {
+  z-index: 320 !important;
 }
 
 .deep-thinking-toggle,
@@ -2024,6 +2029,9 @@ button:hover .ai-dimensional-icon,
 }
 
 .knowledge-header {
+  position: relative;
+  z-index: 120 !important;
+  overflow: visible;
   border-bottom-color: rgba(71, 84, 103, 0.075) !important;
   background:
     radial-gradient(380px 150px at 4% 0%, rgba(231, 77, 94, 0.105), rgba(255, 255, 255, 0) 72%),
@@ -2051,6 +2059,9 @@ button:hover .ai-dimensional-icon,
 }
 
 .knowledge-toolbar {
+  position: relative;
+  z-index: 130;
+  overflow: visible;
   padding: 10px;
   border: 1px solid rgba(71, 84, 103, 0.09);
   border-radius: 16px;
@@ -2060,6 +2071,14 @@ button:hover .ai-dimensional-icon,
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.88),
     0 14px 34px rgba(43, 69, 97, 0.075);
+}
+
+.knowledge-filter-menu {
+  z-index: 220 !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow:
+    0 24px 58px rgba(15, 23, 42, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.72) inset !important;
 }
 
 .knowledge-search-field input {
@@ -2075,6 +2094,8 @@ button:hover .ai-dimensional-icon,
 }
 
 .knowledge-table-scroll {
+  position: relative;
+  z-index: 1;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(247, 250, 253, 0.92));
   padding-top: 2px;

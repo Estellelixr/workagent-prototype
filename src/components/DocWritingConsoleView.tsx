@@ -676,6 +676,9 @@ const WRITING_MODE_OPTIONS: Array<{ id: WritingMode; desc: string; icon: typeof 
 
 const MODEL_OPTIONS = ['金山政务办公大模型', 'DeepSeek-V4-Pro', 'Qwen3-235B-A22B', 'Claude-4.5-Opus'];
 
+const HOME_PROMPT_MAX_LENGTH = 300;
+const HOME_SOURCE_TEXT_MAX_LENGTH = 500;
+
 const HOME_SOURCE_REQUIRED_WRITING_MODES: WritingMode[] = ['大纲成文', '继续写', '生成结语'];
 
 const HOME_WRITING_PROMPT_COPY: Record<WritingMode, {
@@ -705,6 +708,30 @@ const HOME_WRITING_PROMPT_COPY: Record<WritingMode, {
     inlineLead: '请为已有正文补写结语',
     submitLead: '请为已有正文补写结语',
     sourceLabel: '已有正文'
+  }
+};
+
+const HOME_QUICK_PROMPT_COPY: Record<WritingMode, {
+  placeholder: string;
+  hint?: string;
+}> = {
+  生成全文: {
+    placeholder: '一句话说明要写什么，例如：写一篇关于防汛工作的通知'
+  },
+  生成大纲: {
+    placeholder: '一句话说明大纲主题，例如：生成一份数字政府建设汇报大纲'
+  },
+  大纲成文: {
+    placeholder: '一句话说明成文要求，发送后补充已有大纲',
+    hint: '该任务需要已有大纲，发送后将在智能公文页面确认大纲结构。'
+  },
+  继续写: {
+    placeholder: '一句话说明续写方向，发送后选择已有正文',
+    hint: '该任务需要已有正文，发送后将在智能公文页面选择续写来源。'
+  },
+  生成结语: {
+    placeholder: '一句话说明结语用途，发送后补充正文或大纲',
+    hint: '可基于正文、大纲或标题生成结语，发送后继续完善上下文。'
   }
 };
 
@@ -1294,29 +1321,33 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
 
   const buildHomePrompt = () => {
     if (homeActiveCapability === 'write') {
+      const isSourceBasedWritingMode = HOME_SOURCE_REQUIRED_WRITING_MODES.includes(selectedWritingMode);
+      const copy = HOME_WRITING_PROMPT_COPY[selectedWritingMode];
+      if (isSourceBasedWritingMode) {
+        const sourceText = sourceOutlineText.trim();
+        const requirement = homeDraftRequirement.trim();
+        const wordCount = homeDraftWordCount.trim();
+        if (!sourceText || (!requirement && !wordCount)) return '';
+        const sourceLabel = copy.sourceLabel ?? '原始文本';
+        const referenceCount = uploadedFiles.length + selectedKnowledgeItems.length;
+        return [
+          copy.submitLead,
+          `${sourceLabel}：${sourceText.slice(0, 80)}`,
+          referenceCount > 0 ? `参考素材：${referenceCount}份` : '',
+          requirement ? `生成要求：${requirement}` : '',
+          wordCount ? `字数：${wordCount}字` : ''
+        ].filter(Boolean).join('，');
+      }
       const title = homeDraftTitle.trim();
       const requirement = homeDraftRequirement.trim();
       const wordCount = homeDraftWordCount.trim();
-      const needsSourceText = HOME_SOURCE_REQUIRED_WRITING_MODES.includes(selectedWritingMode);
-      const sourceText = sourceOutlineText.trim();
-      const hasSourceText = Boolean(sourceText || uploadedFiles.length > 0);
-      const copy = HOME_WRITING_PROMPT_COPY[selectedWritingMode];
-      const sourceLabel = copy.sourceLabel ?? '已有材料';
-      if (needsSourceText && !hasSourceText) return '';
-      if (!title && !requirement && !wordCount && !sourceText) return '';
-      const parts = needsSourceText ? [
-        copy.submitLead,
-        `${sourceLabel}：${sourceText ? sourceText.slice(0, 72) : uploadedFiles[0]?.name}`,
-        requirement ? `处理要求：${requirement}` : '',
-        wordCount ? `目标字数：${wordCount}字` : ''
-      ] : [
+      if (!title && !requirement && !wordCount) return '';
+      return [
         copy.submitLead,
         title ? `标题：${title}` : '标题未填写',
-        needsSourceText ? `基于已有文本：${sourceText ? sourceText.slice(0, 72) : uploadedFiles[0]?.name}` : '',
         requirement ? `写作要求：${requirement}` : '',
         wordCount ? `字数：${wordCount}字` : ''
-      ];
-      return parts.filter(Boolean).join('，');
+      ].filter(Boolean).join('，');
     }
     return homePrompt.trim();
   };
@@ -1325,6 +1356,24 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
     const prompt = buildHomePrompt();
     if (!prompt) return;
     const activeSkill = homeActiveCapability === 'qa' ? '智能问答' : homeSelectedSkill;
+    if (activeSkill === 'AI写作' && HOME_SOURCE_REQUIRED_WRITING_MODES.includes(selectedWritingMode)) {
+      const sourceText = sourceOutlineText.trim();
+      if (!sourceText) return;
+      setWriteTopic('');
+      setWriteRequirements(homeDraftRequirement.trim());
+      setWriteWordCount(homeDraftWordCount.trim() || '1500');
+      setWriteSourceFile({
+        name: selectedWritingMode === '大纲成文' ? '首页粘贴大纲.txt' : '首页粘贴正文.txt',
+        size: `${sourceText.replace(/\s/g, '').length}字`,
+        type: 'txt'
+      });
+      setSourceOutlineText(sourceText);
+      setOutlineInputMode('ai');
+      resetOutlineParse();
+      setWriteStep('source');
+      setCurrentView('write');
+      return;
+    }
     const result = buildHomeResult(prompt, activeSkill);
     const sources = [...uploadedFiles];
     setHomeConversation({ prompt, skill: activeSkill, result, sources });
@@ -2269,10 +2318,20 @@ ${resultSummary}
 
   const renderHome = () => {
     const homeSubmitPrompt = buildHomePrompt();
-    const selectedHomeChip = isDefaultHomeExpert && homeActiveCapability === 'write' ? 'AI写作' : null;
-    const sourceRequiredForHomeWriting = HOME_SOURCE_REQUIRED_WRITING_MODES.includes(selectedWritingMode);
-    const selectedHomeWritingCopy = HOME_WRITING_PROMPT_COPY[selectedWritingMode];
     const selectedHomeExpertGuide = HOME_EXPERT_GUIDE_COPY[selectedHomeExpert.id];
+    const isSourceBasedHomeWriting = homeActiveCapability === 'write' && HOME_SOURCE_REQUIRED_WRITING_MODES.includes(selectedWritingMode);
+    const selectedHomeWritingCopy = HOME_WRITING_PROMPT_COPY[selectedWritingMode];
+    const selectedHomeQuickCopy = isSourceBasedHomeWriting ? HOME_QUICK_PROMPT_COPY[selectedWritingMode] : null;
+    const shouldUseStructuredHomeWriting = isDefaultHomeExpert && homeActiveCapability === 'write';
+    const homePromptPlaceholder = isDefaultHomeExpert
+      ? homeActiveCapability === 'write'
+        ? selectedHomeQuickCopy?.placeholder ?? '一句话描述你的写作任务'
+        : '请输入你的问题，支持政策、公文、材料相关问答'
+      : selectedHomeExpertGuide;
+    const homePromptHint = isSourceBasedHomeWriting ? selectedHomeQuickCopy?.hint : null;
+    const homePromptLength = homePrompt.length;
+    const homeSourceTextLength = sourceOutlineText.length;
+    const homeSourceLabel = selectedWritingMode === '大纲成文' ? '已有大纲' : selectedWritingMode === '生成结语' ? '原文/大纲' : '已有正文';
     const homePromotedFeatures = [
       { id: 'copy' as const, title: 'AI仿写', desc: '参考范文延续结构、语气和口径', iconKey: 'feature-ai-copy', tone: 'from-[#f7f3ff] to-[#eef4ff]', iconTone: 'bg-[#f0eaff] text-[#7a5cff]' },
       { id: 'polish' as const, title: 'AI润色', desc: '优化表达层次，提升文字质感', iconKey: 'feature-ai-polish', tone: 'from-[#fff7f4] to-[#fff0f2]', iconTone: 'bg-[#fff0e8] text-[#ff7a45]' },
@@ -2297,13 +2356,13 @@ ${resultSummary}
           </div>
 
           <div className="ai-prompt-shell relative z-30 w-full max-w-[980px] shrink-0 overflow-visible rounded-[16px] p-4 text-left">
-            <div className="home-prompt-main-row relative z-50 flex items-start gap-4">
+            <div className={`home-prompt-main-row relative z-50 flex gap-4 ${isSourceBasedHomeWriting ? 'flex-col items-stretch' : 'items-start'}`}>
               {isDefaultHomeExpert ? (
-                <div className="relative z-[80] w-[154px] shrink-0">
+                <div className={`relative z-[80] shrink-0 ${isSourceBasedHomeWriting ? 'flex w-full items-center gap-3' : 'w-[154px]'}`}>
                   <button
                     type="button"
                     onClick={() => setIsHomeModeMenuOpen((value) => !value)}
-                    className="flex h-10 w-full items-center gap-2 rounded-[12px] border border-black/[0.06] bg-white px-3 text-left text-[13px] font-bold text-[#4169d8] shadow-[0_10px_24px_rgba(15,23,42,0.09)] transition hover:-translate-y-0.5 hover:border-[var(--gov-red-line)] hover:shadow-[0_16px_32px_rgba(15,23,42,0.12)]"
+                    className={`flex h-10 items-center gap-2 rounded-[12px] border border-black/[0.06] bg-white px-3 text-left text-[13px] font-bold text-[#4169d8] shadow-[0_10px_24px_rgba(15,23,42,0.09)] transition hover:-translate-y-0.5 hover:border-[var(--gov-red-line)] hover:shadow-[0_16px_32px_rgba(15,23,42,0.12)] ${isSourceBasedHomeWriting ? 'w-[154px]' : 'w-full'}`}
                   >
                     {homeActiveCapability === 'write' ? (
                       <PrototypeIcon name={WRITING_MODE_OPTIONS.find((mode) => mode.id === selectedWritingMode)?.iconKey ?? 'feature-ai-write'} size={24} alt={`${selectedWritingMode}图标`} />
@@ -2313,6 +2372,11 @@ ${resultSummary}
                     <span className="min-w-0 flex-1 truncate">{homeActiveCapability === 'write' ? selectedWritingMode : '智能问答'}</span>
                     <ChevronDown size={14} className={`shrink-0 text-[#98a2b3] transition ${isHomeModeMenuOpen ? 'rotate-180' : ''}`} />
                   </button>
+                  {isSourceBasedHomeWriting ? (
+                    <span className="min-w-0 flex-1 truncate text-[14px] font-medium text-[#4b5563]">
+                      {selectedHomeWritingCopy.inlineLead}
+                    </span>
+                  ) : null}
                   {false ? (
                     <div className="home-prompt-mode-menu absolute left-0 top-12 z-[120] w-full rounded-[14px] border border-black/[0.06] bg-white p-1.5 shadow-[0_22px_58px_rgba(15,23,42,0.18)]">
                       <button
@@ -2368,33 +2432,58 @@ ${resultSummary}
                   </span>
                 </div>
               )}
-              <div className="min-w-0 flex-1">
-            {selectedHomeChip ? (
-              <div className="min-h-[92px] px-1 py-1">
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-[15px] leading-8 text-[#30343b]">
-                  {homeActiveCapability === 'write' ? (
-                    <>
-                      <span className="text-[#4b5563]">{selectedHomeWritingCopy.inlineLead}</span>
-                      {sourceRequiredForHomeWriting ? (
-                        <span className="basis-full rounded-[10px] border border-dashed border-[var(--gov-red-line)] bg-[var(--gov-red-soft)]/45 p-3">
-                          <span className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                            <span className="text-[12px] font-semibold text-[var(--gov-red-deep)]">先提供已有文本或大纲</span>
-                            <label className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-[7px] bg-white px-2.5 text-[11px] font-semibold text-[#667085] ring-1 ring-black/[0.06] transition hover:text-[var(--gov-red-deep)]">
-                              <FileUp size={13} />
-                              上传文本
-                              <input type="file" accept=".doc,.docx,.pdf,.txt" className="sr-only" onChange={handleHomeSourceUpload} />
-                            </label>
-                          </span>
+              <div className={`min-w-0 flex-1 ${isSourceBasedHomeWriting ? '-mt-1' : ''}`}>
+                {shouldUseStructuredHomeWriting ? (
+                  <div className={`${isSourceBasedHomeWriting ? 'min-h-[118px]' : 'min-h-[104px]'} px-1 py-1`}>
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-[15px] leading-8 text-[#30343b]">
+                      <span className={`${isSourceBasedHomeWriting ? 'hidden' : ''} text-[#4b5563]`}>{selectedHomeWritingCopy.inlineLead}</span>
+                      {isSourceBasedHomeWriting ? (
+                        <div className="basis-full rounded-[12px] border border-black/[0.06] bg-[#fafbfc] px-3 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+                          <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2 text-[12px] leading-5">
+                            <div className="flex min-w-0 flex-wrap items-center gap-2">
+                              <span className="font-semibold text-[#596170]">{homeSourceLabel}</span>
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-2 py-0.5 text-[11px] font-medium text-[#8a93a3] ring-1 ring-black/[0.05]">
+                                <HelpCircle size={12} className="text-[#a0a7b2]" />
+                                短文本粘贴
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setWriteRequirements(homeDraftRequirement.trim());
+                                  setWriteWordCount(homeDraftWordCount.trim() || '1500');
+                                  setWriteSourceFile(null);
+                                  setSourceOutlineText('');
+                                  setUploadedFiles([]);
+                                  setSelectedKnowledgeItems([]);
+                                  setOutlineInputMode('ai');
+                                  resetOutlineParse();
+                                  setWriteStep('source');
+                                  setCurrentView('write');
+                                }}
+                                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--gov-red-line)] bg-[var(--gov-red-soft)] px-3 py-0.5 text-[11px] font-bold text-[var(--gov-red-deep)] shadow-[0_6px_16px_rgba(231,77,94,0.08)] transition hover:-translate-y-0.5 hover:bg-white"
+                              >
+                                <FileUp size={12} />
+                                文档或长文本进入完整流程
+                              </button>
+                            </div>
+                            <span className="shrink-0 text-[11px] font-medium text-[#98a2b3]">
+                              {homeSourceTextLength}/{HOME_SOURCE_TEXT_MAX_LENGTH} 字
+                            </span>
+                          </div>
                           <textarea
                             value={sourceOutlineText}
-                            onChange={(event) => setSourceOutlineText(event.target.value)}
-                            placeholder={selectedWritingMode === '大纲成文' ? '粘贴已有大纲内容' : selectedWritingMode === '继续写' ? '粘贴需要续写的已有正文' : '粘贴需要生成结语的正文内容'}
+                            maxLength={HOME_SOURCE_TEXT_MAX_LENGTH}
+                            onChange={(event) => setSourceOutlineText(event.target.value.slice(0, HOME_SOURCE_TEXT_MAX_LENGTH))}
+                            placeholder={selectedWritingMode === '大纲成文'
+                              ? '粘贴 500 字以内的大纲内容，长大纲或文档请进入完整流程'
+                              : selectedWritingMode === '继续写'
+                                ? '粘贴 500 字以内的待续写正文，长文档请进入完整流程'
+                                : '粘贴 500 字以内的正文或大纲，长文档请进入完整流程'}
                             rows={2}
-                            className="min-h-[58px] w-full resize-none rounded-[8px] bg-white px-3 py-2 text-[13px] leading-6 text-[#202124] outline-none ring-1 ring-black/[0.06] placeholder:text-[#a0a7b2] focus:ring-2 focus:ring-[var(--gov-red-line)]"
+                            className="h-[58px] w-full resize-none bg-transparent text-[13px] leading-6 text-[#202124] outline-none placeholder:text-[#a0a7b2]"
                           />
-                        </span>
-                      ) : null}
-                      {!sourceRequiredForHomeWriting ? (
+                        </div>
+                      ) : (
                         <>
                           <span className="text-[#4b5563]">，标题是</span>
                           <input
@@ -2405,8 +2494,8 @@ ${resultSummary}
                             className="inline-flex h-7 min-w-[118px] max-w-full rounded-[6px] bg-[#f0f3f7] px-2 text-[13px] font-semibold text-[#202124] outline-none transition-[width,background-color,box-shadow] duration-200 placeholder:text-[#9aa3b2] focus:bg-white focus:ring-2 focus:ring-[var(--gov-red-line)]"
                           />
                         </>
-                      ) : null}
-                      <span className="text-[#4b5563]">，字数</span>
+                      )}
+                      <span className="text-[#4b5563]">，{isSourceBasedHomeWriting && selectedWritingMode === '生成结语' ? '结语字数' : '字数'}</span>
                       <input
                         value={homeDraftWordCount}
                         onChange={(event) => setHomeDraftWordCount(event.target.value.replace(/\D/g, ''))}
@@ -2414,82 +2503,101 @@ ${resultSummary}
                         inputMode="numeric"
                         className="inline-flex h-7 w-[86px] rounded-[6px] bg-[#f0f3f7] px-2 text-[13px] font-semibold text-[#202124] outline-none placeholder:text-[#9aa3b2] focus:bg-white focus:ring-2 focus:ring-[var(--gov-red-line)]"
                       />
-                      <span className="text-[#4b5563]">字左右，其他要求</span>
+                      <span className="text-[#4b5563]">字左右，{isSourceBasedHomeWriting ? '生成要求' : '其他要求'}</span>
                       <input
                         value={homeDraftRequirement}
                         onChange={(event) => setHomeDraftRequirement(event.target.value)}
-                        placeholder="请输入"
+                        placeholder={isSourceBasedHomeWriting
+                          ? selectedWritingMode === '大纲成文'
+                            ? '例如：扩写重点任务，保持正式稳健'
+                            : selectedWritingMode === '继续写'
+                              ? '例如：接着写落实措施和工作要求'
+                              : '例如：收束有力，强调后续落实'
+                          : '请输入'}
                         className="inline-flex h-7 min-w-[110px] flex-1 rounded-[6px] bg-[#f0f3f7] px-2 text-[13px] font-semibold text-[#202124] outline-none placeholder:text-[#9aa3b2] focus:bg-white focus:ring-2 focus:ring-[var(--gov-red-line)]"
                       />
                       <span className="text-[#4b5563]">。</span>
-                    </>
-                  ) : (
-                    <input
-                      value={homePrompt}
-                      onChange={(event) => setHomePrompt(event.target.value)}
-                      placeholder="请输入你想咨询的政务办公问题"
-                      className="inline-flex h-8 min-w-[260px] flex-1 rounded-[8px] bg-[#f0f3f7] px-3 text-[14px] font-semibold text-[#202124] outline-none placeholder:text-[#9aa3b2] focus:bg-white focus:ring-2 focus:ring-[var(--gov-red-line)]"
-                    />
-                  )}
-                </div>
-              </div>
-            ) : (
-              <textarea
-                value={homePrompt}
-                onChange={(event) => setHomePrompt(event.target.value)}
-                onKeyDown={(event) => {
-                  if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
-                    handleHomeSubmit();
-                  }
-                }}
-                rows={2}
-                className="h-[92px] w-full resize-none bg-transparent px-1 py-2 text-[15px] leading-7 text-[#202124] outline-none placeholder:text-[#9aa0a6]"
-                placeholder={isDefaultHomeExpert ? '今天想生成什么？例如：参考去年这篇稿子，结合三个月月报写季度汇报' : selectedHomeExpertGuide}
-              />
-            )}
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="relative">
+                      <textarea
+                        value={homePrompt}
+                        maxLength={HOME_PROMPT_MAX_LENGTH}
+                        onChange={(event) => setHomePrompt(event.target.value.slice(0, HOME_PROMPT_MAX_LENGTH))}
+                        onKeyDown={(event) => {
+                          if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                            handleHomeSubmit();
+                          }
+                        }}
+                        rows={3}
+                        className="h-[104px] w-full resize-none bg-transparent px-1 py-2 pr-16 text-[15px] leading-7 text-[#202124] outline-none placeholder:text-[#9aa0a6]"
+                        placeholder={homePromptPlaceholder}
+                      />
+                      <span
+                        className={`absolute bottom-2 right-1 rounded-full px-2 py-1 text-[11px] font-semibold ${
+                          homePromptLength > 260
+                            ? 'bg-[#fff1f0] text-[var(--gov-red)]'
+                            : 'bg-[#f5f6f8] text-[#98a2b3]'
+                        }`}
+                      >
+                        {homePromptLength}/{HOME_PROMPT_MAX_LENGTH}
+                      </span>
+                    </div>
+                    {homePromptHint ? (
+                      <div className="mt-2 flex items-center gap-2 rounded-[10px] border border-[var(--gov-red-line)] bg-[var(--gov-red-soft)]/45 px-3 py-2 text-[12px] font-medium text-[var(--gov-red-deep)]">
+                        <Sparkles size={13} />
+                        <span>{homePromptHint}</span>
+                      </div>
+                    ) : null}
+                  </>
+                )}
               </div>
             </div>
-            <div className="home-prompt-toolbar relative z-10 mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-black/[0.06] pt-3">
+            <div className="home-prompt-toolbar relative z-[160] mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-black/[0.06] pt-3">
               <div className="flex flex-wrap items-center gap-2">
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setIsHomeUploadMenuOpen((value) => !value)}
-                    className="inline-flex h-9 items-center justify-center rounded-[8px] border border-black/[0.06] bg-white px-3 text-[13px] font-semibold text-[#444950] transition hover:bg-[#f7f7f7]"
-                  >
-                    {isHomeUploadMenuOpen ? <X size={15} /> : <Plus size={16} />}
-                    <span className="ml-1.5">添加参考文档</span>
-                  </button>
-                  {isHomeUploadMenuOpen ? (
-                    <div className="absolute bottom-11 left-0 z-20 w-[190px] rounded-[14px] border border-black/[0.08] bg-white p-2 shadow-[0_18px_44px_rgba(15,23,42,0.12)]">
-                      <label className="flex h-10 w-full cursor-pointer items-center justify-between rounded-[10px] px-3 text-left text-[13px] font-semibold text-[#344054] transition hover:bg-[#f7f7f7] hover:text-[var(--gov-red-deep)]">
-                        <span className="flex items-center gap-2.5">
-                          <FileUp size={15} className="text-[#7a808a]" />
-                          <span>上传本地文件</span>
-                        </span>
-                        <ChevronDown size={13} className="-rotate-90 text-[#b0b5bd]" />
-                        <input type="file" accept=".doc,.docx,.pdf,.txt" className="sr-only" onChange={(event) => {
-                          handleHomeSourceUpload(event);
-                          setIsHomeUploadMenuOpen(false);
-                        }} />
-                      </label>
+                {homeActiveCapability === 'write' || homeActiveCapability === 'qa' ? (
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setIsHomeUploadMenuOpen((value) => !value)}
+                      className="inline-flex h-9 items-center justify-center rounded-[8px] border border-black/[0.06] bg-white px-3 text-[13px] font-semibold text-[#444950] transition hover:bg-[#f7f7f7]"
+                    >
+                      {isHomeUploadMenuOpen ? <X size={15} /> : <Plus size={16} />}
+                      <span className="ml-1.5">{isSourceBasedHomeWriting ? '添加参考素材' : '添加参考文档'}</span>
+                    </button>
+                    {isHomeUploadMenuOpen ? (
+                      <div className="home-prompt-reference-menu absolute bottom-11 left-0 z-[320] w-[190px] rounded-[14px] border border-black/[0.08] bg-white p-2 shadow-[0_18px_44px_rgba(15,23,42,0.12)]">
+                        <label className="flex h-10 w-full cursor-pointer items-center justify-between rounded-[10px] px-3 text-left text-[13px] font-semibold text-[#344054] transition hover:bg-[#f7f7f7] hover:text-[var(--gov-red-deep)]">
+                          <span className="flex items-center gap-2.5">
+                            <FileUp size={15} className="text-[#7a808a]" />
+                            <span>{isSourceBasedHomeWriting ? '上传本地素材' : '上传本地文件'}</span>
+                          </span>
+                          <ChevronDown size={13} className="-rotate-90 text-[#b0b5bd]" />
+                          <input type="file" accept=".doc,.docx,.pdf,.txt" className="sr-only" onChange={(event) => {
+                            handleHomeSourceUpload(event);
+                            setIsHomeUploadMenuOpen(false);
+                          }} />
+                        </label>
                         <button
                           type="button"
                           onClick={() => {
                             setIsHomeUploadMenuOpen(false);
                             openMyCloudDocumentPicker('home');
                           }}
-                        className="mt-1 flex h-10 w-full items-center justify-between rounded-[10px] px-3 text-left text-[13px] font-semibold text-[#344054] transition hover:bg-[#f7f7f7] hover:text-[var(--gov-red-deep)]"
+                          className="mt-1 flex h-10 w-full items-center justify-between rounded-[10px] px-3 text-left text-[13px] font-semibold text-[#344054] transition hover:bg-[#f7f7f7] hover:text-[var(--gov-red-deep)]"
                         >
                           <span className="flex items-center gap-2.5">
                             <Folder size={15} className="text-[#7a808a]" />
-                            <span>知识库上传</span>
+                            <span>{isSourceBasedHomeWriting ? '从知识库选素材' : '知识库上传'}</span>
                           </span>
                           <ChevronDown size={13} className="-rotate-90 text-[#b0b5bd]" />
                         </button>
-                    </div>
-                  ) : null}
-                </div>
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
                 <div className="relative">
                   <button
                     type="button"
@@ -2504,7 +2612,7 @@ ${resultSummary}
                     <ChevronDown size={14} className={`text-[#98a2b3] transition ${isHomeExpertMenuOpen ? 'rotate-180' : ''}`} />
                   </button>
                   {isHomeExpertMenuOpen ? (
-                    <div className="absolute bottom-12 left-0 z-30 w-[244px] overflow-hidden rounded-[14px] border border-black/[0.08] bg-white p-1.5 shadow-[0_18px_46px_rgba(15,23,42,0.14)]">
+                    <div className="home-prompt-expert-menu absolute bottom-12 left-0 z-[320] w-[244px] overflow-hidden rounded-[14px] border border-black/[0.08] bg-white p-1.5 shadow-[0_18px_46px_rgba(15,23,42,0.14)]">
                       <p className="px-3 py-2 text-[12px] font-semibold text-[#98a2b3]">推荐专家</p>
                       <div className="max-h-[312px] space-y-1 overflow-y-auto">
                       {HOME_EXPERTS.map((expert, index) => {
