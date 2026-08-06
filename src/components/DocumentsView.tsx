@@ -535,7 +535,9 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     const activeSection = librarySections.find((section) => section.id === activeMenuId);
     const activeFolder = librarySections.flatMap((section) => section.folders).find((folder) => folder.id === activeMenuId);
 
-    if (activeFolder) {
+    if (activeSection?.id === 'department') {
+      currentList = [];
+    } else if (activeFolder) {
       const allowedIds = new Set(activeFolder.docIds);
       currentList = currentList.filter((doc) => allowedIds.has(doc.id) || doc.location === activeFolder.label);
     } else if (activeSection && activeSection.id !== 'recent') {
@@ -568,14 +570,14 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     const personalLabels = new Set(['个人知识库', '我的文库', '历史写作稿件', '我的云文档']);
     const departmentLabels = new Set(['部门知识库', '办公室常用材料', '政策制度汇编']);
     const publicLabels = new Set(['公共素材库', '优秀范文案例', '数据与图表', '智算项目', '我收到的']);
-    if (personalIds.has(doc.id) || personalLabels.has(doc.location) || doc.creator === '我') return '个人知识库';
     if (departmentIds.has(doc.id) || departmentLabels.has(doc.location)) return '部门知识库';
+    if (personalIds.has(doc.id) || personalLabels.has(doc.location) || doc.creator === '我') return '个人知识库';
     if (publicIds.has(doc.id) || publicLabels.has(doc.location)) return '素材库';
     return '个人知识库';
   };
 
-  const canDeleteDoc = (doc: VisualDoc) => getDocSource(doc) === '个人知识库';
-  const canManageDoc = (doc: VisualDoc) => getDocSource(doc) === '个人知识库';
+  const canDeleteDoc = (doc: VisualDoc) => activeMenuId.startsWith('department-') || (!isDepartmentLibrary && getDocSource(doc) === '个人知识库');
+  const canManageDoc = (doc: VisualDoc) => activeMenuId.startsWith('department-') || (!isDepartmentLibrary && getDocSource(doc) === '个人知识库');
   const isRecentLibrary = activeMenuId === 'recent';
   const showIngestStatus = activeMenuId !== 'personal-history' && (activeMenuId === 'personal' || activeMenuId.startsWith('personal-') || activeMenuId === 'department' || activeMenuId.startsWith('department-'));
   const showSourceColumn = isRecentLibrary;
@@ -662,7 +664,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     if (ids.size === 0) return;
     const docsToDelete = visualDocs.filter((doc) => ids.has(doc.id));
     if (docsToDelete.some((doc) => !canDeleteDoc(doc))) {
-      showLibraryNotice('仅支持删除个人知识库中的文件');
+      showLibraryNotice('仅支持删除个人知识库或部门文件夹中的文件');
       setOpenFileMenuId(null);
       return;
     }
@@ -1016,7 +1018,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
                           {showMoveAction ? <button type="button" onClick={() => { setVisualDocs((items) => items.map((item) => item.id === doc.id ? { ...item, location: '我的文库', lastModified: '刚刚' } : item)); setOpenFileMenuId(null); showLibraryNotice('已移动到“我的文库”'); }} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><MoveRight size={14} />移动到</button> : null}
                           {showPermissionAction ? <button type="button" onClick={() => { setOpenFileMenuId(null); setPermissionTargetBatchCount(0); setPermissionTargetDoc(doc); }} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><ShieldCheck size={14} />设置权限</button> : null}
                           <button type="button" onClick={() => handleDownloadDoc(doc)} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#475467] hover:bg-[#f5f5f5]"><Download size={14} />下载</button>
-                          {canManageDoc(doc) ? <><div className="my-1 h-px bg-black/[0.06]" /><button type="button" onClick={() => handleDeleteDocs(new Set([doc.id]))} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#d92d20] hover:bg-[#fff1f0]"><Trash2 size={14} />删除</button></> : null}
+                          {canDeleteDoc(doc) ? <><div className="my-1 h-px bg-black/[0.06]" /><button type="button" onClick={() => handleDeleteDocs(new Set([doc.id]))} className="flex w-full items-center gap-2 rounded-[7px] px-2.5 py-2 text-left text-[12px] text-[#d92d20] hover:bg-[#fff1f0]"><Trash2 size={14} />删除</button></> : null}
                         </div> : null}
                       </div>
                     </div>;
