@@ -52,12 +52,14 @@ export default function DocumentsView({ documents, role: _role, onUpdateDocument
   const [openFileMenuId, setOpenFileMenuId] = useState<string | null>(null);
   const [libraryNotice, setLibraryNotice] = useState<string | null>(null);
   const [isNewMenuOpen, setIsNewMenuOpen] = useState(false);
-  const [pathDropdownOpenFor, setPathDropdownOpenFor] = useState<'header' | 'import' | null>(null);
+  const [pathDropdownOpenFor, setPathDropdownOpenFor] = useState<'header' | 'import' | 'new' | null>(null);
   const [actionTargetId, setActionTargetId] = useState<string>('personal');
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isCreateDeptLibraryModalOpen, setIsCreateDeptLibraryModalOpen] = useState(false);
   const [departmentLibraryName, setDepartmentLibraryName] = useState('');
   const [departmentCustomFolders, setDepartmentCustomFolders] = useState<Array<{ id: string; label: string; docIds: string[] }>>([]);
+  const [customFolderEntries, setCustomFolderEntries] = useState<Array<{ id: string; parentId: string; label: string; docIds: string[] }>>([]);
+  const [newFolderName, setNewFolderName] = useState('');
   const [permissionTargetDoc, setPermissionTargetDoc] = useState<VisualDoc | null>(null);
   const [permissionTargetLibraryName, setPermissionTargetLibraryName] = useState<string | null>(null);
   const [permissionTargetBatchCount, setPermissionTargetBatchCount] = useState(0);
@@ -540,7 +542,8 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     const query = searchQuery.trim().toLowerCase();
     let currentList = [...visualDocs];
     const activeSection = librarySections.find((section) => section.id === activeMenuId);
-    const activeFolder = librarySections.flatMap((section) => section.folders).find((folder) => folder.id === activeMenuId);
+    const allFolderEntries = [...librarySections.flatMap((section) => section.folders), ...customFolderEntries];
+    const activeFolder = allFolderEntries.find((folder) => folder.id === activeMenuId);
 
     if (activeSection?.id === 'department') {
       currentList = [];
@@ -557,12 +560,24 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     if (fileTypeFilter === 'ppt') currentList = currentList.filter((doc) => doc.iconType === 'ppt');
     if (query) currentList = currentList.filter((doc) => doc.title.toLowerCase().includes(query));
     return currentList;
-  }, [activeMenuId, fileTypeFilter, searchQuery, visualDocs]);
+  }, [activeMenuId, customFolderEntries, fileTypeFilter, searchQuery, visualDocs]);
 
-  const activeDirectoryLabel = librarySections.flatMap((section) => [
-    { id: section.id, label: section.label },
-    ...section.folders.map((folder) => ({ id: folder.id, label: folder.label })),
-  ]).find((item) => item.id === activeMenuId)?.label ?? '最近';
+  const baseDirectoryMeta = librarySections.flatMap((section) => [
+    { id: section.id, label: section.label, path: section.label },
+    ...section.folders.map((folder) => ({ id: folder.id, label: folder.label, path: `${section.label} / ${folder.label}` })),
+  ]);
+  const directoryMeta = [
+    ...baseDirectoryMeta,
+    ...customFolderEntries.map((folder) => {
+      const parent = baseDirectoryMeta.find((item) => item.id === folder.parentId);
+      return {
+        id: folder.id,
+        label: folder.label,
+        path: `${parent?.path ?? '部门知识库'} / ${folder.label}`,
+      };
+    }),
+  ];
+  const activeDirectoryLabel = directoryMeta.find((item) => item.id === activeMenuId)?.label ?? '最近';
 
   const isWritableDirectoryId = (id: string) => id === 'personal' || id === 'personal-drafts' || id.startsWith('department-');
   const actionDirectoryTree = librarySections
@@ -572,10 +587,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
       selectable: section.id === 'personal',
       folders: section.folders.filter((folder) => folder.id !== 'personal-history'),
     }));
-  const actionTargetMeta = librarySections.flatMap((section) => [
-    { id: section.id, label: section.label, path: section.label },
-    ...section.folders.map((folder) => ({ id: folder.id, label: folder.label, path: `${section.label} / ${folder.label}` })),
-  ]).find((item) => item.id === actionTargetId) ?? { id: 'personal', label: '个人知识库', path: '个人知识库' };
+  const actionTargetMeta = directoryMeta.find((item) => item.id === actionTargetId) ?? { id: 'personal', label: '个人知识库', path: '个人知识库' };
   const actionTargetLabel = actionTargetMeta.label;
   const actionTargetPath = actionTargetMeta.path;
 
@@ -590,13 +602,13 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     setPathDropdownOpenFor(null);
   };
 
-  const renderActionTargetPicker = (align: 'left' | 'right' = 'right', context: 'header' | 'import' = 'header') => {
+  const renderActionTargetPicker = (align: 'left' | 'right' = 'right', context: 'header' | 'import' | 'new' = 'header') => {
     const open = pathDropdownOpenFor === context;
     return <div className="relative">
       <button
         type="button"
-        onClick={() => { setPathDropdownOpenFor(open ? null : context); setIsNewMenuOpen(false); setOpenFileMenuId(null); setIsFilterDropdownOpen(false); }}
-        className="knowledge-action-button inline-flex h-9 max-w-[300px] items-center gap-2 rounded-[8px] border border-black/[0.08] bg-white px-3 text-[12px] font-semibold text-[#344054] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]"
+        onClick={() => { setPathDropdownOpenFor(open ? null : context); if (context !== 'new') setIsNewMenuOpen(false); setOpenFileMenuId(null); setIsFilterDropdownOpen(false); }}
+        className={`knowledge-action-button inline-flex h-9 items-center gap-2 rounded-[8px] border border-black/[0.08] bg-white px-3 text-[12px] font-semibold text-[#344054] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)] ${context === 'new' ? 'w-full max-w-full' : 'max-w-[300px]'}`}
       >
         <Folder size={14} className="shrink-0 text-[#5aa9ee]" />
         <span className="shrink-0 text-[#98a2b3]">文件路径</span>
@@ -609,7 +621,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
             initial={{ opacity: 0, y: -6, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
-            className={`absolute ${align === 'right' ? 'right-0' : 'left-0'} top-11 z-[360] w-[300px] rounded-[12px] border border-black/[0.08] bg-white p-2.5 shadow-[0_22px_58px_rgba(15,23,42,0.18)]`}
+            className={`absolute ${align === 'right' ? 'right-0' : 'left-0'} top-11 z-[360] ${context === 'new' ? 'w-[268px]' : 'w-[300px]'} rounded-[12px] border border-black/[0.08] bg-white p-2.5 shadow-[0_22px_58px_rgba(15,23,42,0.18)]`}
           >
             <div className="mb-2 flex items-center justify-between px-1">
               <span className="text-[12px] font-bold text-[#344054]">选择文件路径</span>
@@ -635,16 +647,32 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
                         {section.folders.map((folder) => {
                           const selected = actionTargetId === folder.id;
                           return (
-                            <button
-                              key={folder.id}
-                              type="button"
-                              onClick={() => handleSelectActionTarget(folder.id)}
-                              className={`mt-1 flex h-9 w-full items-center gap-2 rounded-[8px] px-2.5 text-left transition ${selected ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)] shadow-sm' : 'text-[#667085] hover:bg-[#f7f8fa]'}`}
-                            >
-                              {renderKnowledgeFolderIcon('tree')}
-                              <span className="min-w-0 flex-1 truncate text-[12px] font-semibold">{folder.label}</span>
-                              {selected ? <CheckCircle size={13} className="shrink-0 text-[var(--gov-red)]" /> : null}
-                            </button>
+                            <div key={folder.id}>
+                              <button
+                                type="button"
+                                onClick={() => handleSelectActionTarget(folder.id)}
+                                className={`mt-1 flex h-9 w-full items-center gap-2 rounded-[8px] px-2.5 text-left transition ${selected ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)] shadow-sm' : 'text-[#667085] hover:bg-[#f7f8fa]'}`}
+                              >
+                                {renderKnowledgeFolderIcon('tree')}
+                                <span className="min-w-0 flex-1 truncate text-[12px] font-semibold">{folder.label}</span>
+                                {selected ? <CheckCircle size={13} className="shrink-0 text-[var(--gov-red)]" /> : null}
+                              </button>
+                              {customFolderEntries.filter((child) => child.parentId === folder.id).map((child) => {
+                                const childSelected = actionTargetId === child.id;
+                                return (
+                                  <button
+                                    key={child.id}
+                                    type="button"
+                                    onClick={() => handleSelectActionTarget(child.id)}
+                                    className={`ml-5 mt-1 flex h-8 w-[calc(100%-20px)] items-center gap-2 rounded-[8px] px-2 text-left transition ${childSelected ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)] shadow-sm' : 'text-[#667085] hover:bg-[#f7f8fa]'}`}
+                                  >
+                                    {renderKnowledgeFolderIcon('tree')}
+                                    <span className="min-w-0 flex-1 truncate text-[11px] font-semibold">{child.label}</span>
+                                    {childSelected ? <CheckCircle size={12} className="shrink-0 text-[var(--gov-red)]" /> : null}
+                                  </button>
+                                );
+                              })}
+                            </div>
                           );
                         })}
                       </div>
@@ -823,6 +851,18 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
   const handleCreateLibraryItem = (kind: 'doc' | 'ppt' | 'xls' | 'smart-doc' | 'smart-sheet' | 'multi-sheet' | 'form' | 'folder') => {
     setIsNewMenuOpen(false);
     if (kind === 'folder') {
+      if (!isDepartmentLibrary) {
+        showLibraryNotice(`已在 ${actionTargetPath} 新建文件夹`);
+        return;
+      }
+      const name = newFolderName.trim();
+      if (!name) {
+        showLibraryNotice('请先填写文件夹名称');
+        setIsNewMenuOpen(true);
+        return;
+      }
+      setCustomFolderEntries((items) => [{ id: `department-folder-${Date.now()}`, parentId: actionTargetId, label: name, docIds: [] }, ...items]);
+      setNewFolderName('');
       showLibraryNotice(`已在 ${actionTargetPath} 新建文件夹`);
       return;
     }
@@ -862,6 +902,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     if (!nextName || nextName === currentName) return;
     if (isDepartmentAdminLibrary(folderId)) {
       setDepartmentCustomFolders((items) => items.map((folder) => folder.id === folderId ? { ...folder, label: nextName } : folder));
+      setCustomFolderEntries((items) => items.map((folder) => folder.id === folderId ? { ...folder, label: nextName } : folder));
     }
     setOpenFileMenuId(null);
     showLibraryNotice('文库已重命名');
@@ -875,6 +916,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     }
     if (isDepartmentAdminLibrary(folderId)) {
       setDepartmentCustomFolders((items) => items.filter((folder) => folder.id !== folderId));
+      setCustomFolderEntries((items) => items.filter((folder) => folder.id !== folderId && folder.parentId !== folderId));
       if (activeMenuId === folderId) setActiveMenuId('department');
     }
     setOpenFileMenuId(null);
@@ -916,7 +958,10 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
 
   const selectedCount = selectedFileIds.size;
   const allVisibleSelected = visibleLibraryDocs.length > 0 && visibleLibraryDocs.every((doc) => selectedFileIds.has(doc.id));
-  const visibleFolderEntries = librarySections.find((section) => section.id === activeMenuId)?.folders ?? [];
+  const visibleFolderEntries = [
+    ...(librarySections.find((section) => section.id === activeMenuId)?.folders ?? []),
+    ...customFolderEntries.filter((folder) => folder.parentId === activeMenuId),
+  ];
   const isPublicLibrary = activeMenuId === 'public' || activeMenuId.startsWith('public-');
   const isDepartmentLibrary = activeMenuId === 'department' || activeMenuId.startsWith('department-');
   const isPersonalLibrary = activeMenuId === 'personal' || activeMenuId.startsWith('personal-');
@@ -927,7 +972,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
   const showMoveAction = !isRecentLibrary && !isPublicLibrary;
   const protectedPersonalFolderIds = new Set(['personal-drafts', 'personal-history']);
   const systemDepartmentLibraryIds = new Set(['department-office', 'department-policy']);
-  const isDepartmentAdminLibrary = (folderId: string) => folderId.startsWith('department-custom-');
+  const isDepartmentAdminLibrary = (folderId: string) => folderId.startsWith('department-custom-') || folderId.startsWith('department-folder-');
   const canRenameFolder = (folderId: string) => {
     if (isPublicLibrary) return false;
     if (systemDepartmentLibraryIds.has(folderId)) return false;
@@ -945,6 +990,53 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     { id: 'doc', label: '新建文件', className: 'bg-[#2878f0] text-white' },
     { id: 'folder', label: '新建文件夹', className: 'bg-[#2f7cf4] text-white' },
   ] as const;
+
+  const renderNewMenuContent = () => {
+    if (isDepartmentLibrary) {
+      return (
+        <div className="space-y-3">
+          <div className="rounded-[10px] border border-black/[0.06] bg-[#fafbfc] px-3 py-2.5">
+            <div className="mb-1.5 text-[11px] font-semibold text-[#98a2b3]">文件路径</div>
+            {renderActionTargetPicker('left', 'new')}
+          </div>
+          <label className="block">
+            <span className="text-[11px] font-semibold text-[#667085]">文件夹名称</span>
+            <input
+              value={newFolderName}
+              onChange={(event) => setNewFolderName(event.target.value)}
+              placeholder="请输入文件夹名称"
+              className="mt-1 h-9 w-full rounded-[8px] border border-black/[0.08] bg-white px-3 text-[12px] text-[#344054] outline-none transition placeholder:text-[#b2b8c2] focus:border-[var(--gov-red-line)] focus:ring-2 focus:ring-[var(--gov-red-soft)]"
+            />
+          </label>
+          <button
+            type="button"
+            onClick={() => handleCreateLibraryItem('folder')}
+            disabled={!newFolderName.trim()}
+            className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-[8px] bg-[var(--gov-red)] px-3 text-[12px] font-semibold text-white shadow-[0_8px_18px_rgba(225,61,78,0.2)] transition hover:bg-[var(--gov-red-deep)] disabled:cursor-not-allowed disabled:bg-[#d0d5dd] disabled:shadow-none"
+          >
+            <Folder size={14} />
+            新建文件夹
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-2 gap-2">
+        {newItemOptions.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => handleCreateLibraryItem(item.id)}
+            className="flex min-h-[84px] flex-col items-center justify-center rounded-[9px] border border-transparent px-2 text-center transition hover:border-[var(--gov-red-line)] hover:bg-[var(--gov-red-soft)]/35"
+          >
+            <span className="knowledge-create-icon">{item.id === 'folder' ? renderKnowledgeFolderIcon('tree') : renderIcon('doc')}</span>
+            <span className="mt-2 text-[11px] font-semibold text-[#596170]">{item.label}</span>
+          </button>
+        ))}
+      </div>
+    );
+  };
 
   const collectPermissionIds = (node: PermissionPrincipal): string[] => [
     node.id,
@@ -1107,7 +1199,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
                       {renderActionTargetPicker('right', 'header')}
                       <button type="button" onClick={() => { setIsNewMenuOpen((value) => !value); setPathDropdownOpenFor(null); setOpenFileMenuId(null); setIsFilterDropdownOpen(false); }} className="knowledge-action-button inline-flex h-9 items-center gap-2 rounded-[8px] border border-black/[0.08] bg-white px-4 text-[12px] font-semibold text-[#344054] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]"><FilePlus2 size={14} />新建<ChevronDown size={13} /></button>
                       <button type="button" onClick={() => { setIsImportModalOpen(true); setIsNewMenuOpen(false); setPathDropdownOpenFor(null); }} className="knowledge-action-button inline-flex h-9 items-center gap-2 rounded-[8px] border border-black/[0.08] bg-white px-4 text-[12px] font-semibold text-[#344054] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]"><Upload size={14} />导入</button>
-                      <AnimatePresence>{isNewMenuOpen ? <motion.div initial={{ opacity: 0, y: -6, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6, scale: 0.98 }} className="absolute right-0 top-11 z-[320] w-[240px] rounded-[12px] border border-black/[0.08] bg-white p-4 shadow-[0_20px_55px_rgba(15,23,42,0.16)]"><div className="mb-3 flex items-center justify-between"><span className="text-[12px] font-bold text-[#344054]">新建</span><button type="button" onClick={() => setIsNewMenuOpen(false)} className="rounded-[6px] p-1 text-[#98a2b3] hover:bg-[#f5f5f5]"><X size={14} /></button></div><div className="grid grid-cols-2 gap-2">{newItemOptions.map((item) => <button key={item.id} type="button" onClick={() => handleCreateLibraryItem(item.id)} className="flex min-h-[84px] flex-col items-center justify-center rounded-[9px] border border-transparent px-2 text-center transition hover:border-[var(--gov-red-line)] hover:bg-[var(--gov-red-soft)]/35"><span className="knowledge-create-icon">{item.id === 'folder' ? renderKnowledgeFolderIcon('tree') : renderIcon('doc')}</span><span className="mt-2 text-[11px] font-semibold text-[#596170]">{item.label}</span></button>)}</div></motion.div> : null}</AnimatePresence>
+                      <AnimatePresence>{isNewMenuOpen ? <motion.div initial={{ opacity: 0, y: -6, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6, scale: 0.98 }} className={`absolute right-0 top-11 z-[320] ${isDepartmentLibrary ? 'w-[300px]' : 'w-[240px]'} rounded-[12px] border border-black/[0.08] bg-white p-4 shadow-[0_20px_55px_rgba(15,23,42,0.16)]`}><div className="mb-3 flex items-center justify-between"><span className="text-[12px] font-bold text-[#344054]">{isDepartmentLibrary ? '新建文件夹' : '新建'}</span><button type="button" onClick={() => setIsNewMenuOpen(false)} className="rounded-[6px] p-1 text-[#98a2b3] hover:bg-[#f5f5f5]"><X size={14} /></button></div>{renderNewMenuContent()}</motion.div> : null}</AnimatePresence>
                     </div> : <span className="h-9" aria-hidden="true" />
                   ) : (
                     <div className="flex items-center gap-1.5 text-[12px]">
