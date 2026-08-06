@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { DocumentInfo, Role } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -52,6 +52,8 @@ export default function DocumentsView({ documents, role: _role, onUpdateDocument
   const [openFileMenuId, setOpenFileMenuId] = useState<string | null>(null);
   const [libraryNotice, setLibraryNotice] = useState<string | null>(null);
   const [isNewMenuOpen, setIsNewMenuOpen] = useState(false);
+  const [pathDropdownOpenFor, setPathDropdownOpenFor] = useState<'header' | 'import' | null>(null);
+  const [actionTargetId, setActionTargetId] = useState<string>('personal');
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isCreateDeptLibraryModalOpen, setIsCreateDeptLibraryModalOpen] = useState(false);
   const [departmentLibraryName, setDepartmentLibraryName] = useState('');
@@ -562,6 +564,101 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     ...section.folders.map((folder) => ({ id: folder.id, label: folder.label })),
   ]).find((item) => item.id === activeMenuId)?.label ?? '最近';
 
+  const isWritableDirectoryId = (id: string) => id === 'personal' || id === 'personal-drafts' || id.startsWith('department-');
+  const actionDirectoryTree = librarySections
+    .filter((section) => section.id === 'personal' || section.id === 'department')
+    .map((section) => ({
+      ...section,
+      selectable: section.id === 'personal',
+      folders: section.folders.filter((folder) => folder.id !== 'personal-history'),
+    }));
+  const actionTargetMeta = librarySections.flatMap((section) => [
+    { id: section.id, label: section.label, path: section.label },
+    ...section.folders.map((folder) => ({ id: folder.id, label: folder.label, path: `${section.label} / ${folder.label}` })),
+  ]).find((item) => item.id === actionTargetId) ?? { id: 'personal', label: '个人知识库', path: '个人知识库' };
+  const actionTargetLabel = actionTargetMeta.label;
+  const actionTargetPath = actionTargetMeta.path;
+
+  useEffect(() => {
+    if (isWritableDirectoryId(activeMenuId)) {
+      setActionTargetId(activeMenuId);
+    }
+  }, [activeMenuId]);
+
+  const handleSelectActionTarget = (targetId: string) => {
+    setActionTargetId(targetId);
+    setPathDropdownOpenFor(null);
+  };
+
+  const renderActionTargetPicker = (align: 'left' | 'right' = 'right', context: 'header' | 'import' = 'header') => {
+    const open = pathDropdownOpenFor === context;
+    return <div className="relative">
+      <button
+        type="button"
+        onClick={() => { setPathDropdownOpenFor(open ? null : context); setIsNewMenuOpen(false); setOpenFileMenuId(null); setIsFilterDropdownOpen(false); }}
+        className="knowledge-action-button inline-flex h-9 max-w-[300px] items-center gap-2 rounded-[8px] border border-black/[0.08] bg-white px-3 text-[12px] font-semibold text-[#344054] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]"
+      >
+        <Folder size={14} className="shrink-0 text-[#5aa9ee]" />
+        <span className="shrink-0 text-[#98a2b3]">文件路径</span>
+        <span className="min-w-0 truncate">{actionTargetPath}</span>
+        <ChevronDown size={13} className={`shrink-0 transition ${open ? 'rotate-180' : ''}`} />
+      </button>
+      <AnimatePresence>
+        {open ? (
+          <motion.div
+            initial={{ opacity: 0, y: -6, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.98 }}
+            className={`absolute ${align === 'right' ? 'right-0' : 'left-0'} top-11 z-[360] w-[300px] rounded-[12px] border border-black/[0.08] bg-white p-2.5 shadow-[0_22px_58px_rgba(15,23,42,0.18)]`}
+          >
+            <div className="mb-2 flex items-center justify-between px-1">
+              <span className="text-[12px] font-bold text-[#344054]">选择文件路径</span>
+              <span className="text-[10px] text-[#98a2b3]">可写目录</span>
+            </div>
+            <div className="max-h-[300px] overflow-auto pr-1">
+              {actionDirectoryTree.map((section) => {
+                const sectionSelected = actionTargetId === section.id;
+                return (
+                  <div key={section.id} className="mb-1.5">
+                    <button
+                      type="button"
+                      disabled={!section.selectable}
+                      onClick={() => section.selectable ? handleSelectActionTarget(section.id) : undefined}
+                      className={`flex h-9 w-full items-center gap-2 rounded-[9px] px-2.5 text-left transition ${sectionSelected ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)]' : section.selectable ? 'text-[#344054] hover:bg-[#f7f8fa]' : 'cursor-default text-[#667085]'}`}
+                    >
+                      {renderLibrarySectionIcon(section.id, sectionSelected)}
+                      <span className="min-w-0 flex-1 truncate text-[12px] font-semibold">{section.label}</span>
+                      {section.selectable ? null : <span className="text-[10px] text-[#b2b8c2]">选择子目录</span>}
+                    </button>
+                    {section.folders.length > 0 ? (
+                      <div className="ml-4 mt-1 border-l border-black/[0.07] pl-2">
+                        {section.folders.map((folder) => {
+                          const selected = actionTargetId === folder.id;
+                          return (
+                            <button
+                              key={folder.id}
+                              type="button"
+                              onClick={() => handleSelectActionTarget(folder.id)}
+                              className={`mt-1 flex h-9 w-full items-center gap-2 rounded-[8px] px-2.5 text-left transition ${selected ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)] shadow-sm' : 'text-[#667085] hover:bg-[#f7f8fa]'}`}
+                            >
+                              {renderKnowledgeFolderIcon('tree')}
+                              <span className="min-w-0 flex-1 truncate text-[12px] font-semibold">{folder.label}</span>
+                              {selected ? <CheckCircle size={13} className="shrink-0 text-[var(--gov-red)]" /> : null}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </div>;
+  };
+
   const fileSize = (doc: VisualDoc) => {
     const sizes = ['578.8KB', '5.1MB', '70.1KB', '2.8MB', '333.9KB', '3.6MB', '21.8KB', '14.4MB'];
     const number = Number(doc.id.replace(/\D/g, '')) || 1;
@@ -710,7 +807,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
       title: file.name,
       iconType: /\.xlsx?$/i.test(file.name) ? 'xls' : /\.pptx?$/i.test(file.name) ? 'ppt' : 'doc',
       collaborators: [],
-      location: activeDirectoryLabel,
+      location: actionTargetLabel,
       creator: '我',
       lastModified: '刚刚',
       ingestStatus: 'ingesting',
@@ -718,7 +815,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
       content: `${file.name}\n\n已从本地导入知识库，等待内容解析。`,
     }));
     setVisualDocs((items) => [...importedDocs, ...items]);
-    showLibraryNotice(`已导入 ${files.length} 个文件`);
+    showLibraryNotice(`已导入 ${files.length} 个文件到 ${actionTargetPath}`);
     setIsImportModalOpen(false);
     event.target.value = '';
   };
@@ -726,7 +823,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
   const handleCreateLibraryItem = (kind: 'doc' | 'ppt' | 'xls' | 'smart-doc' | 'smart-sheet' | 'multi-sheet' | 'form' | 'folder') => {
     setIsNewMenuOpen(false);
     if (kind === 'folder') {
-      showLibraryNotice('已新建文件夹，可在列表中继续管理');
+      showLibraryNotice(`已在 ${actionTargetPath} 新建文件夹`);
       return;
     }
     const config = {
@@ -743,7 +840,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
       title: config.title,
       iconType: config.iconType,
       collaborators: [],
-      location: activeDirectoryLabel,
+      location: actionTargetLabel,
       creator: '我',
       lastModified: '刚刚',
       ingestStatus: 'success',
@@ -752,6 +849,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     };
     setVisualDocs((items) => [newDoc, ...items]);
     handleOpenDoc(newDoc);
+    showLibraryNotice(`已在 ${actionTargetPath} 新建文件`);
   };
 
   const handleRenameFolder = (folderId: string, currentName: string) => {
@@ -1006,8 +1104,9 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
                     isPublicLibrary ? <span className="knowledge-readonly-badge inline-flex h-9 items-center rounded-[8px] bg-[#f5f5f5] px-3 text-[11px] font-semibold text-[#667085]"><Globe2 size={13} className="mr-1.5" />公共素材库为只读内容</span> : activeMenuId === 'department' ? (
                       <button type="button" onClick={() => setIsCreateDeptLibraryModalOpen(true)} className="inline-flex h-9 items-center gap-2 rounded-[8px] bg-[#e74d5e] px-4 text-[12px] font-semibold text-white shadow-[0_8px_20px_rgba(225,61,78,0.18)] transition hover:-translate-y-0.5 hover:bg-[#d9364b] hover:shadow-[0_12px_26px_rgba(225,61,78,0.24)]"><FilePlus2 size={14} className="shrink-0 text-white" /><span className="text-white">新建知识库</span></button>
                     ) : canCreateOrImport ? <div className="relative z-[260] flex items-center gap-2">
-                      <button type="button" onClick={() => { setIsNewMenuOpen((value) => !value); setOpenFileMenuId(null); setIsFilterDropdownOpen(false); }} className="knowledge-action-button inline-flex h-9 items-center gap-2 rounded-[8px] border border-black/[0.08] bg-white px-4 text-[12px] font-semibold text-[#344054] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]"><FilePlus2 size={14} />新建<ChevronDown size={13} /></button>
-                      <button type="button" onClick={() => setIsImportModalOpen(true)} className="knowledge-action-button inline-flex h-9 items-center gap-2 rounded-[8px] border border-black/[0.08] bg-white px-4 text-[12px] font-semibold text-[#344054] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]"><Upload size={14} />导入</button>
+                      {renderActionTargetPicker('right', 'header')}
+                      <button type="button" onClick={() => { setIsNewMenuOpen((value) => !value); setPathDropdownOpenFor(null); setOpenFileMenuId(null); setIsFilterDropdownOpen(false); }} className="knowledge-action-button inline-flex h-9 items-center gap-2 rounded-[8px] border border-black/[0.08] bg-white px-4 text-[12px] font-semibold text-[#344054] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]"><FilePlus2 size={14} />新建<ChevronDown size={13} /></button>
+                      <button type="button" onClick={() => { setIsImportModalOpen(true); setIsNewMenuOpen(false); setPathDropdownOpenFor(null); }} className="knowledge-action-button inline-flex h-9 items-center gap-2 rounded-[8px] border border-black/[0.08] bg-white px-4 text-[12px] font-semibold text-[#344054] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]"><Upload size={14} />导入</button>
                       <AnimatePresence>{isNewMenuOpen ? <motion.div initial={{ opacity: 0, y: -6, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6, scale: 0.98 }} className="absolute right-0 top-11 z-[320] w-[240px] rounded-[12px] border border-black/[0.08] bg-white p-4 shadow-[0_20px_55px_rgba(15,23,42,0.16)]"><div className="mb-3 flex items-center justify-between"><span className="text-[12px] font-bold text-[#344054]">新建</span><button type="button" onClick={() => setIsNewMenuOpen(false)} className="rounded-[6px] p-1 text-[#98a2b3] hover:bg-[#f5f5f5]"><X size={14} /></button></div><div className="grid grid-cols-2 gap-2">{newItemOptions.map((item) => <button key={item.id} type="button" onClick={() => handleCreateLibraryItem(item.id)} className="flex min-h-[84px] flex-col items-center justify-center rounded-[9px] border border-transparent px-2 text-center transition hover:border-[var(--gov-red-line)] hover:bg-[var(--gov-red-soft)]/35"><span className="knowledge-create-icon">{item.id === 'folder' ? renderKnowledgeFolderIcon('tree') : renderIcon('doc')}</span><span className="mt-2 text-[11px] font-semibold text-[#596170]">{item.label}</span></button>)}</div></motion.div> : null}</AnimatePresence>
                     </div> : <span className="h-9" aria-hidden="true" />
                   ) : (
@@ -1160,7 +1259,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
               initial={{ y: 16, scale: 0.98 }}
               animate={{ y: 0, scale: 1 }}
               exit={{ y: 16, scale: 0.98 }}
-              className="w-full max-w-[520px] overflow-hidden rounded-[8px] bg-white shadow-[0_24px_72px_rgba(15,23,42,0.24)]"
+              className="w-full max-w-[520px] overflow-visible rounded-[8px] bg-white shadow-[0_24px_72px_rgba(15,23,42,0.24)]"
               onClick={(event) => event.stopPropagation()}
             >
               <div className="flex h-14 items-center justify-between border-b border-black/[0.08] px-6">
@@ -1211,7 +1310,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[90] flex items-center justify-center bg-black/45 p-4"
-            onClick={() => setIsImportModalOpen(false)}
+            onClick={() => { setIsImportModalOpen(false); setPathDropdownOpenFor(null); }}
           >
             <motion.div
               initial={{ y: 16, scale: 0.98 }}
@@ -1224,7 +1323,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
                 <h3 className="text-[18px] font-bold text-[#202124]">上传提示</h3>
                 <button
                   type="button"
-                  onClick={() => setIsImportModalOpen(false)}
+                  onClick={() => { setIsImportModalOpen(false); setPathDropdownOpenFor(null); }}
                   className="inline-flex h-8 w-8 items-center justify-center rounded-[7px] text-[#596170] transition hover:bg-[#f5f5f5] hover:text-[#202124]"
                   aria-label="关闭上传提示"
                 >
@@ -1232,6 +1331,13 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
                 </button>
               </div>
               <div className="px-6 py-5">
+                <div className="mb-4 flex items-center justify-between gap-3 rounded-[10px] border border-black/[0.06] bg-[#fafbfc] px-3 py-3">
+                  <div>
+                    <div className="text-[12px] font-bold text-[#344054]">导入到</div>
+                    <div className="mt-0.5 text-[11px] text-[#98a2b3]">文件将保存到选中的知识库路径</div>
+                  </div>
+                  {renderActionTargetPicker('right', 'import')}
+                </div>
                 <p className="mb-2 text-[13px] font-medium text-[#344054]">提示： 总大小不超过100M，单次上传文件数量限制20个</p>
                 <label className="flex h-[156px] cursor-pointer flex-col items-center justify-center rounded-[8px] border border-dashed border-[#cfd6df] bg-white text-center transition hover:border-[var(--gov-red-line)] hover:bg-[var(--gov-red-soft)]/20">
                   <span className="mb-3 inline-flex h-6 w-6 items-center justify-center rounded-full border border-[var(--gov-red)] text-[var(--gov-red)]">
