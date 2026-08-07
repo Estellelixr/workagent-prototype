@@ -2313,124 +2313,138 @@ function ModelManagementAdmin({ subSection: _subSection }: { subSection: AdminSu
 }
 
 const businessNodes = [
-  { level: 0, name: '智能公文', type: '一级功能', prompt: '识别任务目标，组织智能公文能力入口。', model: '', status: '', root: true },
-  { level: 1, name: '智能问答', type: '单模型节点', prompt: '基于问题与参考素材生成政务问答。', model: '金山政务大模型-Pro', status: '已启用' },
-  { level: 1, name: 'AI写作', type: '二级功能', prompt: '进入写作模式、场景、参数和素材流程。', model: '金山政务大模型-Pro', status: '已启用' },
-  { level: 2, name: '写作模式识别', type: '单模型节点', prompt: '判断生成全文、生成大纲、大纲成文、继续写或生成结语。', model: '通用兼容模型', status: '待启用' },
-  { level: 2, name: '场景选择', type: '单模型节点', prompt: '按照文种和细分场景选择写作模板。', model: '金山政务大模型-Pro', status: '已启用' },
-  { level: 2, name: '生成全文', type: '多模型节点', prompt: '整合基础信息和参考素材生成公文正文。', model: '金山政务大模型-Pro', status: '已启用' },
-  { level: 1, name: 'AI仿写', type: '多模型节点', prompt: '提取参考文本风格并生成仿写稿。', model: '金山政务大模型-Pro', status: '已启用' },
-  { level: 1, name: 'AI润色', type: '单模型节点', prompt: '按润色要求优化表达、语气和结构。', model: '专项审校模型', status: '待启用' },
-  { level: 1, name: '智能排版', type: '单模型节点', prompt: '识别正文层级并输出规范格式建议。', model: '专项审校模型', status: '已启用' },
-  { level: 1, name: '智能校对', type: '单模型节点', prompt: '检查错别字、敏感用语和公文格式问题。', model: '专项审校模型', status: '已启用' }
+  { level: 0, name: '智能公文', type: '一级功能', systemPrompt: '组织智能公文能力入口。', userPrompt: '识别用户任务目标并路由到具体功能节点。', variables: [], model: '', params: '', status: '', root: true },
+  { level: 1, name: '智能问答', type: '单模型节点', systemPrompt: '限定为政务办公问答助手，回答需依据问题和可用素材。', userPrompt: '请基于 {{question}}、{{reference_materials}} 输出结构化答复。', variables: ['{{question}}', '{{reference_materials}}'], model: '金山政务大模型-Pro', params: 'Temp 0.3 / Max 2048 / 深度思考 开', status: '已启用' },
+  { level: 1, name: 'AI写作', type: '二级功能', systemPrompt: '识别写作模式、场景、参数与素材流程。', userPrompt: '根据 {{writing_mode}}、{{title}}、{{requirements}} 进入对应写作链路。', variables: ['{{writing_mode}}', '{{title}}', '{{requirements}}'], model: '金山政务大模型-Pro', params: 'Temp 0.4 / Max 4096 / 深度思考 开', status: '已启用' },
+  { level: 2, name: '写作模式识别', type: '单模型节点', systemPrompt: '只判断用户意图，不生成正文。', userPrompt: '从 {{user_input}} 中识别生成全文、生成大纲、大纲成文、继续写或生成结语。', variables: ['{{user_input}}'], model: '通用兼容模型', params: 'Temp 0.1 / Max 1024', status: '待启用' },
+  { level: 2, name: '场景选择', type: '单模型节点', systemPrompt: '根据文种与场景选择适配写作模板。', userPrompt: '结合 {{doc_type}}、{{scene}}、{{business_context}} 返回推荐场景。', variables: ['{{doc_type}}', '{{scene}}', '{{business_context}}'], model: '金山政务大模型-Pro', params: 'Temp 0.2 / Max 1024', status: '已启用' },
+  { level: 2, name: '生成全文', type: '多模型节点', systemPrompt: '生成正式、规范、可编辑的公文正文。', userPrompt: '根据 {{title}}、{{scene}}、{{word_count}}、{{draft_unit}}、{{reference_materials}} 生成全文。', variables: ['{{title}}', '{{scene}}', '{{word_count}}', '{{draft_unit}}', '{{reference_materials}}'], model: '金山政务大模型-Pro', params: 'Temp 0.5 / Max 8192 / 深度思考 开', status: '已启用' },
+  { level: 1, name: 'AI仿写', type: '多模型节点', systemPrompt: '提取参考文本结构、语气和行文特征，不直接照搬原文。', userPrompt: '基于 {{sample_text}}、{{structure_keywords}}、{{rewrite_requirements}} 生成仿写稿。', variables: ['{{sample_text}}', '{{structure_keywords}}', '{{rewrite_requirements}}'], model: '金山政务大模型-Pro', params: 'Temp 0.45 / Max 8192 / 深度思考 开', status: '已启用' },
+  { level: 1, name: 'AI润色', type: '单模型节点', systemPrompt: '优化表达层次、文字质感和正式语气。', userPrompt: '按 {{polish_goal}} 润色 {{draft_text}}，保留原意和事实。', variables: ['{{polish_goal}}', '{{draft_text}}'], model: '专项审校模型', params: 'Temp 0.3 / Max 4096', status: '待启用' },
+  { level: 1, name: '智能排版', type: '单模型节点', systemPrompt: '识别正文层级并给出规范排版建议。', userPrompt: '对 {{draft_text}} 输出标题层级、段落和格式调整建议。', variables: ['{{draft_text}}'], model: '专项审校模型', params: 'Temp 0.2 / Max 4096', status: '已启用' },
+  { level: 1, name: '智能校对', type: '单模型节点', systemPrompt: '检查错别字、敏感表述和公文格式问题。', userPrompt: '校对 {{draft_text}}，输出问题位置、问题类型和修改建议。', variables: ['{{draft_text}}'], model: '专项审校模型', params: 'Temp 0.2 / Max 4096', status: '已启用' }
 ];
 
 function BusinessNodeAdmin() {
-  const [editingNode, setEditingNode] = useState<string | null>(null);
-  const [bindingNode, setBindingNode] = useState<string | null>(null);
+  const [promptEditor, setPromptEditor] = useState<{ title: string; mode: 'create' | 'edit' } | null>(null);
   const [enabledNodes, setEnabledNodes] = useState<Record<string, boolean>>(() => Object.fromEntries(businessNodes.map((node) => [node.name, node.status === '已启用'])));
   const toggleNode = (name: string) => setEnabledNodes((current) => ({ ...current, [name]: !current[name] }));
 
   return (
-    <div className="ai-admin-card overflow-hidden">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/[0.06] px-5 py-5">
-        <div><h3 className="text-[18px] font-bold text-[#202124]">提示词管理</h3><p className="mt-1.5 text-[13px] text-[#667085]">按智能公文业务节点维护提示词、入参、模型绑定和启用状态。</p></div>
-      </div>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[1060px] text-left text-[13px]">
-          <thead className="bg-[#f7f8fa] text-[12px] text-[#667085]"><tr><th className="p-4">名称</th><th className="p-4">场景提示词</th><th className="p-4">模型绑定</th><th className="p-4">状态</th><th className="p-4 text-right">操作</th></tr></thead>
-          <tbody className="divide-y divide-black/[0.05]">
-            {businessNodes.map((node) => {
-              const enabled = enabledNodes[node.name];
-              const root = Boolean(node.root);
-              const disabledAction = root || enabled;
-              return (
-                <tr key={node.name} className={`${root ? 'bg-[#fffafa]' : 'hover:bg-[#fbfbfc]'}`}>
-                  <td className="p-4">
-                    <div className="flex items-center gap-2" style={{ paddingLeft: `${node.level * 26}px` }}>
-                      {node.level > 0 ? <ChevronRight size={13} className="text-[#b0b5bd]" /> : <FolderTree size={15} className="text-[var(--gov-red)]" />}
-                      <div><p className="font-semibold text-[#202124]">{node.name}</p><p className="mt-0.5 text-[11px] text-[#98a2b3]">{node.type}</p></div>
-                    </div>
-                  </td>
-                  <td className="p-4"><p className="line-clamp-2 max-w-[460px] text-[#667085]">{node.prompt}</p></td>
-                  <td className="p-4 text-[#667085]">{root ? '-' : node.model}</td>
-                  <td className="p-4">{root ? '-' : <Status tone={enabled ? 'success' : 'warning'}>{enabled ? '已启用' : '已停用'}</Status>}</td>
-                  <td className="p-4 text-right">
-                    {root ? null : (
-                      <div className="inline-flex items-center gap-2">
-                        <button className="text-[12px] font-semibold text-[#3b63d9]">新增</button>
-                        <button disabled={disabledAction} onClick={() => setBindingNode(node.name)} className="text-[12px] font-semibold text-[#3b63d9] disabled:text-[#c5cad3]">绑定模型</button>
-                        <button onClick={() => toggleNode(node.name)} className={`text-[12px] font-semibold ${enabled ? 'text-amber-700' : 'text-emerald-700'}`}>{enabled ? '停用' : '启用'}</button>
-                        <button disabled={disabledAction} onClick={() => setEditingNode(node.name)} className="text-[12px] font-semibold text-[var(--gov-red-deep)] disabled:text-[#c5cad3]">编辑</button>
-                        <button disabled={disabledAction} className="text-[12px] font-semibold text-[#98a2b3] disabled:text-[#c5cad3]">删除</button>
+    <div className="space-y-4">
+      <div className="ai-admin-card overflow-hidden">
+        <div className="flex flex-wrap items-start justify-between gap-3 border-b border-black/[0.06] px-5 py-5">
+          <div><h3 className="text-[18px] font-bold text-[#202124]">提示词管理</h3><p className="mt-1.5 text-[13px] leading-6 text-[#667085]">按业务节点维护提示词版本、入参变量、绑定模型和模型参数。</p></div>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[1180px] text-left text-[13px]">
+            <thead className="bg-[#f7f8fa] text-[12px] text-[#667085]"><tr><th className="p-4">业务节点</th><th className="p-4">提示词版本</th><th className="p-4">入参变量</th><th className="p-4">绑定模型</th><th className="p-4">模型参数</th><th className="p-4">状态</th><th className="p-4">更新时间</th><th className="p-4 text-right">操作</th></tr></thead>
+            <tbody className="divide-y divide-black/[0.05]">
+              {businessNodes.map((node) => {
+                const enabled = enabledNodes[node.name];
+                const root = Boolean(node.root);
+                const disabledAction = root || enabled;
+                return (
+                  <tr key={node.name} className={`${root ? 'bg-[#fffafa]' : 'hover:bg-[#fbfbfc]'}`}>
+                    <td className="p-4">
+                      <div className="flex items-center gap-2" style={{ paddingLeft: `${node.level * 26}px` }}>
+                        {node.level > 0 ? <ChevronRight size={13} className="text-[#b0b5bd]" /> : <FolderTree size={15} className="text-[var(--gov-red)]" />}
+                        <div><p className="font-semibold text-[#202124]">{node.name}</p><p className="mt-0.5 text-[11px] text-[#98a2b3]">{node.type}</p></div>
                       </div>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                    </td>
+                    <td className="p-4"><p className="font-semibold text-[#344054]">{root ? '-' : `${node.name}提示词`}</p><p className="mt-1 text-[11px] text-[#98a2b3]">{root ? '' : 'V1.0 · 当前启用版本'}</p></td>
+                    <td className="p-4">
+                      <div className="flex max-w-[220px] flex-wrap gap-1.5">
+                        {node.variables.length > 0 ? node.variables.map((item) => <span key={item} className="rounded-[6px] bg-[var(--gov-red-soft)] px-2 py-1 font-mono text-[10px] font-semibold text-[var(--gov-red-deep)]">{item}</span>) : <span className="text-[#c5cad3]">-</span>}
+                      </div>
+                    </td>
+                    <td className="p-4 text-[#667085]">{root ? '-' : node.model}</td>
+                    <td className="p-4"><p className="max-w-[220px] text-[11px] leading-5 text-[#667085]">{node.params || '-'}</p></td>
+                    <td className="p-4">{root ? '-' : <Status tone={enabled ? 'success' : 'warning'}>{enabled ? '已启用' : '已停用'}</Status>}</td>
+                    <td className="p-4 text-[12px] text-[#667085]">{root ? '-' : '2026-08-07 10:30'}</td>
+                    <td className="p-4 text-right">
+                      {root ? null : (
+                        <div className="inline-flex items-center gap-2">
+                          <button onClick={() => setPromptEditor({ title: node.name, mode: 'create' })} className="text-[12px] font-semibold text-[#3b63d9]">新增版本</button>
+                          <button onClick={() => setPromptEditor({ title: node.name, mode: 'edit' })} className="text-[12px] font-semibold text-[var(--gov-red-deep)]">编辑版本</button>
+                          <button onClick={() => toggleNode(node.name)} className={`text-[12px] font-semibold ${enabled ? 'text-amber-700' : 'text-emerald-700'}`}>{enabled ? '停用' : '启用'}</button>
+                          <button disabled={disabledAction} className="text-[12px] font-semibold text-[#98a2b3] disabled:text-[#c5cad3]">删除</button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div className="border-t border-black/[0.06] bg-[#fbfbfc] px-5 py-3 text-[11px] leading-5 text-[#667085]">
+          前台调用规则：每个业务节点同一时间只允许一条启用的提示词版本；若没有启用版本，前台返回“当前功能暂未完成后台配置，请联系管理员”。
+        </div>
+        <AnimatePresence>{promptEditor ? <BusinessPromptModal title={promptEditor.title} mode={promptEditor.mode} onClose={() => setPromptEditor(null)} /> : null}</AnimatePresence>
       </div>
-      <AnimatePresence>{editingNode ? <BusinessPromptModal title={editingNode} onClose={() => setEditingNode(null)} /> : null}{bindingNode ? <BindModelModal title={bindingNode} onClose={() => setBindingNode(null)} /> : null}</AnimatePresence>
     </div>
   );
 }
 
-function BusinessPromptModal({ title, onClose }: { title: string; onClose: () => void }) {
-  return <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-[#111827]/35 p-5" onClick={onClose}><motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 14 }} className="w-full max-w-[860px] overflow-hidden rounded-[18px] bg-white shadow-[0_30px_90px_rgba(15,23,42,0.22)]" onClick={(event) => event.stopPropagation()}><div className="flex items-center justify-between border-b border-black/[0.06] px-6 py-5"><div><h3 className="text-[17px] font-bold text-[#202124]">编辑业务节点：{title}</h3><p className="mt-1 text-[11px] text-[#98a2b3]">可调整提示词、入参与模型生成参数。</p></div><button onClick={onClose}><X size={18} /></button></div><div className="grid gap-5 px-6 py-6 lg:grid-cols-[1.4fr_0.8fr]"><label className="block"><span className="mb-2 flex items-center justify-between text-[13px] font-bold text-[#344054]">场景提示词 <span className="inline-flex items-center gap-2 text-[12px] font-semibold text-[#667085]"><SlidersHorizontal size={15} />提示词入参 <Settings size={15} />模型参数</span></span><textarea rows={16} className="gov-input w-full resize-none px-4 py-3 text-[13px] leading-6" defaultValue={`# Role: ${title}处理专家\n\n## Profile\n- language: 中文\n- description: 根据业务节点目标、用户输入和可用素材生成稳定、规范的政务办公结果。\n\n## Workflows\n1. 接收用户输入：{input}。\n2. 结合场景约束：{scene}。\n3. 按输出要求生成：{output_format}。`} /></label><div className="space-y-4"><div className="rounded-[14px] border border-black/[0.06] bg-[#fbfbfc] p-4"><h4 className="text-[13px] font-bold text-[#202124]">入参</h4><div className="mt-3 flex flex-wrap gap-2">{['{input}', '{scene}', '{style}', '{length}', '{source}'].map((item) => <span key={item} className="rounded-[7px] bg-white px-2 py-1 font-mono text-[11px] text-[var(--gov-red-deep)] ring-1 ring-black/[0.06]">{item}</span>)}</div></div><div className="rounded-[14px] border border-black/[0.06] bg-[#fbfbfc] p-4"><h4 className="text-[13px] font-bold text-[#202124]">模型参数</h4>{[['Temperature','0.6'],['Top P','0.85'],['Max Tokens','4096'],['深度思考','开启']].map(([label,value])=><div key={label} className="mt-3 flex items-center justify-between text-[12px]"><span className="text-[#667085]">{label}</span><span className="font-semibold text-[#202124]">{value}</span></div>)}</div></div></div><div className="flex justify-end gap-2 border-t border-black/[0.06] px-6 py-4"><button onClick={onClose} className="h-10 rounded-[8px] border border-black/[0.08] px-5 text-[12px] font-semibold">取消</button><button className="gov-button-primary h-10 px-5 text-[12px] font-semibold">保存</button></div></motion.div></motion.div>;
-}
-
-function BindModelModal({ title, onClose }: { title: string; onClose: () => void }) {
-  const [reasoning, setReasoning] = useState(false);
-  const availableModels = initialLlmModels.length > 0
-    ? initialLlmModels
-    : [{ name: '金山政务大模型-Pro', vendor: '金山政务大模型', modelId: 'ks-gov-pro-0724', status: '启用', reasoning: '支持', tokens: '128K / 8K' } satisfies LlmModelItem];
-  const reasoningModels = availableModels.filter((model) => model.reasoning === '支持');
-  const deepThinkingModels = reasoningModels.length > 0 ? reasoningModels : availableModels;
-
+function BusinessPromptModal({ title, mode, onClose }: { title: string; mode: 'create' | 'edit'; onClose: () => void }) {
+  const node = businessNodes.find((item) => item.name === title);
+  const variables = node?.variables.length ? node.variables : ['{{user_input}}', '{{reference_materials}}', '{{output_format}}'];
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-[#111827]/35 p-5" onClick={onClose}>
-      <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 14 }} className="w-full max-w-[720px] overflow-hidden rounded-[16px] bg-white shadow-[0_30px_90px_rgba(15,23,42,0.22)]" onClick={(event) => event.stopPropagation()}>
+      <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 14 }} className="w-full max-w-[1040px] overflow-hidden rounded-[18px] bg-white shadow-[0_30px_90px_rgba(15,23,42,0.22)]" onClick={(event) => event.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-black/[0.06] px-6 py-5">
-          <div><h3 className="text-[17px] font-bold text-[#202124]">绑定模型：{title}</h3><p className="mt-1 text-[12px] text-[#667085]">每个业务节点只能绑定一个主模型，并可单独设置生成参数。</p></div>
+          <div><h3 className="text-[17px] font-bold text-[#202124]">{mode === 'create' ? '新增' : '编辑'}提示词版本：{title}</h3><p className="mt-1 text-[12px] text-[#667085]">入参统一使用双大括号，例如 <code>{'{{title}}'}</code>、<code>{'{{requirements}}'}</code>。</p></div>
           <button onClick={onClose} className="rounded-[8px] border border-black/[0.08] p-2"><X size={18} /></button>
         </div>
-        <div className="space-y-5 px-6 py-6">
-          <Field label="模型列表" required>
-            <select className="gov-input h-11 w-full px-3 text-[13px]">
-              {availableModels.map((model) => <option key={model.modelId} value={model.modelId}>{model.name}</option>)}
-            </select>
-          </Field>
-          <div className="grid gap-4 md:grid-cols-2">
-            <Field label="temperature"><input className="gov-input h-10 w-full px-3 text-[13px]" defaultValue="0.3" /></Field>
-            <Field label="maxToken"><input className="gov-input h-10 w-full px-3 text-[13px]" defaultValue="2048" /></Field>
-          </div>
-          <div className="rounded-[12px] border border-black/[0.08] p-4">
-            <p className="text-[13px] font-bold text-[#344054]">是否需要深度思考</p>
-            <div className="mt-3 flex gap-6 text-[13px] text-[#344054]">
-              <label className="flex items-center gap-2"><input type="radio" checked={!reasoning} onChange={() => setReasoning(false)} />否</label>
-              <label className="flex items-center gap-2"><input type="radio" checked={reasoning} onChange={() => setReasoning(true)} />是</label>
+        <div className="grid max-h-[72vh] gap-5 overflow-auto px-6 py-6 lg:grid-cols-[1.25fr_0.95fr]">
+          <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-[1fr_160px]">
+              <Field label="版本名称" required><input className="gov-input h-11 w-full px-3 text-[13px]" defaultValue={`${title}提示词`} /></Field>
+              <Field label="版本号" required><input className="gov-input h-11 w-full px-3 text-[13px]" defaultValue="V1.0" /></Field>
             </div>
-            {reasoning ? (
-              <div className="mt-4 rounded-[10px] border border-black/[0.06] bg-[#fbfbfc] p-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Field label="深度思考模型">
-                    <select className="gov-input h-10 w-full px-3 text-[13px]">
-                      {deepThinkingModels.map((model) => <option key={model.modelId} value={model.modelId}>{model.name}</option>)}
-                    </select>
-                  </Field>
-                  <Field label="temperature"><input className="gov-input h-10 w-full px-3 text-[13px]" defaultValue="0.2" /></Field>
-                  <Field label="maxToken"><input className="gov-input h-10 w-full px-3 text-[13px]" defaultValue="4096" /></Field>
+            <label className="block">
+              <span className="mb-2 flex items-center justify-between text-[13px] font-bold text-[#344054]">System Prompt <span className="text-[11px] font-medium text-[#98a2b3]">角色 / 边界 / 格式约束</span></span>
+              <textarea rows={9} className="gov-input w-full resize-none px-4 py-3 text-[13px] leading-6" defaultValue={`你是${title}处理专家，服务于政务公文写作场景。\n你必须遵循正式、准确、稳健、可追溯的表达原则。\n不得编造政策、数据、单位名称；缺少关键信息时输出待补充项。\n输出需符合公文表达习惯，避免口语化和营销化措辞。`} />
+            </label>
+            <label className="block">
+              <span className="mb-2 flex items-center justify-between text-[13px] font-bold text-[#344054]">User Prompt <span className="text-[11px] font-medium text-[#98a2b3]">业务输入 / 任务变量</span></span>
+              <textarea rows={9} className="gov-input w-full resize-none px-4 py-3 font-mono text-[12px] leading-6" defaultValue={node?.userPrompt || `请根据 {{user_input}}、{{reference_materials}} 和 {{output_format}} 完成当前节点任务。`} />
+            </label>
+          </div>
+          <div className="space-y-4">
+            <div className="rounded-[14px] border border-black/[0.06] bg-[#fbfbfc] p-4">
+              <h4 className="text-[13px] font-bold text-[#202124]">绑定模型</h4>
+              <div className="mt-3 space-y-3">
+                <Field label="模型列表" required>
+                  <select className="gov-input h-10 w-full px-3 text-[13px]" defaultValue={node?.model || '金山政务大模型-Pro'}>
+                    {(initialLlmModels.length > 0 ? initialLlmModels : [{ name: '金山政务大模型-Pro', vendor: '金山政务大模型', modelId: 'ks-gov-pro-0724', status: '启用', reasoning: '支持', tokens: '128K / 8K' } satisfies LlmModelItem]).map((model) => <option key={model.modelId} value={model.name}>{model.name}</option>)}
+                  </select>
+                </Field>
+                <div className="grid gap-3 md:grid-cols-2">
+                  <Field label="Temperature"><input className="gov-input h-10 w-full px-3 text-[13px]" defaultValue={title.includes('全文') || title.includes('仿写') ? '0.5' : '0.3'} /></Field>
+                  <Field label="Max Tokens"><input className="gov-input h-10 w-full px-3 text-[13px]" defaultValue={title.includes('全文') || title.includes('仿写') ? '8192' : '4096'} /></Field>
                 </div>
+                <label className="flex items-center gap-2 rounded-[10px] border border-black/[0.06] bg-white px-3 py-2 text-[12px] font-semibold text-[#344054]"><input type="checkbox" defaultChecked={node?.params?.includes('深度思考')} className="accent-[var(--gov-red)]" />启用深度思考</label>
               </div>
-            ) : null}
+            </div>
+            <div className="rounded-[14px] border border-black/[0.06] bg-[#fbfbfc] p-4">
+              <h4 className="text-[13px] font-bold text-[#202124]">入参变量</h4>
+              <p className="mt-1 text-[11px] leading-5 text-[#98a2b3]">保存时校验 user prompt 中的变量必须出现在入参清单内。</p>
+              <div className="mt-3 flex flex-wrap gap-2">{variables.map((item) => <span key={item} className="rounded-[7px] bg-white px-2 py-1 font-mono text-[11px] text-[var(--gov-red-deep)] ring-1 ring-black/[0.06]">{item}</span>)}</div>
+            </div>
+            <div className="rounded-[14px] border border-[var(--gov-red-line)] bg-[var(--gov-red-soft)]/35 p-4">
+              <h4 className="text-[13px] font-bold text-[#202124]">启用规则</h4>
+              <div className="mt-3 space-y-2 text-[12px] leading-5 text-[#596170]">
+                <p>1. 当前业务节点同一时间只允许启用一条提示词版本。</p>
+                <p>2. 启用新版本后，系统自动停用该节点下其他版本。</p>
+                <p>3. 没有启用版本时，前台生成前进行明确报错。</p>
+              </div>
+              <label className="mt-3 flex items-center gap-2 text-[12px] font-semibold text-[var(--gov-red-deep)]"><input type="checkbox" defaultChecked={node?.status === '已启用'} className="accent-[var(--gov-red)]" />保存后启用该版本</label>
+            </div>
           </div>
         </div>
-        <div className="flex justify-end gap-2 border-t border-black/[0.06] bg-[#fbfbfc] px-6 py-4">
-          <button onClick={onClose} className="h-10 rounded-[8px] border border-black/[0.08] bg-white px-5 text-[12px] font-semibold">取消</button>
-          <button className="gov-button-primary h-10 px-5 text-[12px] font-semibold">确认绑定</button>
-        </div>
+        <div className="flex justify-end gap-2 border-t border-black/[0.06] px-6 py-4"><button onClick={onClose} className="h-10 rounded-[8px] border border-black/[0.08] px-5 text-[12px] font-semibold">取消</button><button className="gov-button-primary h-10 px-5 text-[12px] font-semibold">保存版本</button></div>
       </motion.div>
     </motion.div>
   );
@@ -2607,7 +2621,7 @@ const rolePermissionTree: RolePermissionNode[] = [
       { id: '智能体管理', label: '智能体管理', children: [{ id: '智能体管理-新建智能体', label: '新建智能体' }, { id: '智能体管理-设置权限', label: '设置权限' }] },
       { id: '文库管理', label: '文库管理' },
       { id: '写作场景管理', label: '写作场景管理', children: [{ id: '写作场景管理-新增一级场景', label: '新增一级场景' }, { id: '写作场景管理-新增子场景', label: '新增子场景' }] },
-      { id: '提示词管理', label: '提示词管理', children: [{ id: '提示词管理-绑定模型', label: '绑定模型' }, { id: '提示词管理-编辑提示词', label: '编辑提示词' }] },
+      { id: '提示词管理', label: '提示词管理', children: [{ id: '提示词管理-新增版本', label: '新增提示词版本' }, { id: '提示词管理-编辑版本', label: '编辑提示词版本' }] },
       { id: '套红管理', label: '套红管理' },
     ],
   },
