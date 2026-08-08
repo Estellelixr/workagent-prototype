@@ -137,9 +137,16 @@ interface CopyStructureItem {
 interface QATurn {
   id: number;
   prompt: string;
-  answer: string;
   sources: UploadedMockFile[];
+  versions: QATurnVersion[];
+  activeVersionIndex: number;
   status: 'processing' | 'done';
+}
+
+interface QATurnVersion {
+  id: number;
+  answer: string;
+  createdAt: number;
 }
 
 const DEFAULT_COPY_ATTRIBUTES: CopyDocumentAttributes = {
@@ -931,6 +938,12 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
   const selectedHomeExpert = useMemo(() => getHomeExpertById(activeHomeExpertId), [activeHomeExpertId]);
   const isDefaultHomeExpert = activeHomeExpertId === DEFAULT_HOME_EXPERT_ID;
 
+  const createQaVersion = (answer: string) => ({
+    id: Date.now() + Math.floor(Math.random() * 1000),
+    answer,
+    createdAt: Date.now(),
+  });
+
   const resetOutlineParse = () => {
     setOutlineParseStatus('idle');
     setOutlineParseSections([]);
@@ -1386,7 +1399,7 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
       setQaSourcesOpen(false);
       setQaActiveCitation(null);
     } else if (activeSkill === '智能问答') {
-      setQaTurns([{ id: Date.now(), prompt, answer: result, sources, status: 'processing' }]);
+      setQaTurns([{ id: Date.now(), prompt, sources, versions: [createQaVersion(result)], activeVersionIndex: 0, status: 'processing' }]);
       setQaProcessingStep(0);
       setQaRunNonce((value) => value + 1);
       setQaProcessExpanded(true);
@@ -1413,7 +1426,7 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
     const sources = [...uploadedFiles];
     const result = buildHomeResult(prompt, 'AI写作');
     setHomeConversation({ prompt, skill: 'AI写作', result, sources });
-    setQaTurns([{ id: Date.now(), prompt, answer: result, sources, status: 'processing' }]);
+    setQaTurns([{ id: Date.now(), prompt, sources, versions: [createQaVersion(result)], activeVersionIndex: 0, status: 'processing' }]);
     setWritingPreflightConfirmed(true);
     setQaProcessingStep(0);
     setQaRunNonce((value) => value + 1);
@@ -1429,7 +1442,7 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
     const activeSkill = homeConversation?.skill ?? '智能问答';
     setQaTurns((turns) => [
       ...turns,
-      { id: Date.now(), prompt, answer: buildHomeResult(prompt, activeSkill), sources, status: 'processing' }
+      { id: Date.now(), prompt, sources, versions: [createQaVersion(buildHomeResult(prompt, activeSkill))], activeVersionIndex: 0, status: 'processing' }
     ]);
     setQaFollowup('');
     setQaProcessingStep(0);
@@ -1447,7 +1460,9 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
       window.setTimeout(() => {
         setQaProcessingStep(4);
         setQaTurns((turns) => turns.map((turn, index) => (
-          index === turns.length - 1 ? { ...turn, status: 'done' } : turn
+          index === turns.length - 1
+            ? { ...turn, status: 'done', activeVersionIndex: Math.max(turn.versions.length - 1, 0) }
+            : turn
         )));
       }, 1950)
     ];
@@ -2898,8 +2913,13 @@ ${resultSummary}
                       </div>
                     </div>
                   ) : null}
-                  {qaTurns.map((turn) => {
+                  {qaTurns.map((turn, turnIndex) => {
                     const hasSources = turn.sources.length > 0;
+                    const activeVersion = turn.versions[turn.activeVersionIndex] ?? turn.versions[turn.versions.length - 1];
+                    const isLastTurn = turnIndex === qaTurns.length - 1;
+                    const showVersionHistory = isLastTurn && turn.versions.length > 1;
+                    const versionCount = turn.versions.length;
+                    const activeVersionLabel = `${Math.min(turn.activeVersionIndex + 1, versionCount)}/${versionCount}`;
                     return (
                       <div key={turn.id} className="space-y-5">
                         <div className="flex justify-end gap-3">
@@ -3008,7 +3028,7 @@ ${resultSummary}
                                   </div>
                                 ) : (
                                   <>
-                                    <p className="text-[14px] leading-7 text-[#30343b]">根据你的问题，建议从“目标确认、现状梳理、执行安排”三个层面推进，既保证答复口径准确，也便于后续形成可落地的任务清单。</p>
+                                    <p className="text-[14px] leading-7 text-[#30343b]">{activeVersion?.answer}</p>
                                     <div className="mt-4 border-t border-black/[0.06] pt-4">
                                       <h3 className="text-[15px] font-semibold text-[#202124]">一、先明确问题边界与办理目标</h3>
                                       <p className="mt-2 text-[14px] leading-7 text-[#3f4650]">
@@ -3024,7 +3044,7 @@ ${resultSummary}
                                   <button
                                     type="button"
                                     onClick={async () => {
-                                      await navigator.clipboard.writeText(turn.answer);
+                                      await navigator.clipboard.writeText(activeVersion?.answer ?? '');
                                       setQaCopiedTurn(turn.id);
                                       window.setTimeout(() => setQaCopiedTurn(null), 1200);
                                     }}
@@ -3037,7 +3057,18 @@ ${resultSummary}
                                   <button
                                     type="button"
                                     onClick={() => {
-                                      setQaTurns((turns) => [...turns, { ...turn, id: Date.now(), status: 'processing' }]);
+                                      const regeneratedAnswer = buildHomeResult(turn.prompt, homeConversation?.skill ?? '智能问答');
+                                      setQaTurns((turns) => turns.map((item, index) => {
+                                        if (index !== turns.length - 1) return item;
+                                        const nextVersions = [...item.versions, createQaVersion(regeneratedAnswer)].slice(-5);
+                                        const nextActiveIndex = nextVersions.length - 1;
+                                        return {
+                                          ...item,
+                                          versions: nextVersions,
+                                          activeVersionIndex: nextActiveIndex,
+                                          status: 'processing',
+                                        };
+                                      }));
                                       setQaProcessingStep(0);
                                       setQaRunNonce((value) => value + 1);
                                       setQaProcessExpanded(true);
@@ -3048,6 +3079,37 @@ ${resultSummary}
                                   >
                                     <RotateCcw size={15} />
                                   </button>
+                                  {showVersionHistory ? (
+                                    <div className="ml-2 inline-flex items-center rounded-[8px] border border-black/[0.06] bg-[#fafafa] px-2 py-1 text-[12px] font-semibold text-[#4b5563]">
+                                      <button
+                                        type="button"
+                                        onClick={() => setQaTurns((turns) => turns.map((item, index) => (
+                                          index === turnIndex
+                                            ? { ...item, activeVersionIndex: Math.max(0, item.activeVersionIndex - 1) }
+                                            : item
+                                        )))}
+                                        disabled={turn.activeVersionIndex === 0}
+                                        className="flex h-5 w-5 items-center justify-center rounded-[6px] text-[#98a2b3] transition hover:bg-white hover:text-[#344054] disabled:cursor-not-allowed disabled:opacity-40"
+                                        aria-label="查看上一版"
+                                      >
+                                        <ChevronDown size={13} className="rotate-90" />
+                                      </button>
+                                      <span className="min-w-[34px] px-1 text-center">{activeVersionLabel}</span>
+                                      <button
+                                        type="button"
+                                        onClick={() => setQaTurns((turns) => turns.map((item, index) => (
+                                          index === turnIndex
+                                            ? { ...item, activeVersionIndex: Math.min(item.versions.length - 1, item.activeVersionIndex + 1) }
+                                            : item
+                                        )))}
+                                        disabled={turn.activeVersionIndex >= versionCount - 1}
+                                        className="flex h-5 w-5 items-center justify-center rounded-[6px] text-[#98a2b3] transition hover:bg-white hover:text-[#344054] disabled:cursor-not-allowed disabled:opacity-40"
+                                        aria-label="查看下一版"
+                                      >
+                                        <ChevronDown size={13} className="-rotate-90" />
+                                      </button>
+                                    </div>
+                                  ) : null}
                                   {isWritingConversation ? (
                                     <>
                                       <span className="mx-1 h-4 w-px bg-black/[0.08]" />
