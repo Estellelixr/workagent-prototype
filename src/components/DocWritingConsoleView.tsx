@@ -58,8 +58,14 @@ interface DocWritingConsoleViewProps {
 
 type WritingView = 'home' | 'write' | 'copy' | 'polish' | 'check' | 'template-layout' | 'ppt' | 'table' | 'weboffice' | 'recent-editor' | 'conversation-detail';
 type ContentLengthOption = '不限' | '简短' | '适中' | '较长';
-type WriteStep = 'mode' | 'source' | 'outline-parse' | 'scenario' | 'form' | 'style' | 'outline' | 'full';
+type WriteStep = 'mode' | 'source' | 'outline-parse' | 'scenario' | 'form' | 'style' | 'outline' | 'full-confirm' | 'full';
 type WritingMode = '生成全文' | '生成大纲' | '大纲成文' | '继续写' | '生成结语';
+type WriteGenerationContext = {
+  topic: string;
+  requirements: string;
+  wordCount: string;
+  draftingUnit: string;
+};
 type OutlineParseStatus = 'idle' | 'processing' | 'success' | 'empty';
 type OutlineInputMode = 'ai' | 'manual';
 type CopyStep = 'upload' | 'extract' | 'requirements' | 'materials' | 'result';
@@ -119,6 +125,9 @@ interface UploadedMockFile {
   name: string;
   size: string;
   type: string;
+  sourceKind?: 'local' | 'knowledge';
+  sourceId?: string;
+  sourceLabel?: string;
 }
 
 interface CopyDocumentAttributes {
@@ -670,7 +679,8 @@ const WRITE_STEP_META: Array<{ id: WriteStep; label: string; stepNumber: number 
   { id: 'form', label: '基础信息', stepNumber: 4 },
   { id: 'style', label: '参考素材', stepNumber: 5 },
   { id: 'outline', label: '生成大纲', stepNumber: 6 },
-  { id: 'full', label: '生成全文', stepNumber: 7 },
+  { id: 'full-confirm', label: '生成确认', stepNumber: 7 },
+  { id: 'full', label: '生成全文', stepNumber: 8 },
 ];
 
 const WRITING_MODE_OPTIONS: Array<{ id: WritingMode; desc: string; icon: typeof FileText; iconKey: string }> = [
@@ -821,6 +831,7 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
   const [searchQuery] = useState('');
   const [writeTopic, setWriteTopic] = useState('');
   const [writeRequirements, setWriteRequirements] = useState('');
+  const [outlineGenerationContext, setOutlineGenerationContext] = useState<WriteGenerationContext | null>(null);
   const [writeContentLength, setWriteContentLength] = useState<ContentLengthOption>('不限');
   const [writeWordCount, setWriteWordCount] = useState('1500');
   const [writeDraftingUnit, setWriteDraftingUnit] = useState('');
@@ -853,6 +864,7 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [selectedRefArticles, setSelectedRefArticles] = useState<string[]>([]);
   const [referenceSource, setReferenceSource] = useState<'local' | 'knowledge'>('knowledge');
+  const [referenceReturnStep, setReferenceReturnStep] = useState<WriteStep | null>(null);
   const [activeKnowledgeRoot, setActiveKnowledgeRoot] = useState(KNOWLEDGE_LIBRARY_GROUPS[0].id);
   const [activeKnowledgeFolder, setActiveKnowledgeFolder] = useState(KNOWLEDGE_LIBRARY_GROUPS[0].folders[0].id);
   const [selectedKnowledgeItems, setSelectedKnowledgeItems] = useState<string[]>([]);
@@ -863,7 +875,6 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
   const [activeCitation, setActiveCitation] = useState<number | null>(null);
   const [styleSearchQuery, setStyleSearchQuery] = useState('');
   const [generatedOutline, setGeneratedOutline] = useState<OutlineSection[]>([]);
-  const [outlineFullTextPanelOpen, setOutlineFullTextPanelOpen] = useState(false);
   const [generatedFullText, setGeneratedFullText] = useState('');
   const [fullTextVersions, setFullTextVersions] = useState<string[]>([]);
   const [activeFullTextVersionIndex, setActiveFullTextVersionIndex] = useState(0);
@@ -1276,6 +1287,7 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
     setSelectedScenario(null);
     setSelectedRefArticles([]);
     setReferenceSource('knowledge');
+    setReferenceReturnStep(null);
     setActiveKnowledgeRoot(KNOWLEDGE_LIBRARY_GROUPS[0].id);
     setActiveKnowledgeFolder(KNOWLEDGE_LIBRARY_GROUPS[0].folders[0].id);
     setSelectedKnowledgeItems([]);
@@ -1283,10 +1295,10 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
     setShowSourceTrace(false);
     setStyleSearchQuery('');
     setGeneratedOutline([]);
-    setOutlineFullTextPanelOpen(false);
     setGeneratedFullText('');
     setWriteTopic('');
     setWriteRequirements('');
+    setOutlineGenerationContext(null);
     setSourceOutlineText('');
     setWriteSourceFile(null);
     setOutlineInputMode('ai');
@@ -1431,7 +1443,7 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
       return;
     }
     const result = buildHomeResult(prompt, activeSkill);
-    const sources = [...uploadedFiles];
+    const sources = buildHomeConversationSources();
     setHomeConversation({ prompt, skill: activeSkill, result, sources });
     if (activeSkill === 'AI写作') {
       setQaTurns([]);
@@ -1466,7 +1478,7 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
     const prompt = needsSourceText
       ? `${copy.submitLead}，${sourceLabel}已提供，目标字数：${wordCount}字，处理要求：${requirement}${writingReferenceDecision === 'skip' ? '，本次不添加参考文档' : ''}`
       : `${copy.submitLead}，场景：${scenario}，标题：《${title}》，字数：${wordCount}字，写作要求：${requirement}${writingReferenceDecision === 'skip' ? '，本次不添加参考文档' : ''}`;
-    const sources = [...uploadedFiles];
+    const sources = buildHomeConversationSources();
     const result = buildHomeResult(prompt, 'AI写作');
     setHomeConversation({ prompt, skill: 'AI写作', result, sources });
     setQaTurns([{ id: Date.now(), prompt, sources, versions: [createQaVersion(result)], activeVersionIndex: 0, status: 'processing' }]);
@@ -1481,7 +1493,7 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
   const handleQAFollowupSubmit = () => {
     const prompt = qaFollowup.trim();
     if (!prompt) return;
-    const sources = [...uploadedFiles];
+    const sources = buildHomeConversationSources();
     const activeSkill = homeConversation?.skill ?? '智能问答';
     setQaTurns((turns) => [
       ...turns,
@@ -1561,11 +1573,18 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
     } else if (writeStep === 'form') {
       setWriteStep(isSourceBasedWritingMode ? 'source' : 'scenario');
     } else if (writeStep === 'style') {
-      setWriteStep('form');
+      if (referenceReturnStep === 'full-confirm') {
+        setReferenceReturnStep(null);
+        setWriteStep('full-confirm');
+      } else {
+        setWriteStep('form');
+      }
     } else if (writeStep === 'outline') {
       setWriteStep('style');
+    } else if (writeStep === 'full-confirm') {
+      setWriteStep('outline');
     } else {
-      setWriteStep(isConclusionWritingMode ? 'form' : needOutline ? 'outline' : 'style');
+      setWriteStep(isConclusionWritingMode ? 'form' : needOutline ? 'full-confirm' : 'style');
     }
   };
 
@@ -1618,8 +1637,13 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
 
   const handleGenerateOutline = () => {
     if (!writeTopic.trim()) return;
+    setOutlineGenerationContext({
+      topic: writeTopic.trim(),
+      requirements: writeRequirements.trim(),
+      wordCount: writeWordCount.trim(),
+      draftingUnit: writeDraftingUnit.trim(),
+    });
     setIsProcessing(true);
-    setOutlineFullTextPanelOpen(false);
     window.setTimeout(() => {
       setIsProcessing(false);
       setGeneratedOutline([
@@ -1680,12 +1704,17 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
   };
 
   const handleContinueFullTextFromOutline = () => {
-    setOutlineFullTextPanelOpen(true);
+    if (outlineGenerationContext) {
+      setWriteTopic((prev) => prev.trim() || outlineGenerationContext.topic);
+      setWriteRequirements((prev) => prev.trim() || outlineGenerationContext.requirements);
+      setWriteWordCount((prev) => prev.trim() || outlineGenerationContext.wordCount || '1500');
+      setWriteDraftingUnit((prev) => prev.trim() || outlineGenerationContext.draftingUnit);
+    }
+    setWriteStep('full-confirm');
   };
 
   const handleGenerateFullText = () => {
     setIsProcessing(true);
-    setOutlineFullTextPanelOpen(false);
     setSavedToCenter(false);
     setIsFullTextInserted(false);
     setShowSourceTrace(false);
@@ -1954,10 +1983,55 @@ ${draftingUnit}
     const file = event.target.files?.[0];
     if (!file) return;
     const size = file.size >= 1024 * 1024 ? `${(file.size / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(file.size / 1024))} KB`;
-    const sourceFile = { name: file.name, size, type: file.name.split('.').pop()?.toLowerCase() || 'file' };
+    const sourceFile: UploadedMockFile = {
+      name: file.name,
+      size,
+      type: file.name.split('.').pop()?.toLowerCase() || 'file',
+      sourceKind: 'local',
+      sourceId: `local-${file.name}`,
+      sourceLabel: '本地上传',
+    };
     setUploadedFiles((prev) => (prev.some((item) => item.name === sourceFile.name) ? prev : [...prev, sourceFile]));
     setWritingReferenceDecision('added');
     event.target.value = '';
+  };
+
+  const buildHomeConversationSources = () => {
+    const localSources = uploadedFiles.map((file) => ({
+      ...file,
+      sourceKind: file.sourceKind ?? 'local',
+      sourceId: file.sourceId ?? `local-${file.name}`,
+      sourceLabel: file.sourceLabel ?? '本地上传',
+    }));
+    const knowledgeSources = KNOWLEDGE_LIBRARY_GROUPS.flatMap((group) =>
+      group.folders.flatMap((folder) => [
+        selectedKnowledgeItems.includes(folder.id)
+          ? {
+              name: folder.title,
+              size: `${folder.files.length}个文件`,
+              type: 'folder',
+              sourceKind: 'knowledge' as const,
+              sourceId: folder.id,
+              sourceLabel: `${group.title}`,
+            }
+          : null,
+        ...folder.files.map((file) => selectedKnowledgeItems.includes(file.id)
+          ? {
+              name: file.title,
+              size: file.size,
+              type: file.type,
+              sourceKind: 'knowledge' as const,
+              sourceId: file.id,
+              sourceLabel: `${group.title}/${folder.title}`,
+            }
+          : null),
+      ])
+    ).filter(Boolean) as UploadedMockFile[];
+
+    return [...localSources, ...knowledgeSources].filter((source, index, sources) => {
+      const key = `${source.sourceKind ?? 'local'}-${source.sourceId ?? source.name}`;
+      return sources.findIndex((item) => `${item.sourceKind ?? 'local'}-${item.sourceId ?? item.name}` === key) === index;
+    });
   };
 
   const handleWriteSourceUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -2109,7 +2183,7 @@ ${resultSummary}
   };
 
   const handleSelectMyCloudDocument = (doc: DocumentInfo) => {
-    const sourceFile = { name: doc.title, size: '知识库', type: 'docx' };
+    const sourceFile: UploadedMockFile = { name: doc.title, size: '知识库', type: 'docx', sourceKind: 'knowledge', sourceId: `doc-${doc.id}`, sourceLabel: '知识库选择' };
     if (documentPickerTarget === 'home') {
       setUploadedFiles((prev) => (prev.some((item) => item.name === sourceFile.name) ? prev : [...prev, sourceFile]));
       setWritingReferenceDecision('added');
@@ -2834,13 +2908,34 @@ ${resultSummary}
                   : '完成口径校验并输出最终答案',
             icon: [HelpCircle, FileSearch, Network, Sparkles][index] ?? Sparkles,
           }));
+      const getSourceKey = (source: UploadedMockFile) => `${source.sourceKind ?? 'local'}-${source.sourceId ?? source.name}`;
+      const currentReferenceSources = buildHomeConversationSources();
       const allSources = qaTurns.reduce<UploadedMockFile[]>((files, turn) => {
         turn.sources.forEach((source) => {
-          if (!files.some((file) => file.name === source.name)) files.push(source);
+          if (!files.some((file) => getSourceKey(file) === getSourceKey(source))) files.push(source);
         });
         return files;
-      }, []);
+      }, [...homeConversation.sources, ...currentReferenceSources].filter((source, index, sources) => (
+        sources.findIndex((item) => getSourceKey(item) === getSourceKey(source)) === index
+      )));
       const activeSource = allSources[qaActiveSource] ?? allSources[0];
+      const handleRemoveConversationSource = (source: UploadedMockFile) => {
+        const sourceKey = getSourceKey(source);
+        setHomeConversation((conversation) => conversation
+          ? { ...conversation, sources: conversation.sources.filter((item) => getSourceKey(item) !== sourceKey) }
+          : conversation);
+        setQaTurns((turns) => turns.map((turn) => ({
+          ...turn,
+          sources: turn.sources.filter((item) => getSourceKey(item) !== sourceKey),
+        })));
+        if ((source.sourceKind ?? 'local') === 'local') {
+          setUploadedFiles((files) => files.filter((file) => getSourceKey(file) !== sourceKey && file.name !== source.name));
+        } else if (source.sourceId) {
+          setSelectedKnowledgeItems((items) => items.filter((item) => item !== source.sourceId));
+        }
+        setQaActiveSource(0);
+        setQaActiveCitation(null);
+      };
       const sourceExcerpt = activeSource
         ? `摘录自《${activeSource.name.replace(/\.[^.]+$/, '')}》：围绕当前事项，应先明确目标边界和责任主体，再结合现有政策、历史材料与执行条件形成可落地的工作建议。`
         : '';
@@ -2876,10 +2971,27 @@ ${resultSummary}
                 <p className="truncate text-[11px] text-[#98a2b3]">金山政务一体机 · {isWritingConversation ? '写作任务' : '连续对话'}</p>
               </div>
             </div>
-            <span className="hidden items-center gap-1.5 text-[11px] font-medium text-[#7a808a] sm:inline-flex">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#49a36d]" />
-              模型服务正常
-            </span>
+            <div className="flex shrink-0 items-center gap-2">
+              <button
+                type="button"
+                onClick={() => allSources.length > 0 && setQaSourcesOpen(true)}
+                disabled={allSources.length === 0}
+                className="relative flex h-9 w-9 items-center justify-center rounded-[10px] border border-black/[0.06] bg-white text-[#667085] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)] disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:border-black/[0.06] disabled:hover:text-[#667085]"
+                title={allSources.length > 0 ? '查看参考文件列表' : '暂无参考文件'}
+                aria-label="参考文件列表"
+              >
+                <ClipboardList size={17} />
+                {allSources.length > 0 ? (
+                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--gov-red)] px-1 text-[10px] font-bold text-white shadow-[0_4px_10px_rgba(190,51,62,0.22)]">
+                    {allSources.length}
+                  </span>
+                ) : null}
+              </button>
+              <span className="hidden items-center gap-1.5 text-[11px] font-medium text-[#7a808a] sm:inline-flex">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#49a36d]" />
+                模型服务正常
+              </span>
+            </div>
           </header>
 
           <div className="flex min-h-0 flex-1 overflow-hidden">
@@ -3245,25 +3357,47 @@ ${resultSummary}
                     <div className="min-h-0 flex-1 overflow-y-auto p-3">
                       <div className="space-y-2">
                         {allSources.map((source, index) => (
-                          <button
-                            key={`${source.name}-${index}`}
-                            type="button"
-                            onClick={() => setQaActiveSource(index)}
-                            className={`w-full rounded-[10px] border p-3 text-left transition ${qaActiveSource === index ? 'border-[var(--gov-red-line)] bg-[var(--gov-red-soft)]' : 'border-black/[0.06] bg-white hover:bg-[#fafafa]'}`}
+                          <div
+                            key={`${getSourceKey(source)}-${index}`}
+                            className={`rounded-[10px] border p-3 transition ${qaActiveSource === index ? 'border-[var(--gov-red-line)] bg-[var(--gov-red-soft)]' : 'border-black/[0.06] bg-white hover:bg-[#fafafa]'}`}
                           >
-                            <div className="flex items-center gap-2">
-                              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[7px] bg-white text-[var(--gov-red-deep)]"><FileText size={13} /></span>
-                              <span className="min-w-0 flex-1 truncate text-[12px] font-semibold text-[#344054]">{source.name}</span>
-                              <span className="text-[10px] text-[#98a2b3]">{index + 1}</span>
+                            <div className="flex items-start gap-2">
+                              <button
+                                type="button"
+                                onClick={() => setQaActiveSource(index)}
+                                className="flex min-w-0 flex-1 items-start gap-2 text-left"
+                              >
+                                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px] bg-white text-[var(--gov-red-deep)] shadow-sm">
+                                  {source.type === 'folder' ? <Folder size={14} /> : <FileText size={14} />}
+                                </span>
+                                <span className="min-w-0 flex-1">
+                                  <span className="block truncate text-[12px] font-semibold text-[#344054]">{source.name}</span>
+                                  <span className="mt-1 block truncate text-[10px] text-[#98a2b3]">
+                                    {(source.sourceKind ?? 'local') === 'knowledge' ? '知识库文件' : '本地文件'} · {source.sourceLabel ?? '本地上传'} · {source.size}
+                                  </span>
+                                </span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveConversationSource(source)}
+                                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px] text-[#98a2b3] transition hover:bg-white hover:text-[var(--gov-red)]"
+                                aria-label={`删除参考文件 ${source.name}`}
+                                title="删除"
+                              >
+                                <X size={13} />
+                              </button>
                             </div>
-                          </button>
+                          </div>
                         ))}
                       </div>
                       {activeSource ? (
                         <div className="mt-3 rounded-[10px] border border-black/[0.06] bg-[#fafafa] p-3">
                           <p className="text-[11px] font-semibold text-[#475467]">相关片段</p>
                           <p className="mt-2 text-[11px] leading-5 text-[#667085]">{sourceExcerpt}</p>
-                          <div className="mt-3 flex items-center justify-between text-[10px] text-[#98a2b3]"><span>{activeSource.type.toUpperCase()}</span><span>{activeSource.size}</span></div>
+                          <div className="mt-3 flex items-center justify-between gap-3 text-[10px] text-[#98a2b3]">
+                            <span className="truncate">{activeSource.sourceLabel ?? ((activeSource.sourceKind ?? 'local') === 'knowledge' ? '知识库' : '本地上传')}</span>
+                            <span>{activeSource.type.toUpperCase()} · {activeSource.size}</span>
+                          </div>
                         </div>
                       ) : null}
                     </div>
@@ -4087,6 +4221,7 @@ ${resultSummary}
                 ])
               ).filter((item) => selectedKnowledgeItems.includes(item.id));
               const selectedReferenceCount = uploadedFiles.length + selectedKnowledgeItems.length;
+              const returningToFullConfirm = referenceReturnStep === 'full-confirm';
 
               return (
                 <>
@@ -4314,7 +4449,10 @@ ${resultSummary}
                               type="button"
                               disabled={isProcessing}
                               onClick={() => {
-                                if (selectedWritingMode === '生成大纲') {
+                                if (returningToFullConfirm) {
+                                  setReferenceReturnStep(null);
+                                  setWriteStep('full-confirm');
+                                } else if (selectedWritingMode === '生成大纲') {
                                   handleGenerateOutline();
                                 } else {
                                   handleGenerateFullText();
@@ -4323,14 +4461,25 @@ ${resultSummary}
                               className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-[var(--gov-red)] px-5 text-[12px] font-semibold text-white transition hover:bg-[#C5282E] disabled:cursor-not-allowed disabled:bg-neutral-300"
                             >
                               {isProcessing ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
-                              {isProcessing ? (selectedWritingMode === '生成大纲' ? '正在生成大纲...' : '正在生成全文...') : (selectedWritingMode === '生成大纲' ? '确认，生成大纲' : '确认，生成全文')}
+                              {isProcessing
+                                ? (selectedWritingMode === '生成大纲' ? '正在生成大纲...' : '正在生成全文...')
+                                : returningToFullConfirm
+                                  ? '确认素材，返回生成确认'
+                                  : (selectedWritingMode === '生成大纲' ? '确认，生成大纲' : '确认，生成全文')}
                             </button>
                             <button
                               type="button"
-                              onClick={() => setWriteStep('form')}
+                              onClick={() => {
+                                if (returningToFullConfirm) {
+                                  setReferenceReturnStep(null);
+                                  setWriteStep('full-confirm');
+                                } else {
+                                  setWriteStep('form');
+                                }
+                              }}
                               className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-black/[0.08] bg-white text-[12px] font-semibold text-[#667085] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red-deep)]"
                             >
-                              返回修改要求
+                              {returningToFullConfirm ? '返回生成确认' : '返回修改要求'}
                             </button>
                           </div>
                         </div>
@@ -4509,69 +4658,251 @@ ${resultSummary}
                   <button
                     type="button"
                     onClick={handleContinueFullTextFromOutline}
-                    className={`inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-[13px] font-semibold transition ${outlineFullTextPanelOpen ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)] ring-1 ring-[var(--gov-red-line)]' : 'bg-[var(--gov-red)] text-white hover:bg-[#C5282E]'}`}
+                    className="inline-flex items-center gap-2 rounded-lg bg-[var(--gov-red)] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[#C5282E]"
                   >
                     <Sparkles size={14} />
                     生成全文
                   </button>
                 </div>
-
-                <AnimatePresence initial={false}>
-                  {outlineFullTextPanelOpen ? (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="rounded-2xl border border-[var(--gov-red-line)] bg-gradient-to-br from-white to-[#fff8f8] p-5 shadow-[0_18px_46px_rgba(190,51,62,0.08)]"
-                    >
-                      <div className="flex flex-wrap items-start justify-between gap-4">
-                        <div>
-                          <p className="text-[15px] font-bold text-[#202124]">基于当前大纲生成全文</p>
-                          <p className="mt-1 text-[12px] leading-5 text-[#667085]">仍保留在「生成大纲」流程内，可随时返回大纲结构继续编辑。</p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setOutlineFullTextPanelOpen(false)}
-                          className="inline-flex h-8 items-center gap-1.5 rounded-[8px] border border-black/[0.08] bg-white px-3 text-[12px] font-semibold text-[#596170] hover:bg-[#fafafa]"
-                        >
-                          <ArrowLeft size={13} />
-                          返回大纲结构
-                        </button>
-                      </div>
-                      <div className="mt-4 grid gap-3 md:grid-cols-3">
-                        <div className="rounded-[12px] border border-black/[0.06] bg-white p-3">
-                          <p className="text-[11px] font-semibold text-[#98a2b3]">文章标题</p>
-                          <p className="mt-1 truncate text-[13px] font-bold text-[#344054]">{writeTopic || '未填写标题'}</p>
-                        </div>
-                        <div className="rounded-[12px] border border-black/[0.06] bg-white p-3">
-                          <p className="text-[11px] font-semibold text-[#98a2b3]">字数</p>
-                          <p className="mt-1 text-[13px] font-bold text-[#344054]">{writeWordCount || '1500'} 字左右</p>
-                        </div>
-                        <div className="rounded-[12px] border border-black/[0.06] bg-white p-3">
-                          <p className="text-[11px] font-semibold text-[#98a2b3]">参考素材</p>
-                          <p className="mt-1 text-[13px] font-bold text-[#344054]">{selectedKnowledgeItems.length + uploadedFiles.length + selectedRefArticles.length} 份已选</p>
-                        </div>
-                      </div>
-                      <div className="mt-4 rounded-[12px] border border-black/[0.06] bg-white p-3">
-                        <p className="text-[11px] font-semibold text-[#98a2b3]">生成要求</p>
-                        <p className="mt-1 line-clamp-2 text-[13px] leading-6 text-[#344054]">{writeRequirements || '未填写额外要求，将按当前场景和大纲自动生成正式全文。'}</p>
-                      </div>
-                      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                        <label className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-[var(--gov-red-line)] bg-white px-3.5 text-[13px] font-semibold text-[var(--gov-red-deep)]">
-                          <input type="checkbox" checked={writeAutoFormat} onChange={(event) => setWriteAutoFormat(event.target.checked)} className="h-4 w-4 accent-[var(--gov-red)]" />
-                          编辑前自动排版
-                        </label>
-                        <div className="flex flex-wrap items-center justify-end gap-2">
-                          <button type="button" onClick={() => setOutlineFullTextPanelOpen(false)} className="h-10 rounded-[9px] border border-black/[0.08] bg-white px-4 text-[13px] font-semibold text-[#596170] hover:bg-[#fafafa]">继续编辑大纲</button>
-                          <button type="button" onClick={handleGenerateFullText} className="inline-flex h-10 items-center gap-2 rounded-[9px] bg-[var(--gov-red)] px-4 text-[13px] font-semibold text-white shadow-[0_8px_20px_rgba(190,51,62,0.18)] hover:bg-[var(--gov-red-deep)]"><Sparkles size={14} />确认生成全文</button>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ) : null}
-                </AnimatePresence>
               </>
             )}
           </motion.div>
+        )}
+
+        {/* Step: Full text confirmation */}
+        {writeStep === 'full-confirm' && (
+          (() => {
+            const selectedKnowledgeEntries = KNOWLEDGE_LIBRARY_GROUPS.flatMap((group) =>
+              group.folders.flatMap((folder) => [
+                { id: folder.id, title: folder.title, type: 'folder', size: `${folder.files.length}个文件`, owner: group.title, updated: '-' },
+                ...folder.files,
+              ])
+            ).filter((item) => selectedKnowledgeItems.includes(item.id));
+            const selectedReferenceCount = uploadedFiles.length + selectedKnowledgeEntries.length;
+            const outlinePreview = generatedOutline.length > 0
+              ? generatedOutline.slice(0, 4)
+              : [
+                { id: 'empty-1', title: '一、工作背景', content: '', subsections: [] },
+                { id: 'empty-2', title: '二、重点任务', content: '', subsections: [] },
+                { id: 'empty-3', title: '三、保障措施', content: '', subsections: [] },
+              ];
+
+            return (
+              <motion.div key="full-confirm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <h3 className="text-[22px] font-bold text-[var(--gov-text)]">确认生成全文</h3>
+                    <p className="mt-2 text-[13px] leading-6 text-[var(--gov-text-muted)]">
+                      已完成大纲生成，请确认标题、写作要求和参考素材；需要调整大纲时可返回上一环节继续编辑。
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setWriteStep('outline')}
+                    className="inline-flex h-10 items-center gap-2 rounded-[10px] border border-black/[0.08] bg-white px-4 text-[13px] font-semibold text-[#596170] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]"
+                  >
+                    <ArrowLeft size={14} />
+                    返回编辑大纲
+                  </button>
+                </div>
+
+                <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
+                  <section className="space-y-5 rounded-[18px] border border-black/[0.06] bg-white p-5 shadow-[0_18px_46px_rgba(15,23,42,0.04)]">
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      <div className="space-y-2 lg:col-span-2">
+                        <div className="flex items-center gap-2">
+                          <label className="text-[13px] font-bold text-[var(--gov-text)]">公文标题</label>
+                          <span className="rounded-full bg-[#f4f5f7] px-2 py-0.5 text-[10px] font-semibold text-[#8a8f98]">已带入基础信息</span>
+                        </div>
+                        <input
+                          type="text"
+                          value={writeTopic}
+                          onChange={(event) => setWriteTopic(event.target.value)}
+                          placeholder="请输入公文标题"
+                          className="gov-input w-full rounded-lg px-3 py-3 text-[13px]"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[13px] font-bold text-[var(--gov-text)]">字数</label>
+                        <input
+                          type="number"
+                          min="100"
+                          step="100"
+                          value={writeWordCount}
+                          onChange={(event) => setWriteWordCount(event.target.value)}
+                          placeholder="例如：1500"
+                          className="gov-input w-full rounded-lg px-3 py-3 text-[13px]"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[13px] font-bold text-[var(--gov-text)]">拟文单位</label>
+                        <input
+                          type="text"
+                          value={writeDraftingUnit}
+                          onChange={(event) => setWriteDraftingUnit(event.target.value)}
+                          placeholder="客户机构(请修改此名称为客户机构名称)"
+                          className="gov-input w-full rounded-lg px-3 py-3 text-[13px]"
+                        />
+                      </div>
+                      <div className="space-y-2 lg:col-span-2">
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-2">
+                            <label className="text-[13px] font-bold text-[var(--gov-text)]">生成要求</label>
+                            <span className="rounded-full bg-[#f4f5f7] px-2 py-0.5 text-[10px] font-semibold text-[#8a8f98]">已带入基础信息</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={handleGenerateWritingRequirements}
+                            className="inline-flex h-8 items-center gap-1.5 rounded-[8px] bg-[var(--gov-red-soft)] px-3 text-[12px] font-semibold text-[var(--gov-red-deep)] transition hover:bg-[var(--gov-red-line)]"
+                          >
+                            <Sparkles size={13} />
+                            AI生成
+                          </button>
+                        </div>
+                        <textarea
+                          rows={5}
+                          value={writeRequirements}
+                          onChange={(event) => setWriteRequirements(event.target.value)}
+                          placeholder="补充正文生成要求，例如文风、结构重点、篇幅控制、引用素材方式等。"
+                          className="gov-input w-full resize-none rounded-lg px-3 py-3 text-[13px] leading-relaxed"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="rounded-[14px] border border-stone-200/70 bg-[#fbfbfc] p-4">
+                      <div className="grid gap-3 md:grid-cols-[110px_1fr] md:items-center">
+                        <div>
+                          <p className="text-[13px] font-bold text-[var(--gov-text)]">生成配置</p>
+                          <p className="mt-1 text-[11px] leading-4 text-[#98a2b3]">确认模型与推理模式</p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <DeepThinkingToggle enabled={deepThinkingEnabled} onChange={setDeepThinkingEnabled} />
+                          <ModelSelectControl selectedModel={selectedModel} onChange={setSelectedModel} />
+                          <label className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-[10px] border border-[var(--gov-red-line)] bg-white px-3 text-[12px] font-semibold text-[var(--gov-red-deep)]">
+                            <input type="checkbox" checked={writeAutoFormat} onChange={(event) => setWriteAutoFormat(event.target.checked)} className="h-4 w-4 accent-[var(--gov-red)]" />
+                            自动排版
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-black/[0.06] pt-4">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setReferenceReturnStep('full-confirm');
+                          setWriteStep('style');
+                        }}
+                        className="inline-flex h-10 items-center gap-2 rounded-[10px] border border-black/[0.08] bg-white px-4 text-[13px] font-semibold text-[#596170] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]"
+                      >
+                        <Folder size={15} />
+                        继续调整参考素材
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!writeTopic.trim() || isProcessing}
+                        onClick={handleGenerateFullText}
+                        className="inline-flex h-11 items-center gap-2 rounded-[11px] bg-[var(--gov-red)] px-6 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(196,41,53,0.2)] transition hover:bg-[var(--gov-red-deep)] disabled:cursor-not-allowed disabled:bg-neutral-300"
+                      >
+                        {isProcessing ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />}
+                        {isProcessing ? '正在生成全文...' : '确认生成全文'}
+                      </button>
+                    </div>
+                  </section>
+
+                  <aside className="space-y-4">
+                    <section className="rounded-[18px] border border-black/[0.06] bg-white p-4 shadow-[0_18px_46px_rgba(15,23,42,0.04)]">
+                      <div className="flex items-center justify-between gap-3">
+                        <div>
+                          <h4 className="text-[16px] font-bold text-[#202124]">已选参考素材</h4>
+                          <p className="mt-1 text-[11px] text-[#98a2b3]">将作为生成全文的引用依据</p>
+                        </div>
+                        <span className="inline-flex h-7 items-center rounded-full bg-[var(--gov-red-soft)] px-3 text-[11px] font-semibold text-[var(--gov-red-deep)]">{selectedReferenceCount} 项</span>
+                      </div>
+                      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                        <button
+                          type="button"
+                          onClick={handleSimulateUpload}
+                          className="inline-flex h-9 items-center justify-center gap-1.5 rounded-[9px] border border-[var(--gov-red-line)] bg-[var(--gov-red-soft)] px-3 text-[12px] font-semibold text-[var(--gov-red-deep)] transition hover:bg-[#f9e4e6]"
+                        >
+                          <FileUp size={14} />
+                          补充本地素材
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setReferenceReturnStep('full-confirm');
+                            setWriteStep('style');
+                          }}
+                          className="inline-flex h-9 items-center justify-center gap-1.5 rounded-[9px] border border-black/[0.08] bg-white px-3 text-[12px] font-semibold text-[#596170] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]"
+                        >
+                          <Folder size={14} />
+                          从知识库补充
+                        </button>
+                      </div>
+                      <div className="mt-4 max-h-[260px] space-y-2 overflow-y-auto pr-1">
+                        {uploadedFiles.map((file, index) => (
+                          <div key={`${file.name}-${index}`} className="flex items-start justify-between gap-2 rounded-[12px] border border-black/[0.06] bg-[#fafafa] p-3">
+                            <div className="min-w-0">
+                              <p className="truncate text-[13px] font-semibold text-[#344054]">{file.name}</p>
+                              <p className="mt-1 text-[10px] text-[#98a2b3]">本地文件 · {file.size}</p>
+                            </div>
+                            <button type="button" onClick={() => handleClearFile(index)} className="shrink-0 text-[#98a2b3] hover:text-[#d92d20]">
+                              <X size={13} />
+                            </button>
+                          </div>
+                        ))}
+                        {selectedKnowledgeEntries.map((item) => (
+                          <div key={item.id} className="flex items-start justify-between gap-2 rounded-[12px] border border-black/[0.06] bg-[#fafafa] p-3">
+                            <div className="min-w-0">
+                              <p className="truncate text-[13px] font-semibold text-[#344054]">{item.title}</p>
+                              <p className="mt-1 text-[10px] text-[#98a2b3]">知识库 · {item.type === 'folder' ? '文件夹' : item.type.toUpperCase()} · {item.size}</p>
+                            </div>
+                            <button type="button" onClick={() => setSelectedKnowledgeItems((prev) => prev.filter((id) => id !== item.id))} className="shrink-0 text-[#98a2b3] hover:text-[#d92d20]">
+                              <X size={13} />
+                            </button>
+                          </div>
+                        ))}
+                        {selectedReferenceCount === 0 ? (
+                          <div className="flex min-h-[120px] flex-col items-center justify-center rounded-[14px] border border-dashed border-black/[0.08] bg-[#fafafa] text-center">
+                            {renderReferenceFolderIcon('empty')}
+                            <p className="mt-2 text-[12px] font-medium text-[#8a8f98]">尚未选择素材</p>
+                          </div>
+                        ) : null}
+                      </div>
+                    </section>
+
+                    <section className="rounded-[18px] border border-black/[0.06] bg-white p-4 shadow-[0_18px_46px_rgba(15,23,42,0.04)]">
+                      <div className="flex items-center justify-between gap-3">
+                        <div>
+                          <h4 className="text-[16px] font-bold text-[#202124]">当前大纲</h4>
+                          <p className="mt-1 text-[11px] text-[#98a2b3]">确认后将按该结构展开正文</p>
+                        </div>
+                        <button type="button" onClick={() => setWriteStep('outline')} className="text-[12px] font-semibold text-[var(--gov-red)] hover:text-[var(--gov-red-deep)]">编辑</button>
+                      </div>
+                      <div className="mt-4 space-y-2">
+                        {outlinePreview.map((section, index) => (
+                          <div key={section.id} className="rounded-[12px] border border-black/[0.05] bg-[#fbfbfc] p-3">
+                            <p className="flex items-center gap-2 text-[13px] font-bold text-[#344054]">
+                              <span className="flex h-5 w-5 items-center justify-center rounded-[6px] bg-[var(--gov-red)] text-[10px] text-white">{index + 1}</span>
+                              <span className="min-w-0 truncate">{section.title}</span>
+                            </p>
+                            {section.subsections?.length ? (
+                              <div className="mt-2 space-y-1 pl-7 text-[11px] font-medium text-[#667085]">
+                                {section.subsections.slice(0, 3).map((sub) => (
+                                  <p key={sub.id} className="truncate">{sub.title}</p>
+                                ))}
+                              </div>
+                            ) : null}
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  </aside>
+                </div>
+              </motion.div>
+            );
+          })()
         )}
 
         {/* Step: Full text */}
@@ -4621,7 +4952,7 @@ ${resultSummary}
                 <div className="flex h-14 shrink-0 items-center justify-between border-b border-black/[0.06] bg-white px-6">
                   <button
                     type="button"
-                    onClick={() => setWriteStep(isConclusionResult ? 'form' : 'style')}
+                    onClick={() => setWriteStep(isConclusionResult ? 'form' : needOutline ? 'full-confirm' : 'style')}
                     className="inline-flex items-center gap-2 text-[13px] font-semibold text-[#667085] transition hover:text-[#202124]"
                   >
                     <ArrowLeft size={16} />
@@ -4781,7 +5112,7 @@ ${resultSummary}
                       <div className="sticky bottom-6 mt-10 flex justify-center">
                         <button
                           type="button"
-                          onClick={isConclusionResult ? handleGenerateConclusion : handleGenerateFullText}
+                          onClick={handleRegenerateCurrentFullText}
                           disabled={isProcessing}
                           className="inline-flex h-10 items-center gap-2 rounded-full bg-[var(--gov-red)] px-5 text-[13px] font-semibold text-white shadow-[0_14px_32px_rgba(196,41,53,0.22)] transition hover:bg-[var(--gov-red-deep)] disabled:cursor-not-allowed disabled:bg-stone-300"
                         >
@@ -5014,6 +5345,7 @@ ${resultSummary}
         if (step.id === 'scenario') return !isSourceBasedWritingMode;
         if (step.id === 'style') return !isConclusionWritingMode;
         if (step.id === 'outline') return needOutline;
+        if (step.id === 'full-confirm') return needOutline;
         return true;
       })
       .map((step, index) => ({
@@ -5037,9 +5369,9 @@ ${resultSummary}
             <div className="flex items-center gap-3">
               <button
                 type="button"
-                onClick={() => setWriteStep(isConclusionWritingMode ? 'form' : needOutline ? 'outline' : 'style')}
+                onClick={() => setWriteStep(isConclusionWritingMode ? 'form' : needOutline ? 'full-confirm' : 'style')}
                 className="inline-flex h-7 w-7 items-center justify-center rounded-md text-stone-400 transition hover:bg-neutral-200/60 hover:text-stone-600"
-                aria-label={isConclusionWritingMode ? '返回基础信息' : needOutline ? '返回大纲' : '返回参考素材'}
+                aria-label={isConclusionWritingMode ? '返回基础信息' : needOutline ? '返回生成确认' : '返回参考素材'}
               >
                 <ArrowLeft size={14} />
               </button>
