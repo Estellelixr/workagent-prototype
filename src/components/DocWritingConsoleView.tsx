@@ -865,6 +865,8 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
   const [generatedOutline, setGeneratedOutline] = useState<OutlineSection[]>([]);
   const [outlineFullTextPanelOpen, setOutlineFullTextPanelOpen] = useState(false);
   const [generatedFullText, setGeneratedFullText] = useState('');
+  const [fullTextVersions, setFullTextVersions] = useState<string[]>([]);
+  const [activeFullTextVersionIndex, setActiveFullTextVersionIndex] = useState(0);
   const [polishResultText, setPolishResultText] = useState('');
   const [polishStep, setPolishStep] = useState<PolishStep>('upload');
   const [polishDirections, setPolishDirections] = useState<string[]>(['通顺表达', '增强感情']);
@@ -943,6 +945,47 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
     answer,
     createdAt: Date.now(),
   });
+
+  const buildFullTextDraft = (versionIndex = 0) => {
+    const topic = writeTopic || '北京市政府工作方案';
+    const introVariants = [
+      `为深入贯彻落实党中央、国务院关于首都发展的重大决策部署，全面推进重点工作落地见效，现结合前期材料和参考素材，起草形成如下内容。`,
+      `为进一步贯彻落实集团高质量发展要求，结合前期工作基础和有关参考材料，现就相关事项形成如下正式文本。`,
+      `围绕当前工作目标和重点任务，结合既有材料与实践需求，现起草形成如下正文内容，供进一步完善和使用。`,
+    ];
+    const middleVariants = [
+      `一、提高政治站位，充分认识工作重要性\n　  各单位要切实把思想和行动统一到集团部署上来，统筹推进重点任务落地见效。各级领导干部要带头担当作为，聚焦主责主业，确保各项工作有人抓、有人管、有人负责。\n\n二、聚焦重点环节，抓好任务落实\n　  围绕制度执行、风险防控、过程跟踪等关键环节，明确节点安排和责任分工。各单位应于收文之日起三个工作日内制定落实方案，并报集团办公室备案。要建立工作台账，实行销号管理，确保件件有着落、事事有回音。\n\n三、强化督导问效，确保形成闭环\n　  各责任单位要按时反馈进展情况，形成可检查、可追踪、可复盘的工作机制。集团办公室将定期通报工作进展，对推进不力、落实不到位的单位予以通报批评，并纳入年度绩效考核。`,
+      `一、明确总体目标，压实工作责任\n　  各单位要牢固树立大局意识，准确把握任务要求，围绕重点事项细化分工、倒排工期、挂图推进，确保责任压实到岗、任务落实到人。\n\n二、突出重点任务，提升推进质效\n　  重点围绕制度执行、协同配合、节点反馈等方面持续发力，及时梳理问题清单和任务清单，强化过程督办和闭环管理，确保工作推进有序顺畅。\n\n三、加强保障措施，推动落实见效\n　  各责任单位要加强信息沟通和统筹协调，按时反馈进展情况，形成上下联动、左右协同的工作机制，确保各项部署落到实处。`,
+      `一、进一步统一思想认识，明确目标方向\n　  各单位要充分认识当前工作的紧迫性和重要性，立足职责分工细化目标任务，把工作要求转化为具体行动和实际成效。\n\n二、围绕关键环节，推动任务落实\n　  聚焦制度执行、节点管理、过程跟踪等重点环节，健全台账管理和督办机制，确保每项工作有人负责、每个节点有人盯办。\n\n三、强化结果导向，确保工作闭环\n　  对重点事项实行动态跟踪、及时反馈和定期复盘，推动形成部署、落实、检查、反馈的闭环机制，确保工作质效持续提升。`,
+    ];
+    const endingVariants = [
+      `特此通知。\n\n${writeDraftingUnit.trim() || '中国智海建设集团办公室'}\n${new Date().toLocaleString('zh-CN', { hour12: false })}`,
+      `以上通知，请认真贯彻执行。\n\n${writeDraftingUnit.trim() || '中国智海建设集团办公室'}\n${new Date().toLocaleString('zh-CN', { hour12: false })}`,
+      `请各单位结合实际抓好落实，并及时反馈工作推进情况。\n\n${writeDraftingUnit.trim() || '中国智海建设集团办公室'}\n${new Date().toLocaleString('zh-CN', { hour12: false })}`,
+    ];
+    const intro = introVariants[versionIndex % introVariants.length];
+    const middle = middleVariants[versionIndex % middleVariants.length];
+    const ending = endingVariants[versionIndex % endingVariants.length];
+    return `关于${topic}\n\n各有关单位：\n${intro}\n\n${middle}\n\n${ending}`;
+  };
+
+  const buildConclusionDraft = (versionIndex = 0) => {
+    const variants = [
+      `综上，相关工作既是落实上级部署的重要举措，也是提升政务办公质效、完善责任闭环的现实需要。下一步，各责任单位应继续坚持目标导向、问题导向和结果导向，细化任务分工，强化协同联动，确保各项要求落地见效。\n\n请各单位结合实际抓好贯彻执行，并及时反馈推进情况。`,
+      `综上，本次工作部署既体现了任务导向，也体现了落实导向。下一步，各责任单位应持续压实责任、细化措施、加强协同，确保各项要求真正转化为工作成效。\n\n请各单位按照职责分工认真贯彻落实，并及时报送进展情况。`,
+      `综上，相关事项已经明确了目标、路径和责任要求。下一步，请各责任单位紧扣关键环节，抓好推进落实，形成上下联动、闭环管理的工作机制，推动各项任务按期完成。\n\n请结合实际认真执行，并持续反馈工作推进情况。`,
+    ];
+    return variants[versionIndex % variants.length];
+  };
+
+  const commitFullTextVersion = (nextText: string, resetHistory = false) => {
+    setFullTextVersions((current) => {
+      const nextVersions = resetHistory ? [nextText] : [...current, nextText].slice(-5);
+      setActiveFullTextVersionIndex(nextVersions.length - 1);
+      setGeneratedFullText(nextVersions[nextVersions.length - 1] ?? nextText);
+      return nextVersions;
+    });
+  };
 
   const resetOutlineParse = () => {
     setOutlineParseStatus('idle');
@@ -1647,33 +1690,28 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
     setIsFullTextInserted(false);
     setShowSourceTrace(false);
     setWriteStep('full');
-    setGeneratedFullText(
-      `关于${writeTopic || '北京市政府工作方案'}\n\n` +
-        `各有关单位：\n` +
-        `为深入贯彻落实党中央、国务院关于首都发展的重大决策部署，全面推进重点工作落地见效，现结合前期材料和参考素材，起草形成如下内容。`
-    );
+    setGeneratedFullText('正在生成全文...');
     window.setTimeout(() => {
       setIsProcessing(false);
-      const now = new Date().toLocaleString('zh-CN', { hour12: false });
-      const draftingUnit = writeDraftingUnit.trim() || '中国智海建设集团办公室';
-      setGeneratedFullText(
-        `各分公司、集团各部室：\n` +
-          `　  为进一步贯彻落实集团高质量发展要求，扎实推进”${writeTopic}”相关工作，经研究决定，现就有关事项通知如下：\n\n` +
-          `一、提高政治站位，充分认识工作重要性\n` +
-          `　  各单位要切实把思想和行动统一到集团部署上来，统筹推进重点任务落地见效。各级领导干部要带头担当作为，聚焦主责主业，确保各项工作有人抓、有人管、有人负责。\n\n` +
-          `二、聚焦重点环节，抓好任务落实\n` +
-          `　  围绕制度执行、风险防控、过程跟踪等关键环节，明确节点安排和责任分工。各单位应于收文之日起三个工作日内制定落实方案，并报集团办公室备案。要建立工作台账，实行销号管理，确保件件有着落、事事有回音。\n\n` +
-          `三、强化督导问效，确保形成闭环\n` +
-          `　  各责任单位要按时反馈进展情况，形成可检查、可追踪、可复盘的工作机制。集团办公室将定期通报工作进展，对推进不力、落实不到位的单位予以通报批评，并纳入年度绩效考核。\n\n` +
-          `　  特此通知。\n\n` +
-          `${draftingUnit}\n` +
-          `${now}`
-      );
+      commitFullTextVersion(buildFullTextDraft(0), true);
       setWriteStep('full');
     }, 1200);
   };
 
-  const handleGenerateConclusion = () => {
+  const handleRegenerateCurrentFullText = () => {
+    if (isConclusionWritingMode) {
+      handleGenerateConclusionVersion(false);
+      return;
+    }
+    setIsProcessing(true);
+    const nextIndex = fullTextVersions.length;
+    window.setTimeout(() => {
+      setIsProcessing(false);
+      commitFullTextVersion(buildFullTextDraft(nextIndex), false);
+    }, 1200);
+  };
+
+  const handleGenerateConclusionVersion = (resetHistory: boolean) => {
     if (!writeRequirements.trim()) return;
     setIsProcessing(true);
     setSavedToCenter(false);
@@ -1685,10 +1723,12 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
     setGeneratedFullText('正在根据已有正文语境生成正式结语...');
     window.setTimeout(() => {
       setIsProcessing(false);
-      setGeneratedFullText(
-        `综上，相关工作既是落实上级部署的重要举措，也是提升政务办公质效、完善责任闭环的现实需要。下一步，各责任单位应继续坚持目标导向、问题导向和结果导向，细化任务分工，强化协同联动，确保各项要求落地见效。\n\n请各单位结合实际抓好贯彻执行，并及时反馈推进情况。`
-      );
+      commitFullTextVersion(buildConclusionDraft(resetHistory ? 0 : fullTextVersions.length), resetHistory);
     }, 1000);
+  };
+
+  const handleGenerateConclusion = () => {
+    handleGenerateConclusionVersion(true);
   };
 
   const updateCopyAttribute = (key: keyof CopyDocumentAttributes, value: string) => {
@@ -4538,6 +4578,8 @@ ${resultSummary}
         {writeStep === 'full' && (
           (() => {
             const isConclusionResult = selectedWritingMode === '生成结语';
+            const hasFullTextHistory = fullTextVersions.length > 0;
+            const activeFullText = fullTextVersions[activeFullTextVersionIndex] ?? generatedFullText;
             const knowledgeEntries = KNOWLEDGE_LIBRARY_GROUPS.flatMap((group) => group.folders.flatMap((folder) => [
               { id: folder.id, title: folder.title, source: group.title, type: '文件夹', date: '知识库' },
               ...folder.files.map((file) => ({ id: file.id, title: file.title, source: `${group.title}/${folder.title}`, type: file.type.toUpperCase(), date: file.updated })),
@@ -4660,8 +4702,33 @@ ${resultSummary}
                           <h1 className="mb-7 text-[30px] font-extrabold leading-[1.35] tracking-normal text-[#111827]">
                             {isConclusionResult ? '生成结语' : writeTopic || '关于北京市政府工作方案'}
                           </h1>
+                          {hasFullTextHistory ? (
+                            <div className="mb-6 flex justify-center">
+                              <div className="inline-flex items-center rounded-[10px] border border-[#d9e0ea] bg-white px-2 py-1 text-[12px] font-semibold text-[#4b5563] shadow-[0_6px_18px_rgba(15,23,42,0.04)]">
+                                <button
+                                  type="button"
+                                  onClick={() => setActiveFullTextVersionIndex((value) => Math.max(0, value - 1))}
+                                  disabled={activeFullTextVersionIndex === 0}
+                                  className="flex h-6 w-6 items-center justify-center rounded-[6px] text-[#98a2b3] transition hover:bg-[#f4f5f7] hover:text-[#344054] disabled:cursor-not-allowed disabled:opacity-40"
+                                  aria-label="查看上一版全文"
+                                >
+                                  <ChevronDown size={13} className="rotate-90" />
+                                </button>
+                                <span className="min-w-[42px] px-1 text-center">{Math.min(activeFullTextVersionIndex + 1, fullTextVersions.length)}/{fullTextVersions.length}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => setActiveFullTextVersionIndex((value) => Math.min(fullTextVersions.length - 1, value + 1))}
+                                  disabled={activeFullTextVersionIndex >= fullTextVersions.length - 1}
+                                  className="flex h-6 w-6 items-center justify-center rounded-[6px] text-[#98a2b3] transition hover:bg-[#f4f5f7] hover:text-[#344054] disabled:cursor-not-allowed disabled:opacity-40"
+                                  aria-label="查看下一版全文"
+                                >
+                                  <ChevronDown size={13} className="-rotate-90" />
+                                </button>
+                              </div>
+                            </div>
+                          ) : null}
                           <div className="space-y-4 text-[16px] font-medium leading-8 text-[#202124]">
-                            {articleParagraphs.map((paragraph, paragraphIndex) => {
+                            {(activeFullText || articleText).split(/\n+/).map((paragraph, paragraphIndex) => {
                               const citationIndex = paragraphIndex % Math.max(sourceCount, 1);
                               const hasCitation = !isConclusionResult && paragraphIndex > 1 && visibleSources[citationIndex];
                               const source = visibleSources[citationIndex];
@@ -4993,7 +5060,7 @@ ${resultSummary}
               <span className="mr-2 text-[10px] text-stone-400">{generatedFullText.replace(/\s/g, '').length} 字</span>
               <button
                 type="button"
-                onClick={isConclusionWritingMode ? handleGenerateConclusion : handleGenerateFullText}
+                onClick={handleRegenerateCurrentFullText}
                 disabled={isProcessing}
                 className="inline-flex items-center gap-1 rounded px-2.5 py-1 text-[11px] text-[var(--gov-text-muted)] transition hover:bg-neutral-200/60 hover:text-[var(--gov-text)] disabled:cursor-not-allowed disabled:text-stone-300"
               >
