@@ -472,6 +472,15 @@ export default function App() {
     setWritingNavigation({ view: 'home', key: Date.now() });
   };
 
+  const syncWritingNavigation = (id: WritingShortcutView) => {
+    setActiveSpace('workbench');
+    setSidebarMode('home');
+    setIsCreateMenuOpen(false);
+    setActiveTab('console-writing');
+    setFocusedBusinessNav(id);
+    setIsDocumentNavExpanded(['quick-create', 'write', 'copy', 'polish', 'template-layout', 'check'].includes(id));
+  };
+
   const openAiFeatureTab = (tab: AiFeatureNavItem['id']) => {
     setActiveSpace('workbench');
     setSidebarMode('ai');
@@ -1177,6 +1186,7 @@ export default function App() {
                       selectedExpertId={selectedHomeExpertId}
                       appearance={homeAppearance}
                       onSelectedExpertChange={setSelectedHomeExpertId}
+                      onNavigationSync={syncWritingNavigation}
                       onOpenDocReview={() => {
                         setSidebarMode('home');
                         setFocusedBusinessNav(null);

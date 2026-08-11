@@ -49,6 +49,7 @@ interface DocWritingConsoleViewProps {
   navigationKey?: number;
   selectedExpertId?: HomeExpertId;
   onSelectedExpertChange?: (expertId: HomeExpertId) => void;
+  onNavigationSync?: (view: WritingNavigationSyncView) => void;
   appearance?: {
     logoUrl: string;
     productName: string;
@@ -57,6 +58,7 @@ interface DocWritingConsoleViewProps {
 }
 
 type WritingView = 'home' | 'quick-create' | 'write' | 'copy' | 'polish' | 'check' | 'template-layout' | 'ppt' | 'table' | 'weboffice' | 'recent-editor' | 'conversation-detail';
+type WritingNavigationSyncView = 'home' | 'quick-create' | 'write' | 'copy' | 'polish' | 'check' | 'template-layout' | 'weboffice';
 type WriteStep = 'mode' | 'source' | 'outline-parse' | 'scenario' | 'form' | 'style' | 'outline' | 'full-confirm' | 'full';
 type WritingMode = '生成全文' | '生成大纲' | '大纲成文' | '继续写' | '生成结语';
 type WriteGenerationContext = {
@@ -825,7 +827,7 @@ const SAMPLE_POLISH_DOCUMENT = `各分公司、集团各部室：
 中国智海建设集团网络安全中心
 二〇二六年六月二十二日`;
 
-export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _onOpenDocReview, documents = [], onSaveToDocumentCenter, navigationView, navigationKey, selectedExpertId, onSelectedExpertChange, appearance }: DocWritingConsoleViewProps) {
+export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _onOpenDocReview, documents = [], onSaveToDocumentCenter, navigationView, navigationKey, selectedExpertId, onSelectedExpertChange, onNavigationSync, appearance }: DocWritingConsoleViewProps) {
   const [currentView, setCurrentView] = useState<WritingView>('home');
   const [searchQuery] = useState('');
   const [writeTopic, setWriteTopic] = useState('');
@@ -1384,11 +1386,17 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
   const openScenarioWritingShortcut = () => {
     resetResults();
     resetWriteFlow();
+    onNavigationSync?.('write');
     setSelectedWritingMode('生成大纲');
     setNeedOutline(true);
     setOutlineInputMode('ai');
-    setWriteStep('mode');
+    setWriteStep('scenario');
     setCurrentView('write');
+  };
+
+  const openHomeFeature = (view: WritingNavigationSyncView) => {
+    onNavigationSync?.(view);
+    openView(view);
   };
 
   const buildHomeResult = (prompt: string, skill: string) => {
@@ -2915,7 +2923,7 @@ ${resultSummary}
                         openScenarioWritingShortcut();
                         return;
                       }
-                      openView(feature.id);
+                      openHomeFeature(feature.id);
                     }}
                     className={`group relative min-h-[132px] overflow-hidden rounded-[18px] border border-white/85 bg-gradient-to-br ${feature.tone} px-5 py-5 text-left shadow-[0_18px_42px_rgba(43,69,97,0.10)] transition hover:-translate-y-1 hover:border-[var(--gov-red-line)] hover:bg-white hover:shadow-[0_26px_56px_rgba(43,69,97,0.14)] active:scale-[0.99]`}
                   >
