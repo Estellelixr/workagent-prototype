@@ -56,7 +56,7 @@ interface DocWritingConsoleViewProps {
   };
 }
 
-type WritingView = 'home' | 'write' | 'copy' | 'polish' | 'check' | 'template-layout' | 'ppt' | 'table' | 'weboffice' | 'recent-editor' | 'conversation-detail';
+type WritingView = 'home' | 'quick-create' | 'write' | 'copy' | 'polish' | 'check' | 'template-layout' | 'ppt' | 'table' | 'weboffice' | 'recent-editor' | 'conversation-detail';
 type WriteStep = 'mode' | 'source' | 'outline-parse' | 'scenario' | 'form' | 'style' | 'outline' | 'full-confirm' | 'full';
 type WritingMode = '生成全文' | '生成大纲' | '大纲成文' | '继续写' | '生成结语';
 type WriteGenerationContext = {
@@ -1326,6 +1326,17 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
 
   const openView = (view: WritingView) => {
     resetResults();
+    if (view === 'quick-create') {
+      setHomeActiveCapability('write');
+      setHomeSelectedSkill('AI写作');
+      setSelectedWritingMode('生成全文');
+      setNeedOutline(false);
+      setOutlineInputMode('ai');
+      setIsHomeModeMenuOpen(false);
+      setIsHomeExpertMenuOpen(false);
+      setIsHomeUploadMenuOpen(false);
+      resetOutlineParse();
+    }
     if (view === 'write') {
       resetWriteFlow();
     }
@@ -2464,14 +2475,16 @@ ${resultSummary}
     </AnimatePresence>
   );
 
-  const renderHome = () => {
+  const renderHome = (variant: 'default' | 'quick-create' = 'default') => {
+    const isQuickCreateHome = variant === 'quick-create';
     const homeSubmitPrompt = buildHomePrompt();
     const selectedHomeExpertGuide = HOME_EXPERT_GUIDE_COPY[selectedHomeExpert.id];
     const isSourceBasedHomeWriting = homeActiveCapability === 'write' && HOME_SOURCE_REQUIRED_WRITING_MODES.includes(selectedWritingMode);
     const selectedHomeWritingCopy = HOME_WRITING_PROMPT_COPY[selectedWritingMode];
     const selectedHomeQuickCopy = isSourceBasedHomeWriting ? HOME_QUICK_PROMPT_COPY[selectedWritingMode] : null;
-    const shouldUseStructuredHomeWriting = isDefaultHomeExpert && homeActiveCapability === 'write';
-    const homePromptPlaceholder = isDefaultHomeExpert
+    const useDefaultHomeWritingControl = isQuickCreateHome || isDefaultHomeExpert;
+    const shouldUseStructuredHomeWriting = useDefaultHomeWritingControl && homeActiveCapability === 'write';
+    const homePromptPlaceholder = useDefaultHomeWritingControl
       ? homeActiveCapability === 'write'
         ? selectedHomeQuickCopy?.placeholder ?? '一句话描述你的写作任务'
         : '请输入你的问题，支持政策、公文、材料相关问答'
@@ -2488,7 +2501,7 @@ ${resultSummary}
     ];
     return (
       <motion.div
-        key="home"
+        key={isQuickCreateHome ? 'quick-create' : 'home'}
         initial={{ opacity: 0, y: 4 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -4 }}
@@ -2505,7 +2518,7 @@ ${resultSummary}
 
           <div className="ai-prompt-shell relative z-30 w-full max-w-[980px] shrink-0 overflow-visible rounded-[16px] p-4 text-left">
             <div className={`home-prompt-main-row relative z-50 flex gap-4 ${isSourceBasedHomeWriting ? 'flex-col items-stretch' : 'items-start'}`}>
-              {isDefaultHomeExpert ? (
+              {useDefaultHomeWritingControl ? (
                 <div className={`relative z-[80] shrink-0 ${isSourceBasedHomeWriting ? 'flex w-full items-center gap-3' : 'w-[154px]'}`}>
                   <button
                     type="button"
@@ -2527,22 +2540,26 @@ ${resultSummary}
                   ) : null}
                   {false ? (
                     <div className="home-prompt-mode-menu absolute left-0 top-12 z-[120] w-full rounded-[14px] border border-black/[0.06] bg-white p-1.5 shadow-[0_22px_58px_rgba(15,23,42,0.18)]">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setHomeActiveCapability('qa');
-                          setIsHomeModeMenuOpen(false);
-                        }}
-                        className={`mb-1 flex h-8 w-full items-center gap-1.5 rounded-[9px] px-2 text-left text-[12px] font-semibold transition ${
-                          homeActiveCapability === 'qa'
-                            ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)] shadow-[inset_3px_0_0_var(--gov-red)]'
-                            : 'text-[#667085] hover:bg-[#f6f7fb] hover:text-[#344054]'
-                        }`}
-                      >
-                        <Sparkles size={14} className="text-[var(--gov-red)]" />
-                        <span className="truncate">智能问答</span>
-                      </button>
-                      <div className="my-1 h-px bg-black/[0.05]" />
+                      {!isQuickCreateHome ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setHomeActiveCapability('qa');
+                              setIsHomeModeMenuOpen(false);
+                            }}
+                            className={`mb-1 flex h-8 w-full items-center gap-1.5 rounded-[9px] px-2 text-left text-[12px] font-semibold transition ${
+                              homeActiveCapability === 'qa'
+                                ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)] shadow-[inset_3px_0_0_var(--gov-red)]'
+                                : 'text-[#667085] hover:bg-[#f6f7fb] hover:text-[#344054]'
+                            }`}
+                          >
+                            <Sparkles size={14} className="text-[var(--gov-red)]" />
+                            <span className="truncate">智能问答</span>
+                          </button>
+                          <div className="my-1 h-px bg-black/[0.05]" />
+                        </>
+                      ) : null}
                     {WRITING_MODE_OPTIONS.map((mode) => {
                       const isSelected = homeActiveCapability === 'write' && selectedWritingMode === mode.id;
                       return (
@@ -2746,51 +2763,53 @@ ${resultSummary}
                     ) : null}
                   </div>
                 ) : null}
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setIsHomeExpertMenuOpen((value) => !value)}
-                    className="inline-flex h-9 items-center gap-1.5 rounded-[9px] border border-black/[0.06] bg-white px-3 text-[13px] font-semibold text-[#444950] shadow-[0_6px_16px_rgba(15,23,42,0.04)] transition hover:-translate-y-0.5 hover:bg-white hover:text-[var(--gov-red-deep)] hover:shadow-[0_10px_26px_rgba(15,23,42,0.08)]"
-                  >
-                    <span className="flex h-6 w-6 items-center justify-center rounded-[7px] bg-[linear-gradient(145deg,var(--gov-red-soft),#fff)] text-[var(--gov-red-deep)] shadow-[inset_0_-3px_8px_rgba(190,51,62,0.08)]">
-                      <Bot size={14} />
-                    </span>
-                    <span>专家</span>
-                    <span className="max-w-[112px] truncate text-[#667085]">{selectedHomeExpert.name}</span>
-                    <ChevronDown size={14} className={`text-[#98a2b3] transition ${isHomeExpertMenuOpen ? 'rotate-180' : ''}`} />
-                  </button>
-                  {isHomeExpertMenuOpen ? (
-                    <div className="home-prompt-expert-menu absolute bottom-12 left-0 z-[320] w-[244px] overflow-hidden rounded-[14px] border border-black/[0.08] bg-white p-1.5 shadow-[0_18px_46px_rgba(15,23,42,0.14)]">
-                      <p className="px-3 py-2 text-[12px] font-semibold text-[#98a2b3]">推荐专家</p>
-                      <div className="max-h-[312px] space-y-1 overflow-y-auto">
-                      {HOME_EXPERTS.map((expert, index) => {
-                        const isSelected = expert.id === activeHomeExpertId;
-                        const ExpertIcon = [FileText, ClipboardList, FileCheck2, PenTool, FileSearch, Layers][index] ?? Bot;
-                        return (
-                          <button
-                            key={expert.id}
-                            type="button"
-                            onClick={() => handleSelectHomeExpert(expert.id)}
-                            className={`group flex h-11 w-full items-center gap-2.5 rounded-[10px] px-2.5 text-left transition ${
-                              isSelected
-                                ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)]'
-                                : 'text-[#344054] hover:bg-[#f7f7f7]'
-                            }`}
-                          >
-                            <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] shadow-[inset_0_-5px_12px_rgba(15,23,42,0.04)] ${isSelected ? 'bg-white text-[var(--gov-red-deep)]' : 'bg-[#f3f5f8] text-[#667085]'}`}>
-                              <ExpertIcon size={16} />
-                            </span>
-                            <span className="min-w-0 flex-1 truncate text-[13px] font-semibold">
-                              {expert.name}
-                            </span>
-                            {isSelected ? <CheckCircle size={14} className="shrink-0" /> : <ChevronDown size={13} className="-rotate-90 text-[#b0b5bd]" />}
-                          </button>
-                        );
-                      })}
+                {!isQuickCreateHome ? (
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setIsHomeExpertMenuOpen((value) => !value)}
+                      className="inline-flex h-9 items-center gap-1.5 rounded-[9px] border border-black/[0.06] bg-white px-3 text-[13px] font-semibold text-[#444950] shadow-[0_6px_16px_rgba(15,23,42,0.04)] transition hover:-translate-y-0.5 hover:bg-white hover:text-[var(--gov-red-deep)] hover:shadow-[0_10px_26px_rgba(15,23,42,0.08)]"
+                    >
+                      <span className="flex h-6 w-6 items-center justify-center rounded-[7px] bg-[linear-gradient(145deg,var(--gov-red-soft),#fff)] text-[var(--gov-red-deep)] shadow-[inset_0_-3px_8px_rgba(190,51,62,0.08)]">
+                        <Bot size={14} />
+                      </span>
+                      <span>专家</span>
+                      <span className="max-w-[112px] truncate text-[#667085]">{selectedHomeExpert.name}</span>
+                      <ChevronDown size={14} className={`text-[#98a2b3] transition ${isHomeExpertMenuOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    {isHomeExpertMenuOpen ? (
+                      <div className="home-prompt-expert-menu absolute bottom-12 left-0 z-[320] w-[244px] overflow-hidden rounded-[14px] border border-black/[0.08] bg-white p-1.5 shadow-[0_18px_46px_rgba(15,23,42,0.14)]">
+                        <p className="px-3 py-2 text-[12px] font-semibold text-[#98a2b3]">推荐专家</p>
+                        <div className="max-h-[312px] space-y-1 overflow-y-auto">
+                        {HOME_EXPERTS.map((expert, index) => {
+                          const isSelected = expert.id === activeHomeExpertId;
+                          const ExpertIcon = [FileText, ClipboardList, FileCheck2, PenTool, FileSearch, Layers][index] ?? Bot;
+                          return (
+                            <button
+                              key={expert.id}
+                              type="button"
+                              onClick={() => handleSelectHomeExpert(expert.id)}
+                              className={`group flex h-11 w-full items-center gap-2.5 rounded-[10px] px-2.5 text-left transition ${
+                                isSelected
+                                  ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)]'
+                                  : 'text-[#344054] hover:bg-[#f7f7f7]'
+                              }`}
+                            >
+                              <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] shadow-[inset_0_-5px_12px_rgba(15,23,42,0.04)] ${isSelected ? 'bg-white text-[var(--gov-red-deep)]' : 'bg-[#f3f5f8] text-[#667085]'}`}>
+                                <ExpertIcon size={16} />
+                              </span>
+                              <span className="min-w-0 flex-1 truncate text-[13px] font-semibold">
+                                {expert.name}
+                              </span>
+                              {isSelected ? <CheckCircle size={14} className="shrink-0" /> : <ChevronDown size={13} className="-rotate-90 text-[#b0b5bd]" />}
+                            </button>
+                          );
+                        })}
+                        </div>
                       </div>
-                    </div>
-                  ) : null}
-                </div>
+                    ) : null}
+                  </div>
+                ) : null}
                 {uploadedFiles.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {uploadedFiles.slice(0, 2).map((file, index) => (
@@ -2822,27 +2841,31 @@ ${resultSummary}
                 </button>
               </div>
             </div>
-            {isDefaultHomeExpert && isHomeModeMenuOpen ? (
+            {useDefaultHomeWritingControl && isHomeModeMenuOpen ? (
               <div
                 className="home-prompt-mode-floating absolute w-[154px] rounded-[14px] border border-black/[0.06] bg-white p-1.5 shadow-[0_24px_64px_rgba(15,23,42,0.20)]"
                 style={{ left: 16, top: 64, zIndex: 9999 }}
               >
-                <button
-                  type="button"
-                  onClick={() => {
-                    setHomeActiveCapability('qa');
-                    setIsHomeModeMenuOpen(false);
-                  }}
-                  className={`mb-1 flex h-8 w-full items-center gap-1.5 rounded-[9px] px-2 text-left text-[12px] font-semibold transition ${
-                    homeActiveCapability === 'qa'
-                      ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)] shadow-[inset_3px_0_0_var(--gov-red)]'
-                      : 'text-[#667085] hover:bg-[#f6f7fb] hover:text-[#344054]'
-                  }`}
-                >
-                  <Sparkles size={14} className="text-[var(--gov-red)]" />
-                  <span className="truncate">智能问答</span>
-                </button>
-                <div className="my-1 h-px bg-black/[0.05]" />
+                {!isQuickCreateHome ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setHomeActiveCapability('qa');
+                        setIsHomeModeMenuOpen(false);
+                      }}
+                      className={`mb-1 flex h-8 w-full items-center gap-1.5 rounded-[9px] px-2 text-left text-[12px] font-semibold transition ${
+                        homeActiveCapability === 'qa'
+                          ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)] shadow-[inset_3px_0_0_var(--gov-red)]'
+                          : 'text-[#667085] hover:bg-[#f6f7fb] hover:text-[#344054]'
+                      }`}
+                    >
+                      <Sparkles size={14} className="text-[var(--gov-red)]" />
+                      <span className="truncate">智能问答</span>
+                    </button>
+                    <div className="my-1 h-px bg-black/[0.05]" />
+                  </>
+                ) : null}
                 {WRITING_MODE_OPTIONS.map((mode) => {
                   const isSelected = homeActiveCapability === 'write' && selectedWritingMode === mode.id;
                   return (
@@ -2873,45 +2896,49 @@ ${resultSummary}
             ) : null}
           </div>
 
-          <div className="relative z-10 mt-7 flex w-full max-w-[980px] items-end justify-start gap-4">
-            <div>
-              <p className="text-[18px] font-extrabold text-[#202124]">更多创作方式</p>
-              <p className="mt-1 text-[12px] text-[#8a93a3]">按材料来源、写作场景和交付动作快速进入对应流程</p>
-            </div>
-          </div>
+          {!isQuickCreateHome ? (
+            <>
+              <div className="relative z-10 mt-7 flex w-full max-w-[980px] items-end justify-start gap-4">
+                <div>
+                  <p className="text-[18px] font-extrabold text-[#202124]">更多创作方式</p>
+                  <p className="mt-1 text-[12px] text-[#8a93a3]">按材料来源、写作场景和交付动作快速进入对应流程</p>
+                </div>
+              </div>
 
-          <div className="relative z-10 mt-4 grid w-full max-w-[980px] grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {homePromotedFeatures.map((feature) => (
-              <button
-                key={feature.id}
-                type="button"
-                onClick={() => {
-                  if (feature.id === 'scenario-writing') {
-                    openScenarioWritingShortcut();
-                    return;
-                  }
-                  openView(feature.id);
-                }}
-                className={`group relative min-h-[132px] overflow-hidden rounded-[18px] border border-white/85 bg-gradient-to-br ${feature.tone} px-5 py-5 text-left shadow-[0_18px_42px_rgba(43,69,97,0.10)] transition hover:-translate-y-1 hover:border-[var(--gov-red-line)] hover:bg-white hover:shadow-[0_26px_56px_rgba(43,69,97,0.14)] active:scale-[0.99]`}
-              >
-                <span className={`pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full ${feature.glow} blur-xl transition group-hover:scale-125`} />
-                <span className="pointer-events-none absolute bottom-0 right-0 h-20 w-24 rounded-tl-[42px] bg-white/24" />
-                <span className="relative flex h-full flex-col justify-between gap-4">
-                  <span className="flex items-start justify-between gap-3">
-                    <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[15px] ${feature.iconTone} shadow-[inset_0_-5px_12px_rgba(15,23,42,0.04),0_12px_24px_rgba(15,23,42,0.06)]`}>
-                      <PrototypeIcon name={feature.iconKey} size={34} alt={`${feature.title}图标`} />
+              <div className="relative z-10 mt-4 grid w-full max-w-[980px] grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {homePromotedFeatures.map((feature) => (
+                  <button
+                    key={feature.id}
+                    type="button"
+                    onClick={() => {
+                      if (feature.id === 'scenario-writing') {
+                        openScenarioWritingShortcut();
+                        return;
+                      }
+                      openView(feature.id);
+                    }}
+                    className={`group relative min-h-[132px] overflow-hidden rounded-[18px] border border-white/85 bg-gradient-to-br ${feature.tone} px-5 py-5 text-left shadow-[0_18px_42px_rgba(43,69,97,0.10)] transition hover:-translate-y-1 hover:border-[var(--gov-red-line)] hover:bg-white hover:shadow-[0_26px_56px_rgba(43,69,97,0.14)] active:scale-[0.99]`}
+                  >
+                    <span className={`pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full ${feature.glow} blur-xl transition group-hover:scale-125`} />
+                    <span className="pointer-events-none absolute bottom-0 right-0 h-20 w-24 rounded-tl-[42px] bg-white/24" />
+                    <span className="relative flex h-full flex-col justify-between gap-4">
+                      <span className="flex items-start justify-between gap-3">
+                        <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[15px] ${feature.iconTone} shadow-[inset_0_-5px_12px_rgba(15,23,42,0.04),0_12px_24px_rgba(15,23,42,0.06)]`}>
+                          <PrototypeIcon name={feature.iconKey} size={34} alt={`${feature.title}图标`} />
+                        </span>
+                        <ChevronDown size={17} className="-rotate-90 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:text-[var(--gov-red-deep)]" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block truncate text-[17px] font-extrabold text-[#202124]">{feature.title}</span>
+                        <span className="mt-1.5 block text-[12px] leading-5 text-[#7a8392]">{feature.desc}</span>
+                        <span className="mt-3 inline-flex rounded-full bg-white/58 px-2.5 py-1 text-[11px] font-semibold text-[#667085] ring-1 ring-white/70">{feature.hint}</span>
+                      </span>
                     </span>
-                    <ChevronDown size={17} className="-rotate-90 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:text-[var(--gov-red-deep)]" />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block truncate text-[17px] font-extrabold text-[#202124]">{feature.title}</span>
-                    <span className="mt-1.5 block text-[12px] leading-5 text-[#7a8392]">{feature.desc}</span>
-                    <span className="mt-3 inline-flex rounded-full bg-white/58 px-2.5 py-1 text-[11px] font-semibold text-[#667085] ring-1 ring-white/70">{feature.hint}</span>
-                  </span>
-                </span>
-              </button>
-            ))}
-          </div>
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : null}
 
         </section>
       </motion.div>
@@ -7064,6 +7091,8 @@ ${resultSummary}
       <AnimatePresence mode="wait">
         {currentView === 'home'
           ? renderHome()
+          : currentView === 'quick-create'
+            ? renderHome('quick-create')
           : currentView === 'conversation-detail'
             ? renderConversationDetail()
             : currentView === 'write'

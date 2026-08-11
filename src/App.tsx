@@ -53,7 +53,7 @@ type ActiveTab =
   | 'doc-review'
   | 'expert-management';
 
-type WritingShortcutView = 'home' | 'write' | 'copy' | 'polish' | 'template-layout' | 'check' | 'weboffice';
+type WritingShortcutView = 'home' | 'quick-create' | 'write' | 'copy' | 'polish' | 'template-layout' | 'check' | 'weboffice';
 type BusinessNavId = WritingShortcutView | 'documents' | 'history' | 'expert-management';
 
 type BusinessNavItem = {
@@ -225,8 +225,16 @@ export default function App() {
       writingView: 'home'
     },
     {
-      id: 'write',
+      id: 'quick-create',
       label: '快速创作',
+      icon: PenTool,
+      iconKey: 'nav-ai-write',
+      tab: 'console-writing',
+      writingView: 'quick-create'
+    },
+    {
+      id: 'write',
+      label: '场景创作',
       icon: PenTool,
       iconKey: 'nav-ai-write',
       tab: 'console-writing',
@@ -448,7 +456,7 @@ export default function App() {
     setIsCreateMenuOpen(false);
     setFocusedBusinessNav(item.id);
     setActiveTab(item.tab);
-    setIsDocumentNavExpanded(['write', 'copy', 'polish', 'template-layout', 'check'].includes(item.id));
+    setIsDocumentNavExpanded(['quick-create', 'write', 'copy', 'polish', 'template-layout', 'check'].includes(item.id));
     if (item.writingView) {
       setWritingNavigation({ view: item.writingView, key: Date.now() });
     }
@@ -677,9 +685,10 @@ export default function App() {
         { id: 'documents' as const, label: '知识库', icon: Folder, iconKey: 'nav-knowledge' },
         { id: 'expert-management' as const, label: '专家管理', icon: Bot, iconKey: 'nav-expert' }
       ];
-      const documentFeatureIds: BusinessNavId[] = ['write', 'copy', 'polish', 'template-layout', 'check'];
+      const documentFeatureIds: BusinessNavId[] = ['quick-create', 'write', 'copy', 'polish', 'template-layout', 'check'];
       const documentFeatureItems = [
-        { id: 'write' as const, label: '快速创作', icon: PenTool, iconKey: 'nav-ai-write' },
+        { id: 'quick-create' as const, label: '快速创作', icon: PenTool, iconKey: 'nav-ai-write' },
+        { id: 'write' as const, label: '场景创作', icon: PenTool, iconKey: 'write-mode-outline' },
         { id: 'copy' as const, label: '以稿写稿', icon: Layers, iconKey: 'nav-ai-copy' },
         { id: 'polish' as const, label: '文风润色', icon: Sparkles, iconKey: 'nav-ai-polish' },
         { id: 'template-layout' as const, label: '智能排版', icon: Stamp, iconKey: 'nav-layout' },
@@ -939,7 +948,8 @@ export default function App() {
 
   const businessHeaderTitles: Partial<Record<BusinessNavId, string>> = {
     home: '智能问答',
-    write: '智能公文',
+    'quick-create': '快速创作',
+    write: '场景创作',
     copy: '以稿写稿',
     polish: '文风润色',
     'template-layout': '智能排版',
