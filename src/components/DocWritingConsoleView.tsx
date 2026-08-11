@@ -57,7 +57,6 @@ interface DocWritingConsoleViewProps {
 }
 
 type WritingView = 'home' | 'write' | 'copy' | 'polish' | 'check' | 'template-layout' | 'ppt' | 'table' | 'weboffice' | 'recent-editor' | 'conversation-detail';
-type ContentLengthOption = '不限' | '简短' | '适中' | '较长';
 type WriteStep = 'mode' | 'source' | 'outline-parse' | 'scenario' | 'form' | 'style' | 'outline' | 'full-confirm' | 'full';
 type WritingMode = '生成全文' | '生成大纲' | '大纲成文' | '继续写' | '生成结语';
 type WriteGenerationContext = {
@@ -210,7 +209,7 @@ const TASK_ENTRIES: Array<{
 }> = [
   {
     id: 'write',
-    title: '起草公文',
+    title: '快速创作',
     subtitle: '根据主题快速生成通知、请示、纪要等规范初稿',
     icon: PenTool,
     iconKey: 'feature-ai-write',
@@ -234,7 +233,7 @@ const TASK_ENTRIES: Array<{
   },
   {
     id: 'copy',
-    title: '仿写成稿',
+    title: '以稿写稿',
     subtitle: '参考既有范文，快速复用结构、语气和行文组织',
     icon: Layers,
     iconKey: 'feature-ai-copy',
@@ -242,7 +241,7 @@ const TASK_ENTRIES: Array<{
   },
   {
     id: 'polish',
-    title: '智能润色',
+    title: '文风润色',
     subtitle: '提升严谨度、压缩口语化表达、统一正式口径',
     icon: Sparkles,
     iconKey: 'feature-ai-polish',
@@ -267,9 +266,9 @@ const TASK_ENTRIES: Array<{
 ];
 
 const HOME_QUICK_START = [
-  { id: 'write' as const, title: 'AI写作', desc: '从空白页快速起草通知、请示、纪要等正式公文', icon: PenTool, iconKey: 'feature-ai-write', tag: '主入口' },
-  { id: 'copy' as const, title: 'AI仿写', desc: '参考范文延续结构、语气和口径，快速生成成稿', icon: Layers, iconKey: 'feature-ai-copy', tag: '高频任务' },
-  { id: 'polish' as const, title: 'AI润色', desc: '统一正式表达，压缩口语化语句，提升成稿严谨度', icon: Sparkles, iconKey: 'feature-ai-polish', tag: '提质优化' },
+  { id: 'write' as const, title: '快速创作', desc: '从空白页快速起草通知、请示、纪要等正式公文', icon: PenTool, iconKey: 'feature-ai-write', tag: '主入口' },
+  { id: 'copy' as const, title: '以稿写稿', desc: '参考范文延续结构、语气和口径，快速生成成稿', icon: Layers, iconKey: 'feature-ai-copy', tag: '高频任务' },
+  { id: 'polish' as const, title: '文风润色', desc: '统一正式表达，压缩口语化语句，提升成稿严谨度', icon: Sparkles, iconKey: 'feature-ai-polish', tag: '提质优化' },
   { id: 'template-layout' as const, title: '智能排版', desc: '一键规范排版或套入红头模板，直接进入输出前版式处理', icon: Stamp, iconKey: 'feature-layout', tag: '版式整理' },
   { id: 'check' as const, title: '智能校对', desc: '检查错别字、敏感用语和国家公文格式规范问题', icon: FileCheck2, iconKey: 'feature-proofread', tag: '交付前' }
 ] satisfies Array<{
@@ -832,7 +831,6 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
   const [writeTopic, setWriteTopic] = useState('');
   const [writeRequirements, setWriteRequirements] = useState('');
   const [outlineGenerationContext, setOutlineGenerationContext] = useState<WriteGenerationContext | null>(null);
-  const [writeContentLength, setWriteContentLength] = useState<ContentLengthOption>('不限');
   const [writeWordCount, setWriteWordCount] = useState('1500');
   const [writeDraftingUnit, setWriteDraftingUnit] = useState('');
   const [sourceOutlineText, setSourceOutlineText] = useState('');
@@ -841,7 +839,7 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
   const [resultText, setResultText] = useState('');
   const [referenceMaterial, setReferenceMaterial] = useState('');
   const [imitateTopic, setImitateTopic] = useState('');
-  const [copyContentLength, setCopyContentLength] = useState<ContentLengthOption>('不限');
+  const [copyWordCount, setCopyWordCount] = useState('1500');
   const [copyDraftingUnit, setCopyDraftingUnit] = useState('');
   const [proofreadResult, setProofreadResult] = useState<{
     score: number;
@@ -870,6 +868,7 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
   const [selectedKnowledgeItems, setSelectedKnowledgeItems] = useState<string[]>([]);
   const [isFullTextInserted, setIsFullTextInserted] = useState(false);
   const [writeAutoFormat, setWriteAutoFormat] = useState(true);
+  const [copyAutoFormat, setCopyAutoFormat] = useState(true);
   const [showSourceTrace, setShowSourceTrace] = useState(false);
   const [showThoughtTrace, setShowThoughtTrace] = useState(false);
   const [activeCitation, setActiveCitation] = useState<number | null>(null);
@@ -1338,7 +1337,7 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
       setCopyResultText('');
       setImitateTopic('');
       setReferenceMaterial('');
-      setCopyContentLength('不限');
+      setCopyWordCount('1500');
       setCopyDraftingUnit('');
       setUploadedFiles([]);
       setSelectedKnowledgeItems([]);
@@ -1371,12 +1370,22 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
     setCurrentView(view);
   };
 
+  const openScenarioWritingShortcut = () => {
+    resetResults();
+    resetWriteFlow();
+    setSelectedWritingMode('生成大纲');
+    setNeedOutline(true);
+    setOutlineInputMode('ai');
+    setWriteStep('mode');
+    setCurrentView('write');
+  };
+
   const buildHomeResult = (prompt: string, skill: string) => {
     if (skill === '智能问答') {
       if (!isDefaultHomeExpert) {
         return `【${selectedHomeExpert.name}】已收到你的问题：“${prompt}”。\n\n一、处理判断\n${selectedHomeExpert.answerIntro}\n\n二、核心结论\n建议先明确任务对象、时间范围和输出用途，再按“事实依据、关键判断、执行建议”的顺序组织内容，确保回复既有依据又便于落地。\n\n三、下一步建议\n如果你愿意继续补充材料，我可以围绕当前问题继续追问、提炼要点，或直接形成一版可用于汇报的文字。`;
       }
-      return `已根据“${prompt}”完成问题分析。\n\n一、问题理解\n系统已识别你的咨询意图，并结合政务办公、公文写作和知识库材料进行检索。\n\n二、处理过程\n已完成问题拆解、相关政策与历史材料匹配，并整理出可执行的回复口径。\n\n三、建议动作\n如需形成正式材料，可继续选择 AI写作、AI润色或智能校对进入专项处理流程。`;
+      return `已根据“${prompt}”完成问题分析。\n\n一、问题理解\n系统已识别你的咨询意图，并结合政务办公、公文写作和知识库材料进行检索。\n\n二、处理过程\n已完成问题拆解、相关政策与历史材料匹配，并整理出可执行的回复口径。\n\n三、建议动作\n如需形成正式材料，可继续选择快速创作、文风润色或智能校对进入专项处理流程。`;
     }
     if (skill === 'AI仿写') {
       return `已根据“${prompt}”完成仿写任务。\n\n一、整体口径\n延续参考材料的结构节奏和正式表达，保留“背景说明、重点任务、工作要求”的层次，确保文本风格统一、语气稳健。\n\n二、生成内容\n围绕当前工作目标补充年度重点、责任分工与落实要求，避免直接复制原文表述，并对关键措辞做了政务化处理。\n\n三、后续建议\n建议进入编辑器补充具体单位名称、时间安排和数字材料，再进行最终校对。`;
@@ -1424,7 +1433,7 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
     const prompt = buildHomePrompt();
     if (!prompt) return;
     const activeSkill = homeActiveCapability === 'qa' ? '智能问答' : homeSelectedSkill;
-    if (activeSkill === 'AI写作' && HOME_SOURCE_REQUIRED_WRITING_MODES.includes(selectedWritingMode)) {
+    if (activeSkill === 'AI写作' && HOME_SOURCE_REQUIRED_WRITING_MODES.includes(selectedWritingMode) && selectedWritingMode !== '大纲成文') {
       const sourceText = sourceOutlineText.trim();
       if (!sourceText) return;
       setWriteTopic('');
@@ -1445,7 +1454,16 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
     const result = buildHomeResult(prompt, activeSkill);
     const sources = buildHomeConversationSources();
     setHomeConversation({ prompt, skill: activeSkill, result, sources });
-    if (activeSkill === 'AI写作') {
+    if (activeSkill === 'AI写作' && selectedWritingMode === '大纲成文') {
+      setQaTurns([{ id: Date.now(), prompt, sources, versions: [createQaVersion(result)], activeVersionIndex: 0, status: 'processing' }]);
+      setWritingPreflightConfirmed(true);
+      setQaProcessingStep(0);
+      setQaRunNonce((value) => value + 1);
+      setWritingReferenceDecision(sources.length > 0 ? 'added' : 'skip');
+      setQaProcessExpanded(true);
+      setQaSourcesOpen(false);
+      setQaActiveCitation(null);
+    } else if (activeSkill === 'AI写作') {
       setQaTurns([]);
       setQaRunNonce(0);
       setWritingPreflightConfirmed(false);
@@ -1911,9 +1929,10 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
     window.setTimeout(() => {
       setIsProcessing(false);
       const draftingUnit = copyDraftingUnit.trim() || '中国智海建设集团办公室';
+      const targetWordCount = copyWordCount.trim() || '1500';
       setCopyResultText(`各分公司、集团各部室：
 
-　　为深入贯彻落实集团年度重点工作部署，进一步规范“${imitateTopic}”相关工作，结合参考文稿的结构层次和行文口径，经研究，现就有关事项通知如下：
+　　为深入贯彻落实集团年度重点工作部署，进一步规范“${imitateTopic}”相关工作，结合参考文稿的结构层次和行文口径，并按照约 ${targetWordCount} 字的篇幅要求，经研究，现就有关事项通知如下：
 
 一、统一思想认识，明确总体要求
 
@@ -2066,7 +2085,7 @@ ${draftingUnit}
       .replace(/突法/g, '突发')
       .replace(/15分内/g, '15分钟内');
 
-    return `【AI润色稿】${sourceTitle.replace(/\.(docx?|pdf|txt)$/i, '')}\n\n${normalized}\n\n润色处理说明：\n一、已统一正式公文表述，压缩口语化和重复用语。\n二、已按公文行文习惯补强“责任闭环、时限反馈、督办问效”表达。\n三、建议进入 AI 审校环节继续检查格式、敏感表述和发文字号规范。`;
+    return `【文风润色稿】${sourceTitle.replace(/\.(docx?|pdf|txt)$/i, '')}\n\n${normalized}\n\n润色处理说明：\n一、已统一正式公文表述，压缩口语化和重复用语。\n二、已按公文行文习惯补强“责任闭环、时限反馈、督办问效”表达。\n三、建议进入智能校对环节继续检查格式、敏感表述和发文字号规范。`;
   };
 
   const handleCheckSourceUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -2462,10 +2481,10 @@ ${resultSummary}
     const homeSourceTextLength = sourceOutlineText.length;
     const homeSourceLabel = selectedWritingMode === '大纲成文' ? '已有大纲' : selectedWritingMode === '生成结语' ? '原文/大纲' : '已有正文';
     const homePromotedFeatures = [
-      { id: 'copy' as const, title: 'AI仿写', desc: '参考范文延续结构、语气和口径', iconKey: 'feature-ai-copy', tone: 'from-[#f7f3ff] to-[#eef4ff]', iconTone: 'bg-[#f0eaff] text-[#7a5cff]' },
-      { id: 'polish' as const, title: 'AI润色', desc: '优化表达层次，提升文字质感', iconKey: 'feature-ai-polish', tone: 'from-[#fff7f4] to-[#fff0f2]', iconTone: 'bg-[#fff0e8] text-[#ff7a45]' },
-      { id: 'template-layout' as const, title: '智能排版', desc: '模板样式一键规范排版', iconKey: 'feature-layout', tone: 'from-[#effaf7] to-[#eef7ff]', iconTone: 'bg-[#e7faf2] text-[#16a085]' },
-      { id: 'check' as const, title: '智能校对', desc: '检查错漏、敏感表述与格式问题', iconKey: 'feature-proofread', tone: 'from-[#f2f7ff] to-[#f5f1ff]', iconTone: 'bg-[#eaf1ff] text-[#4169d8]' },
+      { id: 'copy' as const, title: '以稿写稿', desc: '参考范文延续结构、语气和口径', hint: '稿子为蓝本，二次创作', iconKey: 'feature-ai-copy', tone: 'from-[#f7f3ff] via-[#f4f6ff] to-[#edf4ff]', iconTone: 'bg-[#f0eaff] text-[#7a5cff]', glow: 'bg-[#9272ff]/18' },
+      { id: 'scenario-writing' as const, title: '场景写作', desc: '按具体场景先生成结构化大纲', hint: '围绕文种和场景起草', iconKey: 'write-mode-outline', tone: 'from-[#fff6f5] via-[#fff2f5] to-[#f9f2ff]', iconTone: 'bg-[#fff0e8] text-[#ff7a45]', glow: 'bg-[#ff8a5c]/18' },
+      { id: 'template-layout' as const, title: '智能排版', desc: '模板样式一键规范排版', hint: '套模板、控格式、快交付', iconKey: 'feature-layout', tone: 'from-[#effaf7] via-[#eef8ff] to-[#f6f4ff]', iconTone: 'bg-[#e7faf2] text-[#16a085]', glow: 'bg-[#1abc9c]/16' },
+      { id: 'check' as const, title: '智能校对', desc: '检查错漏、敏感表述与格式问题', hint: '交付前查错和规范检查', iconKey: 'feature-proofread', tone: 'from-[#f2f7ff] via-[#f5f1ff] to-[#fff4f6]', iconTone: 'bg-[#eaf1ff] text-[#4169d8]', glow: 'bg-[#6384ff]/16' },
     ];
     return (
       <motion.div
@@ -2854,20 +2873,41 @@ ${resultSummary}
             ) : null}
           </div>
 
-          <div className="relative z-10 mt-5 grid w-full max-w-[980px] grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="relative z-10 mt-7 flex w-full max-w-[980px] items-end justify-start gap-4">
+            <div>
+              <p className="text-[18px] font-extrabold text-[#202124]">更多创作方式</p>
+              <p className="mt-1 text-[12px] text-[#8a93a3]">按材料来源、写作场景和交付动作快速进入对应流程</p>
+            </div>
+          </div>
+
+          <div className="relative z-10 mt-4 grid w-full max-w-[980px] grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {homePromotedFeatures.map((feature) => (
               <button
                 key={feature.id}
                 type="button"
-                onClick={() => openView(feature.id)}
-                className={`group flex min-h-[88px] items-center gap-3 rounded-[14px] border border-white/80 bg-gradient-to-br ${feature.tone} px-4 text-left shadow-[0_14px_34px_rgba(43,69,97,0.08)] transition hover:-translate-y-1 hover:border-[var(--gov-red-line)] hover:bg-white hover:shadow-[0_20px_44px_rgba(43,69,97,0.12)] active:scale-[0.99]`}
+                onClick={() => {
+                  if (feature.id === 'scenario-writing') {
+                    openScenarioWritingShortcut();
+                    return;
+                  }
+                  openView(feature.id);
+                }}
+                className={`group relative min-h-[132px] overflow-hidden rounded-[18px] border border-white/85 bg-gradient-to-br ${feature.tone} px-5 py-5 text-left shadow-[0_18px_42px_rgba(43,69,97,0.10)] transition hover:-translate-y-1 hover:border-[var(--gov-red-line)] hover:bg-white hover:shadow-[0_26px_56px_rgba(43,69,97,0.14)] active:scale-[0.99]`}
               >
-                <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] ${feature.iconTone} shadow-[inset_0_-5px_12px_rgba(15,23,42,0.04)]`}>
-                  <PrototypeIcon name={feature.iconKey} size={32} alt={`${feature.title}图标`} />
-                </span>
-                <span className="min-w-0">
-                  <span className="block truncate text-[15px] font-bold text-[#202124]">{feature.title}</span>
-                  <span className="mt-1 block text-[12px] leading-5 text-[#7a8392]">{feature.desc}</span>
+                <span className={`pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full ${feature.glow} blur-xl transition group-hover:scale-125`} />
+                <span className="pointer-events-none absolute bottom-0 right-0 h-20 w-24 rounded-tl-[42px] bg-white/24" />
+                <span className="relative flex h-full flex-col justify-between gap-4">
+                  <span className="flex items-start justify-between gap-3">
+                    <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[15px] ${feature.iconTone} shadow-[inset_0_-5px_12px_rgba(15,23,42,0.04),0_12px_24px_rgba(15,23,42,0.06)]`}>
+                      <PrototypeIcon name={feature.iconKey} size={34} alt={`${feature.title}图标`} />
+                    </span>
+                    <ChevronDown size={17} className="-rotate-90 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:text-[var(--gov-red-deep)]" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block truncate text-[17px] font-extrabold text-[#202124]">{feature.title}</span>
+                    <span className="mt-1.5 block text-[12px] leading-5 text-[#7a8392]">{feature.desc}</span>
+                    <span className="mt-3 inline-flex rounded-full bg-white/58 px-2.5 py-1 text-[11px] font-semibold text-[#667085] ring-1 ring-white/70">{feature.hint}</span>
+                  </span>
                 </span>
               </button>
             ))}
@@ -2967,7 +3007,7 @@ ${resultSummary}
                 <ArrowLeft size={17} />
               </button>
               <div className="min-w-0">
-                <p className="truncate text-[14px] font-semibold text-[#202124]">{isWritingConversation ? 'AI写作' : selectedHomeExpert.name}</p>
+                <p className="truncate text-[14px] font-semibold text-[#202124]">{isWritingConversation ? '快速创作' : selectedHomeExpert.name}</p>
                 <p className="truncate text-[11px] text-[#98a2b3]">金山政务一体机 · {isWritingConversation ? '写作任务' : '连续对话'}</p>
               </div>
             </div>
@@ -5486,7 +5526,7 @@ ${resultSummary}
             </button>
             <div className="h-3 w-px bg-[rgba(35,31,32,0.1)]" />
             <span className="text-[15px] font-semibold text-[var(--gov-text)]">
-              {currentTaskMeta?.title ?? '起草公文'}
+              {currentTaskMeta?.title ?? '快速创作'}
             </span>
             <span className="text-[10px] text-stone-300">|</span>
             <div className="flex min-w-0 flex-1 items-center overflow-x-auto py-1">
@@ -5559,7 +5599,7 @@ ${resultSummary}
       const articleParagraphs = copyResultText.split(/\n+/).map((paragraph) => paragraph.trim()).filter(Boolean);
       const thoughtSteps = [
         '解析仿写样稿：识别标题组织、段落层次、句式节奏与正式程度。',
-        '理解仿写要求：锁定写作主题、篇幅范围、拟文单位与重点表达。',
+        `理解仿写要求：锁定写作主题、${copyWordCount.trim() || '1500'} 字左右、拟文单位与重点表达。`,
         '融合参考素材：提取政策口径、事实材料和可引用的关键依据。',
         '生成并校验：完成正文仿写、来源标注与公文规范检查。',
       ];
@@ -5575,13 +5615,19 @@ ${resultSummary}
               <span className="font-medium text-[#98a2b3]">AI 仿写</span>
             </button>
             <div className="flex items-center gap-2">
-              <button type="button" onClick={() => handleCopy(copyResultText)} className="inline-flex h-10 items-center gap-2 rounded-[10px] border border-black/[0.08] bg-white px-4 text-[13px] font-semibold text-[#596170] transition hover:border-[var(--gov-red-line)] hover:text-[var(--gov-red)]">
-                <Copy size={15} />{copied ? '已复制' : '复制全文'}
-              </button>
+              <label className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-[10px] border border-[var(--gov-red-line)] bg-[var(--gov-red-soft)] px-3.5 text-[13px] font-semibold text-[var(--gov-red-deep)] transition hover:bg-[#f9e4e6]">
+                <input
+                  type="checkbox"
+                  checked={copyAutoFormat}
+                  onChange={(event) => setCopyAutoFormat(event.target.checked)}
+                  className="h-4 w-4 accent-[var(--gov-red)]"
+                />
+                自动排版
+              </label>
               <button
                 type="button"
                 onClick={() => {
-                  setRecentDocumentTitle(imitateTopic || 'AI仿写文稿');
+                  setRecentDocumentTitle(imitateTopic || '以稿写稿文稿');
                   setRecentDocumentContent(copyResultText);
                   openView('recent-editor');
                 }}
@@ -5619,7 +5665,7 @@ ${resultSummary}
 
                 <article className="relative mt-6 min-h-[calc(100vh-260px)] w-full rounded-[10px] bg-white px-8 py-8 text-[#111827] shadow-[0_18px_50px_rgba(15,23,42,0.04)] xl:px-12">
                   <div className="mx-auto w-full max-w-[1440px]">
-                    <h1 className="mb-7 text-[30px] font-extrabold leading-[1.35] tracking-normal text-[#111827]">{imitateTopic || 'AI仿写文稿'}</h1>
+                    <h1 className="mb-7 text-[30px] font-extrabold leading-[1.35] tracking-normal text-[#111827]">{imitateTopic || '以稿写稿文稿'}</h1>
                     <div className="space-y-4 text-[16px] font-medium leading-8 text-[#202124]">
                       {articleParagraphs.map((paragraph, paragraphIndex) => {
                         const citationIndex = paragraphIndex % visibleSources.length;
@@ -5977,13 +6023,42 @@ ${resultSummary}
                     <textarea rows={7} value={referenceMaterial} onChange={(event) => setReferenceMaterial(event.target.value)} placeholder="说明需要保留的结构、语气、篇幅和重点内容。例如：沿用参考文稿的三段式结构，语气正式严谨，突出责任分工和完成时限，篇幅控制在 1200 字以内。" className="gov-input w-full resize-none px-3 py-3 text-[13px] leading-6" />
                     <p className="text-right text-[10px] text-stone-400">{referenceMaterial.length}/1000</p>
                   </div>
-                  <WritingSettingsPanel
-                    name="copy-content-length"
-                    contentLength={copyContentLength}
-                    onContentLengthChange={setCopyContentLength}
-                    draftingUnit={copyDraftingUnit}
-                    onDraftingUnitChange={setCopyDraftingUnit}
-                  />
+                  <div className="rounded-xl border border-stone-200/70 bg-white p-4">
+                    <div className="grid gap-3 md:grid-cols-[110px_1fr] md:items-center">
+                      <label className="text-[13px] font-bold text-[var(--gov-text)]">字数</label>
+                      <input
+                        type="number"
+                        min="100"
+                        step="100"
+                        value={copyWordCount}
+                        onChange={(event) => setCopyWordCount(event.target.value)}
+                        placeholder="例如：1500"
+                        className="gov-input w-full rounded-lg px-3 py-3 text-[13px]"
+                      />
+                    </div>
+                    <div className="mt-4 grid gap-3 md:grid-cols-[110px_1fr] md:items-center">
+                      <label className="text-[13px] font-bold text-[var(--gov-text)]">拟文单位</label>
+                      <input
+                        type="text"
+                        value={copyDraftingUnit}
+                        onChange={(event) => setCopyDraftingUnit(event.target.value)}
+                        placeholder="客户机构(请修改此名称为客户机构名称)"
+                        className="gov-input w-full rounded-lg px-3 py-3 text-[13px]"
+                      />
+                    </div>
+                  </div>
+                  <div className="rounded-xl border border-stone-200/70 bg-[#fbfbfc] p-4">
+                    <div className="grid gap-3 md:grid-cols-[110px_1fr] md:items-center">
+                      <div>
+                        <p className="text-[13px] font-bold text-[var(--gov-text)]">生成配置</p>
+                        <p className="mt-1 text-[11px] leading-4 text-[#98a2b3]">选择模型与推理模式</p>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <DeepThinkingToggle enabled={deepThinkingEnabled} onChange={setDeepThinkingEnabled} />
+                        <ModelSelectControl selectedModel={selectedModel} onChange={setSelectedModel} />
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="mt-6 flex items-center justify-between">
                   <button type="button" onClick={() => setCopyStep('extract')} className="text-[11px] font-medium text-stone-500 hover:text-stone-700">返回结构提取</button>
@@ -6060,7 +6135,7 @@ ${resultSummary}
           <div className="flex h-12 shrink-0 items-center justify-between border-b border-black/[0.07] bg-white px-5 md:px-7">
             <div className="flex items-center gap-3">
               <button type="button" onClick={() => setPolishStep('requirements')} className="inline-flex h-8 w-8 items-center justify-center rounded-[8px] text-[#667085] hover:bg-[#f5f5f5]" aria-label="返回润色要求"><ArrowLeft size={15} /></button>
-              <span className="text-[13px] font-bold text-[#202124]">AI润色</span>
+              <span className="text-[13px] font-bold text-[#202124]">文风润色</span>
               <span className="text-[11px] text-[#98a2b3]">{isProcessing ? '正在润色全文' : '润色稿编辑器'}</span>
             </div>
             <span className="text-[11px] text-[#98a2b3]">{polishResultText.replace(/\s/g, '').length} 字</span>
@@ -6113,7 +6188,7 @@ ${resultSummary}
       return (
         <motion.div key="polish-preview" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className="flex h-full flex-col overflow-hidden bg-[#fafafa]">
           <div className="flex h-12 shrink-0 items-center justify-between border-b border-black/[0.07] bg-white px-5 md:px-7">
-            <div className="flex items-center gap-3"><button type="button" onClick={() => setPolishStep('requirements')} className="inline-flex h-8 w-8 items-center justify-center rounded-[8px] text-[#667085] hover:bg-[#f5f5f5]" aria-label="返回填写润色要求"><ArrowLeft size={15} /></button><span className="text-[13px] font-bold text-[#202124]">AI润色</span><span className="text-[11px] text-[#98a2b3]">结果预览</span></div>
+            <div className="flex items-center gap-3"><button type="button" onClick={() => setPolishStep('requirements')} className="inline-flex h-8 w-8 items-center justify-center rounded-[8px] text-[#667085] hover:bg-[#f5f5f5]" aria-label="返回填写润色要求"><ArrowLeft size={15} /></button><span className="text-[13px] font-bold text-[#202124]">文风润色</span><span className="text-[11px] text-[#98a2b3]">结果预览</span></div>
             <div className="flex items-center gap-2">
               {polishResultText ? <button type="button" onClick={() => handleCopy(polishResultText)} className="inline-flex h-9 items-center gap-1.5 rounded-[8px] border border-black/[0.08] bg-white px-3 text-[12px] font-semibold text-[#596170] hover:text-[var(--gov-red)]"><Copy size={14} />{copied ? '已复制' : '复制'}</button> : null}
               <button type="button" disabled={!polishResultText} onClick={() => setPolishStep('result')} className="inline-flex h-9 items-center gap-1.5 rounded-[8px] bg-[var(--gov-red)] px-4 text-[12px] font-semibold text-white shadow-[0_8px_20px_rgba(196,41,53,0.16)] hover:bg-[var(--gov-red-deep)] disabled:bg-stone-300"><PenTool size={14} />去编辑</button>
@@ -6137,7 +6212,7 @@ ${resultSummary}
     return (
       <motion.div key={`polish-${polishStep}`} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className="flex h-full flex-col overflow-hidden bg-[#fafafa]">
         <div className="flex h-12 shrink-0 items-center justify-between border-b border-black/[0.07] bg-white px-5 md:px-7">
-          <div className="flex items-center gap-3"><button type="button" onClick={() => polishStep === 'upload' ? openView('home') : setPolishStep('upload')} className="inline-flex h-8 w-8 items-center justify-center rounded-[8px] text-[#667085] hover:bg-[#f5f5f5]" aria-label="返回上一步"><ArrowLeft size={15} /></button><span className="text-[14px] font-bold text-[#202124]">AI润色</span><span className="text-[13px] text-[#98a2b3]">提升表达质量并保持原文事实口径</span></div>
+          <div className="flex items-center gap-3"><button type="button" onClick={() => polishStep === 'upload' ? openView('home') : setPolishStep('upload')} className="inline-flex h-8 w-8 items-center justify-center rounded-[8px] text-[#667085] hover:bg-[#f5f5f5]" aria-label="返回上一步"><ArrowLeft size={15} /></button><span className="text-[14px] font-bold text-[#202124]">文风润色</span><span className="text-[13px] text-[#98a2b3]">提升表达质量并保持原文事实口径</span></div>
           <span className="text-[12px] font-medium text-[#98a2b3]">步骤 {stepNumber}/3</span>
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6 md:px-8">
@@ -6210,7 +6285,41 @@ ${resultSummary}
                   <div><p className="mb-3 text-[13px] font-bold text-[#344054]">补充要求 <span className="font-normal text-[#98a2b3]">（选填）</span></p><textarea value={polishRequirementText} onChange={(event) => setPolishRequirementText(event.target.value)} rows={4} placeholder="例如：保留原有数据与政策表述，重点增强任务部署部分的可执行性。" className="w-full resize-none rounded-[9px] border border-black/[0.09] bg-[#fafafa] px-4 py-3 text-[12px] leading-6 text-[#344054] outline-none placeholder:text-[#b2b8c2] focus:border-[var(--gov-red-line)] focus:bg-white" /></div>
                 </div>
               </section>
-              <aside className="flex flex-col rounded-[14px] border border-black/[0.07] bg-white p-6 shadow-[0_8px_28px_rgba(15,23,42,0.04)]"><h3 className="text-[14px] font-bold text-[#202124]">本次润色配置</h3><div className="mt-5 space-y-4 text-[11px]"><div className="rounded-[9px] bg-[#fafafa] p-3"><p className="text-[#98a2b3]">待润色文件</p><p className="mt-1.5 truncate font-semibold text-[#344054]">{sourceName}</p></div><div><p className="text-[#98a2b3]">优化方向</p><div className="mt-2 flex flex-wrap gap-1.5">{polishDirections.map((item) => <span key={item} className="rounded-[6px] bg-[var(--gov-red-soft)] px-2 py-1 text-[var(--gov-red-deep)]">{item}</span>)}</div></div><div><p className="text-[#98a2b3]">语言风格</p><p className="mt-1.5 font-semibold text-[#344054]">{polishStyles.join('、') || '未选择'}</p></div><div><p className="text-[#98a2b3]">长度要求</p><p className="mt-1.5 font-semibold text-[#344054]">{polishLength}</p></div></div><div className="mt-auto pt-8"><button type="button" onClick={handleRunPolish} disabled={polishDirections.length === 0 || polishStyles.length === 0} className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-[9px] bg-[var(--gov-red)] text-[13px] font-semibold text-white shadow-[0_10px_24px_rgba(196,41,53,0.16)] hover:bg-[var(--gov-red-deep)] disabled:bg-stone-300"><Sparkles size={15} />开始生成</button><button type="button" onClick={() => setPolishStep('upload')} className="mt-2 h-9 w-full text-[11px] font-semibold text-[#667085] hover:text-[#344054]">返回更换文件</button></div></aside>
+              <aside className="flex flex-col rounded-[14px] border border-black/[0.07] bg-white p-6 shadow-[0_8px_28px_rgba(15,23,42,0.04)]">
+                <h3 className="text-[14px] font-bold text-[#202124]">本次润色配置</h3>
+                <div className="mt-5 space-y-4 text-[11px]">
+                  <div className="rounded-[9px] bg-[#fafafa] p-3">
+                    <p className="text-[#98a2b3]">待润色文件</p>
+                    <p className="mt-1.5 truncate font-semibold text-[#344054]">{sourceName}</p>
+                  </div>
+                  <div>
+                    <p className="text-[#98a2b3]">优化方向</p>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {polishDirections.map((item) => <span key={item} className="rounded-[6px] bg-[var(--gov-red-soft)] px-2 py-1 text-[var(--gov-red-deep)]">{item}</span>)}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-[#98a2b3]">语言风格</p>
+                    <p className="mt-1.5 font-semibold text-[#344054]">{polishStyles.join('、') || '未选择'}</p>
+                  </div>
+                  <div>
+                    <p className="text-[#98a2b3]">长度要求</p>
+                    <p className="mt-1.5 font-semibold text-[#344054]">{polishLength}</p>
+                  </div>
+                </div>
+                <div className="mt-auto space-y-3 pt-8">
+                  <div className="rounded-[12px] border border-stone-200/70 bg-[#fbfbfc] p-3">
+                    <p className="text-[12px] font-bold text-[var(--gov-text)]">生成配置</p>
+                    <p className="mt-1 text-[11px] leading-4 text-[#98a2b3]">选择模型与推理模式</p>
+                    <div className="mt-3 flex flex-col gap-2">
+                      <DeepThinkingToggle enabled={deepThinkingEnabled} onChange={setDeepThinkingEnabled} compact />
+                      <ModelSelectControl selectedModel={selectedModel} onChange={setSelectedModel} compact />
+                    </div>
+                  </div>
+                  <button type="button" onClick={handleRunPolish} disabled={polishDirections.length === 0 || polishStyles.length === 0} className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-[9px] bg-[var(--gov-red)] text-[13px] font-semibold text-white shadow-[0_10px_24px_rgba(196,41,53,0.16)] hover:bg-[var(--gov-red-deep)] disabled:bg-stone-300"><Sparkles size={15} />开始生成</button>
+                  <button type="button" onClick={() => setPolishStep('upload')} className="h-9 w-full text-[11px] font-semibold text-[#667085] hover:text-[#344054]">返回更换文件</button>
+                </div>
+              </aside>
             </div>}
           </div>
         </div>
@@ -6994,61 +7103,6 @@ function UploadHint({ title, desc, onClick }: { title: string; desc: string; onC
         <div className="mt-1 text-[11px] leading-[18px] text-stone-500">{desc}</div>
       </div>
     </button>
-  );
-}
-
-function WritingSettingsPanel({
-  name,
-  contentLength,
-  onContentLengthChange,
-  draftingUnit,
-  onDraftingUnitChange,
-}: {
-  name: string;
-  contentLength: ContentLengthOption;
-  onContentLengthChange: (value: ContentLengthOption) => void;
-  draftingUnit: string;
-  onDraftingUnitChange: (value: string) => void;
-}) {
-  const options: ContentLengthOption[] = ['不限', '简短', '适中', '较长'];
-
-  return (
-    <div className="rounded-xl border border-stone-200/70 bg-white p-4">
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-        <span className="text-[12px] font-bold text-[var(--gov-text)]">字数</span>
-        <div className="flex flex-wrap items-center gap-5">
-          {options.map((option) => {
-            const selected = contentLength === option;
-            return (
-              <label key={option} className="inline-flex cursor-pointer items-center gap-2 text-[12px] font-semibold text-stone-700">
-                <input
-                  type="radio"
-                  name={name}
-                  checked={selected}
-                  onChange={() => onContentLengthChange(option)}
-                  className="sr-only"
-                />
-                <span className={`flex h-5 w-5 items-center justify-center rounded-full border ${selected ? 'border-[#2F6FDB] bg-[#2F6FDB]' : 'border-stone-300 bg-white'}`}>
-                  {selected ? <span className="h-1.5 w-1.5 rounded-full bg-white" /> : null}
-                </span>
-                {option}
-              </label>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="mt-5 grid gap-3 md:grid-cols-[110px_1fr] md:items-center">
-        <label className="text-[12px] font-bold text-[var(--gov-text)]">拟文单位</label>
-        <input
-          type="text"
-          value={draftingUnit}
-          onChange={(event) => onDraftingUnitChange(event.target.value)}
-          placeholder="客户机构(请修改此名称为客户机构名称)"
-          className="gov-input w-full rounded-lg px-3 py-3 text-[13px]"
-        />
-      </div>
-    </div>
   );
 }
 
