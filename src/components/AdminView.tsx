@@ -2326,9 +2326,45 @@ const businessNodes = [
 ];
 
 function BusinessNodeAdmin() {
+  const editableNodes = businessNodes.filter((node) => !node.root);
+  const [selectedNodeName, setSelectedNodeName] = useState(editableNodes[0]?.name ?? '智能问答');
   const [promptEditor, setPromptEditor] = useState<{ title: string; mode: 'create' | 'edit' } | null>(null);
-  const [enabledNodes, setEnabledNodes] = useState<Record<string, boolean>>(() => Object.fromEntries(businessNodes.map((node) => [node.name, node.status === '已启用'])));
-  const toggleNode = (name: string) => setEnabledNodes((current) => ({ ...current, [name]: !current[name] }));
+  const [enabledVersions, setEnabledVersions] = useState<Record<string, boolean>>({});
+  const selectedNode = businessNodes.find((node) => node.name === selectedNodeName) ?? editableNodes[0];
+  const supportsMultiModel = selectedNode?.type.includes('多模型') ?? false;
+  const promptVersions = selectedNode ? [
+    {
+      id: `${selectedNode.name}-v1`,
+      version: 'V1.0',
+      supportsMultiModel,
+      model: selectedNode.model || '金山政务大模型-Pro',
+      deepThinking: selectedNode.params.includes('深度思考'),
+      defaultEnabled: selectedNode.status === '已启用',
+    },
+    {
+      id: `${selectedNode.name}-v09`,
+      version: 'V0.9',
+      supportsMultiModel,
+      model: selectedNode.name.includes('校对') || selectedNode.name.includes('排版') || selectedNode.name.includes('润色') ? '专项审校模型' : '通用兼容模型',
+      deepThinking: supportsMultiModel,
+      defaultEnabled: supportsMultiModel,
+    },
+  ] : [];
+
+  const toggleVersion = (versionId: string) => {
+    setEnabledVersions((current) => {
+      const version = promptVersions.find((item) => item.id === versionId);
+      if (!version) return current;
+      const enabled = current[version.id] ?? version.defaultEnabled;
+      if (enabled) return { ...current, [version.id]: false };
+      if (version.supportsMultiModel) return { ...current, [version.id]: true };
+      const next = { ...current, [version.id]: true };
+      promptVersions.forEach((item) => {
+        if (item.id !== version.id) next[item.id] = false;
+      });
+      return next;
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -2336,47 +2372,102 @@ function BusinessNodeAdmin() {
         <div className="flex flex-wrap items-start justify-between gap-3 border-b border-black/[0.06] px-5 py-5">
           <div><h3 className="text-[18px] font-bold text-[#202124]">提示词管理</h3><p className="mt-1.5 text-[13px] leading-6 text-[#667085]">按业务节点维护提示词版本、入参变量、绑定模型和模型参数。</p></div>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[1180px] text-left text-[13px]">
-            <thead className="bg-[#f7f8fa] text-[12px] text-[#667085]"><tr><th className="p-4">业务节点</th><th className="p-4">提示词版本</th><th className="p-4">入参变量</th><th className="p-4">绑定模型</th><th className="p-4">模型参数</th><th className="p-4">状态</th><th className="p-4">更新时间</th><th className="p-4 text-right">操作</th></tr></thead>
-            <tbody className="divide-y divide-black/[0.05]">
+        <div className="grid min-h-[620px] lg:grid-cols-[300px_minmax(0,1fr)]">
+          <aside className="border-r border-black/[0.06] bg-[#fbfbfc] p-4">
+            <div className="mb-3 flex h-10 items-center gap-2 rounded-[10px] border border-black/[0.06] bg-white px-3">
+              <Search size={15} className="text-[#98a2b3]" />
+              <input className="min-w-0 flex-1 bg-transparent text-[12px] outline-none placeholder:text-[#b0b5bd]" placeholder="搜索业务节点" />
+            </div>
+            <div className="space-y-1">
               {businessNodes.map((node) => {
-                const enabled = enabledNodes[node.name];
                 const root = Boolean(node.root);
-                const disabledAction = root || enabled;
+                const selected = selectedNodeName === node.name;
                 return (
-                  <tr key={node.name} className={`${root ? 'bg-[#fffafa]' : 'hover:bg-[#fbfbfc]'}`}>
-                    <td className="p-4">
-                      <div className="flex items-center gap-2" style={{ paddingLeft: `${node.level * 26}px` }}>
-                        {node.level > 0 ? <ChevronRight size={13} className="text-[#b0b5bd]" /> : <FolderTree size={15} className="text-[var(--gov-red)]" />}
-                        <div><p className="font-semibold text-[#202124]">{node.name}</p><p className="mt-0.5 text-[11px] text-[#98a2b3]">{node.type}</p></div>
-                      </div>
-                    </td>
-                    <td className="p-4"><p className="font-semibold text-[#344054]">{root ? '-' : `${node.name}提示词`}</p><p className="mt-1 text-[11px] text-[#98a2b3]">{root ? '' : 'V1.0 · 当前启用版本'}</p></td>
-                    <td className="p-4">
-                      <div className="flex max-w-[220px] flex-wrap gap-1.5">
-                        {node.variables.length > 0 ? node.variables.map((item) => <span key={item} className="rounded-[6px] bg-[var(--gov-red-soft)] px-2 py-1 font-mono text-[10px] font-semibold text-[var(--gov-red-deep)]">{item}</span>) : <span className="text-[#c5cad3]">-</span>}
-                      </div>
-                    </td>
-                    <td className="p-4 text-[#667085]">{root ? '-' : node.model}</td>
-                    <td className="p-4"><p className="max-w-[220px] text-[11px] leading-5 text-[#667085]">{node.params || '-'}</p></td>
-                    <td className="p-4">{root ? '-' : <Status tone={enabled ? 'success' : 'warning'}>{enabled ? '已启用' : '已停用'}</Status>}</td>
-                    <td className="p-4 text-[12px] text-[#667085]">{root ? '-' : '2026-08-07 10:30'}</td>
-                    <td className="p-4 text-right">
-                      {root ? null : (
-                        <div className="inline-flex items-center gap-2">
-                          <button onClick={() => setPromptEditor({ title: node.name, mode: 'create' })} className="text-[12px] font-semibold text-[#3b63d9]">新增版本</button>
-                          <button onClick={() => setPromptEditor({ title: node.name, mode: 'edit' })} className="text-[12px] font-semibold text-[var(--gov-red-deep)]">编辑版本</button>
-                          <button onClick={() => toggleNode(node.name)} className={`text-[12px] font-semibold ${enabled ? 'text-amber-700' : 'text-emerald-700'}`}>{enabled ? '停用' : '启用'}</button>
-                          <button disabled={disabledAction} className="text-[12px] font-semibold text-[#98a2b3] disabled:text-[#c5cad3]">删除</button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
+                  <button
+                    key={node.name}
+                    type="button"
+                    disabled={root}
+                    onClick={() => setSelectedNodeName(node.name)}
+                    className={`flex min-h-[44px] w-full items-center gap-2 rounded-[10px] px-3 text-left transition ${
+                      root
+                        ? 'cursor-default bg-white text-[var(--gov-red-deep)] shadow-[0_6px_18px_rgba(15,23,42,0.04)]'
+                        : selected
+                          ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)] ring-1 ring-[var(--gov-red-line)]'
+                          : 'text-[#596170] hover:bg-white hover:text-[#202124]'
+                    }`}
+                    style={{ paddingLeft: `${12 + node.level * 18}px` }}
+                  >
+                    {root ? <FolderTree size={15} /> : node.level > 1 ? <MessageSquareText size={14} /> : <FileText size={14} />}
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[12px] font-bold">{node.name}</span>
+                      <span className={`mt-0.5 block text-[10px] ${selected ? 'text-[var(--gov-red-deep)]/70' : 'text-[#98a2b3]'}`}>{node.type}</span>
+                    </span>
+                  </button>
                 );
               })}
-            </tbody>
-          </table>
+            </div>
+          </aside>
+
+          <section className="min-w-0 bg-white">
+            {selectedNode ? (
+              <div className="space-y-4 p-5">
+                <div className="flex flex-wrap items-start justify-between gap-3 border-b border-black/[0.06] pb-4">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-[var(--gov-red-soft)] text-[var(--gov-red)]"><MessageSquareText size={15} /></span>
+                      <h4 className="text-[17px] font-bold text-[#202124]">{selectedNode.name}</h4>
+                      <span className="rounded-full bg-[#f0f2f5] px-2 py-0.5 text-[10px] font-semibold text-[#667085]">{selectedNode.type}</span>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {selectedNode.variables.length > 0 ? selectedNode.variables.map((item) => (
+                        <span key={item} className="rounded-[7px] bg-[var(--gov-red-soft)] px-2 py-1 font-mono text-[11px] font-semibold text-[var(--gov-red-deep)] ring-1 ring-[var(--gov-red-line)]">{item}</span>
+                      )) : <span className="text-[12px] text-[#c5cad3]">该节点暂无入参变量</span>}
+                    </div>
+                  </div>
+                  <button onClick={() => setPromptEditor({ title: selectedNode.name, mode: 'create' })} className="inline-flex h-9 items-center gap-1.5 rounded-[8px] bg-[var(--gov-red)] px-3 text-[12px] font-semibold text-white shadow-[0_8px_20px_rgba(190,51,62,0.16)]">
+                    <PlusCircle size={14} />
+                    新增版本
+                  </button>
+                </div>
+
+                <div className="overflow-x-auto rounded-[12px] border border-black/[0.06]">
+                  <table className="w-full min-w-[860px] text-left text-[13px]">
+                    <thead className="bg-[#f7f8fa] text-[12px] font-semibold text-[#667085]">
+                      <tr>
+                        <th className="px-4 py-3">版本号</th>
+                        <th className="px-4 py-3">是否支持多模型</th>
+                        <th className="px-4 py-3">绑定模型名称</th>
+                        <th className="px-4 py-3">是否支持深度思考</th>
+                        <th className="px-4 py-3">状态</th>
+                        <th className="px-4 py-3 text-right">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-black/[0.05] bg-white">
+                      {promptVersions.map((version) => {
+                        const active = enabledVersions[version.id] ?? version.defaultEnabled;
+                        return (
+                          <tr key={version.id} className="hover:bg-[#fffafa]">
+                            <td className="px-4 py-3 font-semibold text-[#202124]">{version.version}</td>
+                            <td className="px-4 py-3 text-[#667085]">{version.supportsMultiModel ? '是' : '否'}</td>
+                            <td className="px-4 py-3 text-[#344054]">{version.model}</td>
+                            <td className="px-4 py-3 text-[#667085]">{version.deepThinking ? '是' : '否'}</td>
+                            <td className="px-4 py-3"><Status tone={active ? 'success' : 'warning'}>{active ? '启用' : '停用'}</Status></td>
+                            <td className="px-4 py-3 text-right">
+                              <div className="inline-flex items-center gap-3">
+                                <button onClick={() => setPromptEditor({ title: selectedNode.name, mode: 'edit' })} className="text-[12px] font-semibold text-[var(--gov-red-deep)]">编辑</button>
+                                <button onClick={() => toggleVersion(version.id)} className={`text-[12px] font-semibold ${active ? 'text-amber-700' : 'text-emerald-700'}`}>{active ? '停用' : '启用'}</button>
+                                <button disabled={active} className="text-[12px] font-semibold text-[#98a2b3] disabled:text-[#c5cad3]">删除</button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ) : null}
+          </section>
         </div>
         <div className="border-t border-black/[0.06] bg-[#fbfbfc] px-5 py-3 text-[11px] leading-5 text-[#667085]">
           前台调用规则：每个业务节点同一时间只允许一条启用的提示词版本；若没有启用版本，前台返回“当前功能暂未完成后台配置，请联系管理员”。
@@ -2399,9 +2490,12 @@ function BusinessPromptModal({ title, mode, onClose }: { title: string; mode: 'c
         </div>
         <div className="grid max-h-[72vh] gap-5 overflow-auto px-6 py-6 lg:grid-cols-[1.25fr_0.95fr]">
           <div className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-[1fr_160px]">
-              <Field label="版本名称" required><input className="gov-input h-11 w-full px-3 text-[13px]" defaultValue={`${title}提示词`} /></Field>
-              <Field label="版本号" required><input className="gov-input h-11 w-full px-3 text-[13px]" defaultValue="V1.0" /></Field>
+            <div className="rounded-[14px] border border-black/[0.06] bg-[#fbfbfc] p-4">
+              <h4 className="text-[13px] font-bold text-[#202124]">所属业务节点</h4>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <span className="rounded-[8px] bg-[var(--gov-red-soft)] px-3 py-1.5 text-[12px] font-bold text-[var(--gov-red-deep)]">{title}</span>
+                <span className="text-[12px] text-[#98a2b3]">版本号由系统保存时自动生成，编辑时不需要手动维护。</span>
+              </div>
             </div>
             <label className="block">
               <span className="mb-2 flex items-center justify-between text-[13px] font-bold text-[#344054]">System Prompt <span className="text-[11px] font-medium text-[#98a2b3]">角色 / 边界 / 格式约束</span></span>
