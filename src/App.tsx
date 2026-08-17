@@ -37,7 +37,7 @@ import PrototypeIcon from './components/PrototypeIcon';
 import { DEFAULT_HOME_EXPERT_ID, HOME_EXPERTS, HomeExpertId, HomeExpertMarketCategory } from './homeExperts';
 import { DEFAULT_PRODUCT_ICON_URL, resolvePublicAssetUrl } from './utils/publicAsset';
 
-import { Bell, Bot, CheckCircle, ChevronDown, ChevronRight, ClipboardList, Clock, Code2, FileSearch, FileText, Folder, History, Home, KeyRound, Layers, Link2, LockKeyhole, LogOut, MessageCircle, MoreHorizontal, Network, PenTool, Pin, Plus, RefreshCw, Search, Settings, ShieldCheck, SlidersHorizontal, Sparkles, Stamp, Trash2, UserRound, Users } from 'lucide-react';
+import { Bell, Bot, CheckCircle, ChevronDown, ChevronRight, ClipboardList, Clock, Code2, Database, FileSearch, FileText, Folder, HardDrive, History, Home, KeyRound, Layers, Link2, LockKeyhole, LogOut, MessageCircle, MoreHorizontal, Network, PenTool, Pin, Plus, RefreshCw, Search, Settings, ShieldCheck, SlidersHorizontal, Sparkles, Stamp, Trash2, UserRound, Users } from 'lucide-react';
 
 type SidebarMode = 'home' | 'ai';
 type ActiveTab =
@@ -45,6 +45,7 @@ type ActiveTab =
   | 'agents'
   | 'sessions'
   | 'documents'
+  | 'local-resources'
   | 'history'
   | 'connectors'
   | 'automation-schedules'
@@ -53,14 +54,14 @@ type ActiveTab =
   | 'expert-management';
 
 type WritingShortcutView = 'home' | 'quick-create' | 'write' | 'copy' | 'polish' | 'template-layout' | 'check' | 'weboffice';
-type BusinessNavId = WritingShortcutView | 'documents' | 'history' | 'expert-management';
+type BusinessNavId = WritingShortcutView | 'documents' | 'local-resources' | 'connectors' | 'history' | 'expert-management';
 
 type BusinessNavItem = {
   id: BusinessNavId;
   label: string;
   icon: typeof FileText;
   iconKey?: string;
-  tab: 'console-writing' | 'documents' | 'history' | 'expert-management';
+  tab: 'console-writing' | 'documents' | 'local-resources' | 'connectors' | 'history' | 'expert-management';
   writingView?: WritingShortcutView;
 };
 
@@ -285,6 +286,18 @@ export default function App() {
       tab: 'documents'
     },
     {
+      id: 'local-resources',
+      label: '本地资源',
+      icon: HardDrive,
+      tab: 'local-resources'
+    },
+    {
+      id: 'connectors',
+      label: '数据连接',
+      icon: Database,
+      tab: 'connectors'
+    },
+    {
       id: 'expert-management',
       label: '智能体市场',
       icon: Bot,
@@ -367,8 +380,9 @@ export default function App() {
     agents: '数字专家',
     sessions: 'AI会话',
     documents: '知识库',
+    'local-resources': '本地资源',
     history: '历史记录',
-    connectors: '系统集成',
+    connectors: '数据连接',
     'automation-schedules': '定时任务',
     'doc-review': 'AI审校',
     'expert-management': '智能体市场'
@@ -503,7 +517,7 @@ export default function App() {
     setActiveSpace('workbench');
     setSidebarMode(mode);
     if (mode === 'home') {
-      if (!['console-writing', 'documents', 'history', 'expert-management'].includes(activeTab)) {
+      if (!['console-writing', 'documents', 'local-resources', 'connectors', 'history', 'expert-management'].includes(activeTab)) {
         setActiveTab('console-writing');
         setFocusedBusinessNav('home');
         setWritingNavigation({ view: 'home', key: Date.now() });
@@ -697,7 +711,9 @@ export default function App() {
           key: 'knowledge',
           label: '知识资源',
           items: [
-            { id: 'documents' as const, label: '知识库', icon: Folder, iconKey: 'nav-knowledge' }
+            { id: 'documents' as const, label: '知识库', icon: Folder, iconKey: 'nav-knowledge' },
+            { id: 'local-resources' as const, label: '本地资源', icon: HardDrive },
+            { id: 'connectors' as const, label: '数据连接', icon: Database }
           ]
         },
         {
@@ -741,6 +757,8 @@ export default function App() {
                     (focusedBusinessNav === item.id ||
                       (item.id === 'write' && (isDocumentNavExpanded || (focusedBusinessNav !== null && documentFeatureIds.includes(focusedBusinessNav)))) ||
                       (item.id === 'documents' && activeTab === 'documents') ||
+                      (item.id === 'local-resources' && activeTab === 'local-resources') ||
+                      (item.id === 'connectors' && activeTab === 'connectors') ||
                       (item.id === 'expert-management' && activeTab === 'expert-management') ||
                       (item.id === 'home' && activeTab === 'console-writing' && focusedBusinessNav === 'home'));
 
@@ -979,6 +997,8 @@ export default function App() {
     check: '智能校对',
     weboffice: '新建空白稿',
     documents: '知识库',
+    'local-resources': '本地资源',
+    connectors: '数据连接',
     history: '历史记录',
     'expert-management': '智能体市场'
   };
@@ -1116,7 +1136,7 @@ export default function App() {
                 </AnimatePresence>
               </div>
             </div>
-          ) : activeTab === 'sessions' || activeTab === 'documents' || activeTab === 'history' || activeTab === 'expert-management' || activeTab === 'console-writing' || activeTab === 'doc-review' ? (
+          ) : activeTab === 'sessions' || activeTab === 'documents' || activeTab === 'local-resources' || activeTab === 'history' || activeTab === 'expert-management' || activeTab === 'console-writing' || activeTab === 'doc-review' ? (
             <div className="ai-workspace-bg relative flex-1 overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -1144,6 +1164,10 @@ export default function App() {
 
                   {activeTab === 'documents' && (
                     <DocumentsView documents={documents} role={role} onUpdateDocumentContent={handleUpdateDocumentContent} />
+                  )}
+
+                  {activeTab === 'local-resources' && (
+                    <LocalResourcesView documents={documents} />
                   )}
 
                   {activeTab === 'history' && <HistoryView key={selectedHistoryId} initialSelectedId={selectedHistoryId} />}
@@ -1402,6 +1426,76 @@ const HISTORY_RECORDS = [
     detail: '已按工作进展、存在问题、下一步计划整理为汇报稿。'
   }
 ];
+
+function LocalResourcesView({ documents }: { documents: DocumentInfo[] }) {
+  const resourceCards = [
+    { title: '本地文档', desc: '上传到当前工作台的 Word、PDF、Excel 文件', count: `${documents.length} 个文件`, icon: FileText, tone: 'bg-[#fff1f2] text-[var(--gov-red)]' },
+    { title: '模板文件', desc: '本地保存的红头、周报和常用格式模板', count: '8 个模板', icon: Folder, tone: 'bg-[#eff6ff] text-[#3b82f6]' },
+    { title: '导入记录', desc: '最近通过上传、拖拽导入的素材记录', count: '12 条记录', icon: History, tone: 'bg-[#f5f3ff] text-[#7c3aed]' }
+  ];
+  const recentFiles = documents.slice(0, 6);
+
+  return (
+    <div className="h-full overflow-y-auto p-6">
+      <div className="mx-auto max-w-[1480px] space-y-5">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-[24px] font-bold tracking-normal text-[#151922]">本地资源</p>
+            <p className="mt-2 text-[13px] leading-6 text-[#7a808a]">管理当前工作台内的本地文档、模板文件和最近导入资源。</p>
+          </div>
+          <button type="button" className="inline-flex h-10 items-center gap-2 rounded-[10px] bg-[var(--gov-red)] px-4 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(225,61,78,0.18)] transition hover:bg-[var(--gov-red-deep)]">
+            <Plus size={15} />
+            上传本地资源
+          </button>
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-3">
+          {resourceCards.map((item) => {
+            const IconComponent = item.icon;
+            return (
+              <div key={item.title} className="rounded-[16px] border border-black/[0.06] bg-white p-5 shadow-[0_14px_34px_rgba(15,23,42,0.05)]">
+                <div className={`flex h-11 w-11 items-center justify-center rounded-[13px] ${item.tone}`}>
+                  <IconComponent size={20} />
+                </div>
+                <p className="mt-4 text-[17px] font-bold text-[#202124]">{item.title}</p>
+                <p className="mt-2 min-h-[40px] text-[13px] leading-5 text-[#7a808a]">{item.desc}</p>
+                <p className="mt-4 text-[12px] font-semibold text-[#98a2b3]">{item.count}</p>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="rounded-[18px] border border-black/[0.06] bg-white shadow-[0_16px_42px_rgba(15,23,42,0.055)]">
+          <div className="flex items-center justify-between border-b border-black/[0.05] px-5 py-4">
+            <div>
+              <p className="text-[16px] font-bold text-[#202124]">最近本地文件</p>
+              <p className="mt-1 text-[12px] text-[#98a2b3]">展示当前原型中已保存到文档中心的文件。</p>
+            </div>
+            <button type="button" className="rounded-[9px] border border-black/[0.08] bg-white px-3 py-2 text-[12px] font-semibold text-[#596170] transition hover:bg-[#f7f8fa]">查看全部</button>
+          </div>
+          <div className="divide-y divide-black/[0.045]">
+            {recentFiles.map((doc) => (
+              <div key={doc.id} className="grid grid-cols-[minmax(0,1fr)_120px_160px] items-center gap-4 px-5 py-4 text-[13px]">
+                <div className="flex min-w-0 items-center gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] bg-[#f7f8fb] text-[#4b63d9]"><FileText size={17} /></span>
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold text-[#344054]">{doc.title}</p>
+                    <p className="mt-1 truncate text-[12px] text-[#98a2b3]">{doc.category}</p>
+                  </div>
+                </div>
+                <span className="text-[#667085]">{doc.type.toUpperCase()}</span>
+                <span className="text-[#98a2b3]">{doc.lastModified}</span>
+              </div>
+            ))}
+            {recentFiles.length === 0 ? (
+              <div className="px-5 py-12 text-center text-[13px] text-[#98a2b3]">暂无本地资源</div>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function ExpertManagementView({
   selectedExpertId,
