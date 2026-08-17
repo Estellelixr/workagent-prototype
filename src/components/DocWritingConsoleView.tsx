@@ -2547,17 +2547,17 @@ ${resultSummary}
         exit={{ opacity: 0, y: -4 }}
         className="ai-workspace-bg ai-home-bg relative flex h-full flex-col overflow-hidden"
       >
-        <section className="mx-auto flex min-h-0 w-full max-w-[1320px] flex-1 flex-col items-center justify-start px-[clamp(28px,4vw,72px)] pb-5 pt-[clamp(48px,9vh,96px)]">
-          <div className="mb-5 flex shrink-0 flex-col items-center text-center">
-            <div className="relative"><div className="absolute -inset-2 rounded-[24px] border border-[var(--gov-red-line)] bg-white/60" /><img src={resolvePublicAssetUrl(appearance?.logoUrl ?? DEFAULT_PRODUCT_ICON_URL)} alt="产品 logo" className="relative h-20 w-20 rounded-[20px] border border-white object-cover shadow-[0_18px_38px_rgba(176,64,70,0.18)]" /><span className="absolute -bottom-2 -right-3 flex h-8 w-8 items-center justify-center rounded-[10px] border-2 border-white bg-[var(--gov-red)] text-white shadow-[0_7px_16px_rgba(181,47,61,0.28)]"><Sparkles size={15} /></span></div>
-            <h1 className="mt-5 text-[32px] font-semibold leading-tight tracking-normal">
+        <section className="mx-auto flex min-h-0 w-full max-w-[1160px] flex-1 flex-col items-center justify-start px-[clamp(28px,4vw,64px)] pb-5 pt-[clamp(24px,5vh,50px)]">
+          <div className="mb-4 flex shrink-0 flex-col items-center text-center">
+            <div className="relative"><div className="absolute -inset-1.5 rounded-[21px] border border-[var(--gov-red-line)] bg-white/60" /><img src={resolvePublicAssetUrl(appearance?.logoUrl ?? DEFAULT_PRODUCT_ICON_URL)} alt="产品 logo" className="relative h-16 w-16 rounded-[18px] border border-white object-cover shadow-[0_14px_30px_rgba(176,64,70,0.16)]" /><span className="absolute -bottom-1.5 -right-2 flex h-7 w-7 items-center justify-center rounded-[9px] border-2 border-white bg-[var(--gov-red)] text-white shadow-[0_7px_16px_rgba(181,47,61,0.24)]"><Sparkles size={13} /></span></div>
+            <h1 className="mt-4 text-[28px] font-semibold leading-tight tracking-normal">
               <span className="text-[#202124]">全能助手，</span>
               <span className="text-[var(--gov-red-deep)]">{appearance?.slogan ?? '一步开启高效公文写作新体验'}</span>
             </h1>
           </div>
 
           {useDefaultHomeWritingControl ? (
-            <div className="home-skill-tabs relative z-30 mb-5 grid w-full max-w-[980px] grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
+            <div className="home-skill-tabs relative z-30 mb-4 grid w-full max-w-[920px] grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-6">
               {homeSkillTabs.map((skill) => {
                 const isSelected =
                   skill.id === 'qa'
@@ -2568,20 +2568,20 @@ ${resultSummary}
                     key={skill.id}
                     type="button"
                     onClick={() => handleSelectHomeSkill(skill.id)}
-                    className={`group flex h-14 items-center justify-center gap-3 rounded-[14px] border bg-white px-4 text-[15px] font-bold transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_38px_rgba(15,23,42,0.10)] ${
+                    className={`group flex h-12 items-center justify-center gap-2.5 rounded-[13px] border bg-white px-3 text-[14px] font-bold transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_rgba(15,23,42,0.10)] ${
                       isSelected
                         ? 'border-[var(--gov-red-line)] text-[var(--gov-red-deep)] shadow-[0_18px_38px_rgba(190,51,62,0.13)] ring-4 ring-[rgba(231,77,94,0.07)]'
                         : 'border-black/[0.06] text-[#344054] shadow-[0_12px_28px_rgba(15,23,42,0.06)] hover:border-black/[0.10]'
                     }`}
                   >
                     <span
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] bg-white shadow-[0_8px_20px_rgba(15,23,42,0.08)] ring-1 ring-black/[0.04]"
+                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px] bg-white shadow-[0_8px_18px_rgba(15,23,42,0.07)] ring-1 ring-black/[0.04]"
                       style={{ color: skill.color }}
                     >
                       {skill.id === 'qa' ? (
-                        <MessageCircle size={19} strokeWidth={2.1} />
+                        <MessageCircle size={17} strokeWidth={2.1} />
                       ) : (
-                        <PrototypeIcon name={skill.iconKey} size={30} alt={`${skill.label}图标`} />
+                        <PrototypeIcon name={skill.iconKey} size={27} alt={`${skill.label}图标`} />
                       )}
                     </span>
                     <span className="truncate">{skill.label}</span>
@@ -2591,7 +2591,7 @@ ${resultSummary}
             </div>
           ) : null}
 
-          <div className="ai-prompt-shell relative z-30 w-full max-w-[980px] shrink-0 overflow-visible rounded-[16px] p-4 text-left">
+          <div className="ai-prompt-shell relative z-30 w-full max-w-[920px] shrink-0 overflow-visible rounded-[16px] p-4 text-left">
             <div className={`home-prompt-main-row relative z-50 flex gap-4 ${isSourceBasedHomeWriting ? 'flex-col items-stretch' : 'items-start'}`}>
               {!useDefaultHomeWritingControl ? (
                 <div className="flex shrink-0 justify-start">
@@ -2603,7 +2603,7 @@ ${resultSummary}
               ) : null}
               <div className={`min-w-0 flex-1 ${isSourceBasedHomeWriting ? '-mt-1' : ''}`}>
                 {shouldUseStructuredHomeWriting ? (
-                  <div className={`${isSourceBasedHomeWriting ? 'min-h-[118px]' : 'min-h-[104px]'} px-1 py-1`}>
+                  <div className={`${isSourceBasedHomeWriting ? 'min-h-[98px]' : 'min-h-[82px]'} px-1 py-1`}>
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-2 text-[15px] leading-8 text-[#30343b]">
                       <span className={`${isSourceBasedHomeWriting ? 'hidden' : ''} text-[#4b5563]`}>{selectedHomeWritingCopy.inlineLead}</span>
                       {isSourceBasedHomeWriting ? (
@@ -2701,7 +2701,7 @@ ${resultSummary}
                           }
                         }}
                         rows={3}
-                        className="h-[150px] w-full resize-none bg-transparent px-1 py-2 pr-16 text-[15px] leading-7 text-[#202124] outline-none placeholder:text-[#9aa0a6]"
+                        className="h-[118px] w-full resize-none bg-transparent px-1 py-2 pr-16 text-[15px] leading-7 text-[#202124] outline-none placeholder:text-[#9aa0a6]"
                         placeholder={homePromptPlaceholder}
                       />
                       <span
@@ -2724,7 +2724,7 @@ ${resultSummary}
                 )}
               </div>
             </div>
-            <div className="home-prompt-toolbar relative z-[160] mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-black/[0.06] pt-3">
+            <div className="home-prompt-toolbar relative z-[160] mt-2.5 flex flex-wrap items-center justify-between gap-3 border-t border-black/[0.06] pt-3">
               <div className="flex flex-wrap items-center gap-2">
                 {homeActiveCapability === 'write' || homeActiveCapability === 'qa' ? (
                   <div className="relative">
@@ -2849,14 +2849,14 @@ ${resultSummary}
 
           {!isQuickCreateHome ? (
             <>
-              <div className="relative z-10 mt-7 flex w-full max-w-[980px] items-end justify-start gap-4">
+              <div className="relative z-10 mt-5 flex w-full max-w-[920px] items-end justify-start gap-4">
                 <div>
-                  <p className="text-[18px] font-extrabold text-[#202124]">更多创作方式</p>
+                  <p className="text-[17px] font-extrabold text-[#202124]">更多创作方式</p>
                   <p className="mt-1 text-[12px] text-[#8a93a3]">按材料来源、写作场景和交付动作快速进入对应流程</p>
                 </div>
               </div>
 
-              <div className="relative z-10 mt-4 grid w-full max-w-[980px] grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="relative z-10 mt-3 grid w-full max-w-[920px] grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 {homePromotedFeatures.map((feature) => (
                   <button
                     key={feature.id}
@@ -2868,21 +2868,21 @@ ${resultSummary}
                       }
                       openHomeFeature(feature.id);
                     }}
-                    className={`group relative min-h-[132px] overflow-hidden rounded-[18px] border border-white/85 bg-gradient-to-br ${feature.tone} px-5 py-5 text-left shadow-[0_18px_42px_rgba(43,69,97,0.10)] transition hover:-translate-y-1 hover:border-[var(--gov-red-line)] hover:bg-white hover:shadow-[0_26px_56px_rgba(43,69,97,0.14)] active:scale-[0.99]`}
+                    className={`group relative min-h-[112px] overflow-hidden rounded-[16px] border border-white/85 bg-gradient-to-br ${feature.tone} px-4 py-4 text-left shadow-[0_16px_34px_rgba(43,69,97,0.09)] transition hover:-translate-y-1 hover:border-[var(--gov-red-line)] hover:bg-white hover:shadow-[0_24px_48px_rgba(43,69,97,0.13)] active:scale-[0.99]`}
                   >
                     <span className={`pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full ${feature.glow} blur-xl transition group-hover:scale-125`} />
                     <span className="pointer-events-none absolute bottom-0 right-0 h-20 w-24 rounded-tl-[42px] bg-white/24" />
                     <span className="relative flex h-full flex-col justify-between gap-4">
                       <span className="flex items-start justify-between gap-3">
-                        <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[15px] ${feature.iconTone} shadow-[inset_0_-5px_12px_rgba(15,23,42,0.04),0_12px_24px_rgba(15,23,42,0.06)]`}>
-                          <PrototypeIcon name={feature.iconKey} size={34} alt={`${feature.title}图标`} />
+                        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] ${feature.iconTone} shadow-[inset_0_-5px_12px_rgba(15,23,42,0.04),0_10px_20px_rgba(15,23,42,0.06)]`}>
+                          <PrototypeIcon name={feature.iconKey} size={30} alt={`${feature.title}图标`} />
                         </span>
                         <ChevronDown size={17} className="-rotate-90 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:text-[var(--gov-red-deep)]" />
                       </span>
                       <span className="min-w-0">
-                        <span className="block truncate text-[17px] font-extrabold text-[#202124]">{feature.title}</span>
-                        <span className="mt-1.5 block text-[12px] leading-5 text-[#7a8392]">{feature.desc}</span>
-                        <span className="mt-3 inline-flex rounded-full bg-white/58 px-2.5 py-1 text-[11px] font-semibold text-[#667085] ring-1 ring-white/70">{feature.hint}</span>
+                        <span className="block truncate text-[16px] font-extrabold text-[#202124]">{feature.title}</span>
+                        <span className="mt-1 block text-[12px] leading-5 text-[#7a8392]">{feature.desc}</span>
+                        <span className="mt-2 inline-flex rounded-full bg-white/58 px-2.5 py-1 text-[11px] font-semibold text-[#667085] ring-1 ring-white/70">{feature.hint}</span>
                       </span>
                     </span>
                   </button>
