@@ -35,7 +35,6 @@ import ConnectorsView from './components/ConnectorsView';
 import WorkflowsView from './components/WorkflowsView';
 import AdminView from './components/AdminView';
 import PrototypeIcon from './components/PrototypeIcon';
-import StyleLibraryView from './components/StyleLibraryView';
 import { DEFAULT_HOME_EXPERT_ID, HOME_EXPERTS, HomeExpertId } from './homeExperts';
 import { DEFAULT_PRODUCT_ICON_URL, resolvePublicAssetUrl } from './utils/publicAsset';
 
@@ -52,18 +51,17 @@ type ActiveTab =
   | 'automation-schedules'
   | 'console-writing'
   | 'doc-review'
-  | 'style-library'
   | 'expert-management';
 
 type WritingShortcutView = 'home' | 'quick-create' | 'write' | 'copy' | 'polish' | 'template-layout' | 'check' | 'weboffice';
-type BusinessNavId = WritingShortcutView | 'documents' | 'style-library' | 'history' | 'expert-management';
+type BusinessNavId = WritingShortcutView | 'documents' | 'history' | 'expert-management';
 
 type BusinessNavItem = {
   id: BusinessNavId;
   label: string;
   icon: typeof FileText;
   iconKey?: string;
-  tab: 'console-writing' | 'documents' | 'style-library' | 'history' | 'expert-management';
+  tab: 'console-writing' | 'documents' | 'history' | 'expert-management';
   writingView?: WritingShortcutView;
 };
 
@@ -290,13 +288,6 @@ export default function App() {
       tab: 'documents'
     },
     {
-      id: 'style-library',
-      label: '文风库',
-      icon: Sparkles,
-      iconKey: 'nav-ai-polish',
-      tab: 'style-library'
-    },
-    {
       id: 'expert-management',
       label: '专家管理',
       icon: Bot,
@@ -379,7 +370,6 @@ export default function App() {
     agents: '数字专家',
     sessions: 'AI会话',
     documents: '知识库',
-    'style-library': '文风库',
     history: '历史记录',
     connectors: '系统集成',
     'automation-schedules': '定时任务',
@@ -516,7 +506,7 @@ export default function App() {
     setActiveSpace('workbench');
     setSidebarMode(mode);
     if (mode === 'home') {
-      if (!['console-writing', 'documents', 'style-library', 'history', 'expert-management'].includes(activeTab)) {
+      if (!['console-writing', 'documents', 'history', 'expert-management'].includes(activeTab)) {
         setActiveTab('console-writing');
         setFocusedBusinessNav('home');
         setWritingNavigation({ view: 'home', key: Date.now() });
@@ -702,7 +692,6 @@ export default function App() {
         { id: 'write' as const, label: '智能公文', icon: FileText, iconKey: 'nav-smart-doc' },
         { id: 'weboffice' as const, label: '公文写作', icon: FileText, iconKey: 'feature-web-office' },
         { id: 'documents' as const, label: '知识库', icon: Folder, iconKey: 'nav-knowledge' },
-        { id: 'style-library' as const, label: '文风库', icon: Sparkles, iconKey: 'nav-ai-polish' },
         { id: 'expert-management' as const, label: '专家管理', icon: Bot, iconKey: 'nav-expert' }
       ];
       const documentFeatureIds: BusinessNavId[] = ['quick-create', 'write', 'copy', 'polish', 'template-layout', 'check'];
@@ -745,7 +734,6 @@ export default function App() {
                 focusedBusinessNav === item.id ||
                 (item.id === 'write' && (isDocumentNavExpanded || (focusedBusinessNav !== null && documentFeatureIds.includes(focusedBusinessNav)))) ||
                 (item.id === 'documents' && activeTab === 'documents') ||
-                (item.id === 'style-library' && activeTab === 'style-library') ||
                 (item.id === 'expert-management' && activeTab === 'expert-management') ||
                 (item.id === 'home' && activeTab === 'console-writing' && focusedBusinessNav === 'home');
 
@@ -977,7 +965,6 @@ export default function App() {
     check: '智能校对',
     weboffice: '公文写作',
     documents: '知识库',
-    'style-library': '文风库',
     history: '历史记录',
     'expert-management': '专家管理'
   };
@@ -1151,7 +1138,7 @@ export default function App() {
                 </AnimatePresence>
               </div>
             </div>
-          ) : activeTab === 'sessions' || activeTab === 'documents' || activeTab === 'style-library' || activeTab === 'history' || activeTab === 'expert-management' || activeTab === 'console-writing' || activeTab === 'doc-review' ? (
+          ) : activeTab === 'sessions' || activeTab === 'documents' || activeTab === 'history' || activeTab === 'expert-management' || activeTab === 'console-writing' || activeTab === 'doc-review' ? (
             <div className="ai-workspace-bg relative flex-1 overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -1180,8 +1167,6 @@ export default function App() {
                   {activeTab === 'documents' && (
                     <DocumentsView documents={documents} role={role} onUpdateDocumentContent={handleUpdateDocumentContent} />
                   )}
-
-                  {activeTab === 'style-library' && <StyleLibraryView />}
 
                   {activeTab === 'history' && <HistoryView key={selectedHistoryId} initialSelectedId={selectedHistoryId} />}
 
