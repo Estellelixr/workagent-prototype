@@ -54,6 +54,7 @@ interface DocWritingConsoleViewProps {
   appearance?: {
     logoUrl: string;
     productName: string;
+    productSubtitle?: string;
     slogan: string;
   };
 }
@@ -2985,7 +2986,7 @@ ${resultSummary}
               </button>
               <div className="min-w-0">
                 <p className="truncate text-[14px] font-semibold text-[#202124]">{isWritingConversation ? '快速创作' : selectedHomeExpert.name}</p>
-                <p className="truncate text-[11px] text-[#98a2b3]">金山文澜智能创作平台 · {isWritingConversation ? '写作任务' : '连续对话'}</p>
+                <p className="truncate text-[11px] text-[#98a2b3]">{appearance?.productName ?? '金山文澜'} · {appearance?.productSubtitle ?? '智能政务创作平台'} · {isWritingConversation ? '写作任务' : '连续对话'}</p>
               </div>
             </div>
             <div className="flex shrink-0 items-center gap-2">
@@ -3022,7 +3023,7 @@ ${resultSummary}
                         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--gov-red-soft)] text-[12px] font-bold text-[var(--gov-red-deep)]">张</span>
                       </div>
                       <div className="flex items-start gap-3">
-                        <img src={DEFAULT_PRODUCT_ICON_URL} alt="金山文澜智能创作平台" className="h-9 w-9 shrink-0 rounded-[10px] border border-black/[0.05] object-cover" />
+                        <img src={DEFAULT_PRODUCT_ICON_URL} alt="金山文澜" className="h-9 w-9 shrink-0 rounded-[10px] border border-black/[0.05] object-cover" />
                         <div className="min-w-0 flex-1 rounded-[16px] border border-black/[0.07] bg-white p-5 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
                           <div className="flex items-start justify-between gap-4">
                             <div>
@@ -3099,7 +3100,7 @@ ${resultSummary}
                         </div>
 
                         <div className="flex items-start gap-3">
-                          <img src={DEFAULT_PRODUCT_ICON_URL} alt="金山文澜智能创作平台" className="h-9 w-9 shrink-0 rounded-[10px] border border-black/[0.05] object-cover" />
+                          <img src={DEFAULT_PRODUCT_ICON_URL} alt="金山文澜" className="h-9 w-9 shrink-0 rounded-[10px] border border-black/[0.05] object-cover" />
                           <div className="min-w-0 flex-1">
                             <div className="mb-3 flex items-center gap-2 text-[13px] font-semibold text-[#4b5563]">
                               {turn.status === 'processing' ? <Loader2 size={15} className="animate-spin text-[var(--gov-red)]" /> : <CheckCircle size={15} className="text-[#49a36d]" />}

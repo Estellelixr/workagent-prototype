@@ -2553,7 +2553,8 @@ function SystemManagementAdmin({ subSection }: { subSection: AdminSubSection }) 
 const HOME_APPEARANCE_STORAGE_KEY = 'workagent-home-appearance';
 const DEFAULT_HOME_APPEARANCE = {
   logoUrl: DEFAULT_PRODUCT_ICON_URL,
-  productName: '金山文澜智能创作平台',
+  productName: '金山文澜',
+  productSubtitle: '智能政务创作平台',
   slogan: '一步开启高效公文写作新体验',
 };
 
@@ -2563,8 +2564,8 @@ function loadAppearanceDraft() {
     const saved = window.localStorage.getItem(HOME_APPEARANCE_STORAGE_KEY);
     if (!saved) return DEFAULT_HOME_APPEARANCE;
     const parsed = { ...DEFAULT_HOME_APPEARANCE, ...JSON.parse(saved) };
-    if (parsed.productName === '金山政务一体机') {
-      return { ...parsed, productName: DEFAULT_HOME_APPEARANCE.productName };
+    if (parsed.productName === '金山政务一体机' || parsed.productName === '金山文澜智能创作平台') {
+      return { ...parsed, productName: DEFAULT_HOME_APPEARANCE.productName, productSubtitle: DEFAULT_HOME_APPEARANCE.productSubtitle };
     }
     return parsed;
   } catch {
@@ -2581,6 +2582,7 @@ function AppearanceManagementPanel() {
     const normalized = {
       logoUrl: appearanceDraft.logoUrl || DEFAULT_HOME_APPEARANCE.logoUrl,
       productName: appearanceDraft.productName.trim() || DEFAULT_HOME_APPEARANCE.productName,
+      productSubtitle: appearanceDraft.productSubtitle.trim() || DEFAULT_HOME_APPEARANCE.productSubtitle,
       slogan: appearanceDraft.slogan.trim() || DEFAULT_HOME_APPEARANCE.slogan,
     };
     window.localStorage.setItem(HOME_APPEARANCE_STORAGE_KEY, JSON.stringify(normalized));
@@ -2635,7 +2637,10 @@ function AppearanceManagementPanel() {
             </div>
           </div>
           <Field label="产品名称" required>
-            <input value={appearanceDraft.productName} onChange={(event) => setAppearanceDraft({ ...appearanceDraft, productName: event.target.value })} className="gov-input h-11 w-full px-3 text-[13px]" placeholder="例如：金山文澜智能创作平台" />
+            <input value={appearanceDraft.productName} onChange={(event) => setAppearanceDraft({ ...appearanceDraft, productName: event.target.value })} className="gov-input h-11 w-full px-3 text-[13px]" placeholder="例如：金山文澜" />
+          </Field>
+          <Field label="产品副标题" required>
+            <input value={appearanceDraft.productSubtitle} onChange={(event) => setAppearanceDraft({ ...appearanceDraft, productSubtitle: event.target.value })} className="gov-input h-11 w-full px-3 text-[13px]" placeholder="例如：智能政务创作平台" />
           </Field>
           <Field label="首页标语" required>
             <textarea value={appearanceDraft.slogan} onChange={(event) => setAppearanceDraft({ ...appearanceDraft, slogan: event.target.value })} className="gov-input min-h-[108px] w-full resize-none px-3 py-3 text-[13px] leading-6" placeholder="例如：一步开启高效公文写作新体验" />
@@ -2660,7 +2665,7 @@ function AppearanceManagementPanel() {
                 <img src={resolvePublicAssetUrl(appearanceDraft.logoUrl)} alt="首页 Logo" className="h-14 w-14 rounded-[17px] object-cover shadow-[0_12px_30px_rgba(176,64,70,0.14)]" />
                 <div>
                   <p className="text-[16px] font-bold text-[#202124]">{appearanceDraft.productName || DEFAULT_HOME_APPEARANCE.productName}</p>
-                  <p className="mt-1 text-[12px] text-[#98a2b3]">首页品牌预览</p>
+                  <p className="mt-1 text-[12px] font-medium text-[#98a2b3]">{appearanceDraft.productSubtitle || DEFAULT_HOME_APPEARANCE.productSubtitle}</p>
                 </div>
               </div>
               <div className="mt-10 text-center">

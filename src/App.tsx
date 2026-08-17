@@ -99,12 +99,14 @@ type DemoAccount = CurrentUser & {
 export type HomeAppearance = {
   logoUrl: string;
   productName: string;
+  productSubtitle: string;
   slogan: string;
 };
 
 export const DEFAULT_HOME_APPEARANCE: HomeAppearance = {
   logoUrl: DEFAULT_PRODUCT_ICON_URL,
-  productName: '金山文澜智能创作平台',
+  productName: '金山文澜',
+  productSubtitle: '智能政务创作平台',
   slogan: '一步开启高效公文写作新体验'
 };
 
@@ -116,8 +118,8 @@ const loadHomeAppearance = (): HomeAppearance => {
     const saved = window.localStorage.getItem(HOME_APPEARANCE_STORAGE_KEY);
     if (!saved) return DEFAULT_HOME_APPEARANCE;
     const parsed = { ...DEFAULT_HOME_APPEARANCE, ...JSON.parse(saved) };
-    if (parsed.productName === '金山政务一体机') {
-      return { ...parsed, productName: DEFAULT_HOME_APPEARANCE.productName };
+    if (parsed.productName === '金山政务一体机' || parsed.productName === '金山文澜智能创作平台') {
+      return { ...parsed, productName: DEFAULT_HOME_APPEARANCE.productName, productSubtitle: DEFAULT_HOME_APPEARANCE.productSubtitle };
     }
     return parsed;
   } catch {
@@ -624,7 +626,7 @@ export default function App() {
   };
 
   if (!currentUser) {
-    return <LoginView captcha={captcha} onRefreshCaptcha={refreshCaptcha} onLogin={handleLogin} />;
+    return <LoginView captcha={captcha} appearance={homeAppearance} onRefreshCaptcha={refreshCaptcha} onLogin={handleLogin} />;
   }
 
   const renderSidebarContent = () => {
@@ -700,7 +702,10 @@ export default function App() {
         <div className="flex min-h-full flex-col">
           <div className="mb-4 flex items-center gap-3 px-2">
             <img src={resolvePublicAssetUrl(homeAppearance.logoUrl)} alt="产品 logo" className="h-11 w-11 rounded-[14px] object-cover shadow-[0_8px_20px_rgba(176,64,70,0.10)]" />
-            <span className="min-w-0 flex-1 truncate text-[15px] font-semibold text-[#1f2329]">{homeAppearance.productName}</span>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[15px] font-semibold leading-[20px] text-[#1f2329]">{homeAppearance.productName}</p>
+              <p className="mt-0.5 truncate text-[11px] font-medium leading-[16px] text-[#98a2b3]">{homeAppearance.productSubtitle}</p>
+            </div>
           </div>
 
           <nav className="space-y-1">
@@ -1204,6 +1209,7 @@ export default function App() {
 
 type LoginViewProps = {
   captcha: string;
+  appearance: HomeAppearance;
   onRefreshCaptcha: () => void;
   onLogin: (username: string, password: string, captchaInput: string) => string | null;
 };
@@ -1543,7 +1549,7 @@ function HistoryView({ initialSelectedId }: { initialSelectedId?: string }) {
   );
 }
 
-function LoginView({ captcha, onRefreshCaptcha, onLogin }: LoginViewProps) {
+function LoginView({ captcha, appearance, onRefreshCaptcha, onLogin }: LoginViewProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [captchaInput, setCaptchaInput] = useState('');
@@ -1586,10 +1592,13 @@ function LoginView({ captcha, onRefreshCaptcha, onLogin }: LoginViewProps) {
 
       <main className="relative z-10 mx-auto grid min-h-[calc(100vh-84px)] w-full max-w-[1220px] grid-cols-1 items-center gap-5 py-10 lg:grid-cols-[620px_540px]">
         <section className="max-w-[620px]">
-          <h1 className="text-[40px] font-semibold leading-[1.14] tracking-normal text-[#db4053] sm:text-[50px] lg:whitespace-nowrap">
-            金山文澜智能创作平台
+          <h1 className="text-[42px] font-semibold leading-[1.08] tracking-normal text-[#db4053] sm:text-[54px]">
+            {appearance.productName}
           </h1>
-          <p className="mt-4 text-[23px] font-semibold tracking-normal text-[#39404c] sm:text-[28px]">
+          <p className="mt-3 text-[18px] font-semibold tracking-normal text-[#8b94a3] sm:text-[22px]">
+            {appearance.productSubtitle}
+          </p>
+          <p className="mt-5 text-[23px] font-semibold tracking-normal text-[#39404c] sm:text-[28px]">
             让公文流转更轻，让智能办公更近
           </p>
           <p className="mt-8 max-w-[540px] text-[15px] font-medium leading-7 text-[#6f7886]">
