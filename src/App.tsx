@@ -37,7 +37,7 @@ import PrototypeIcon from './components/PrototypeIcon';
 import { DEFAULT_HOME_EXPERT_ID, HOME_EXPERTS, HomeExpertId, HomeExpertMarketCategory } from './homeExperts';
 import { DEFAULT_PRODUCT_ICON_URL, resolvePublicAssetUrl } from './utils/publicAsset';
 
-import { Bell, Bot, CheckCircle, ChevronDown, ChevronRight, ClipboardList, Clock, FileSearch, FileText, Folder, History, Home, KeyRound, Layers, Link2, LockKeyhole, LogOut, MessageCircle, MoreHorizontal, Network, PenTool, Pin, Plus, RefreshCw, Search, Settings, ShieldCheck, SlidersHorizontal, Sparkles, Stamp, Trash2, UserRound, Users } from 'lucide-react';
+import { Bell, Bot, CheckCircle, ChevronDown, ChevronRight, ClipboardList, Clock, Code2, FileSearch, FileText, Folder, History, Home, KeyRound, Layers, Link2, LockKeyhole, LogOut, MessageCircle, MoreHorizontal, Network, PenTool, Pin, Plus, RefreshCw, Search, Settings, ShieldCheck, SlidersHorizontal, Sparkles, Stamp, Trash2, UserRound, Users } from 'lucide-react';
 
 type SidebarMode = 'home' | 'ai';
 type ActiveTab =
@@ -105,7 +105,7 @@ export type HomeAppearance = {
 
 export const DEFAULT_HOME_APPEARANCE: HomeAppearance = {
   logoUrl: DEFAULT_PRODUCT_ICON_URL,
-  productName: '金山文澜',
+  productName: '金山政务智能办公平台',
   productSubtitle: '智能政务创作平台',
   slogan: '一步开启高效公文写作新体验'
 };
@@ -118,7 +118,7 @@ const loadHomeAppearance = (): HomeAppearance => {
     const saved = window.localStorage.getItem(HOME_APPEARANCE_STORAGE_KEY);
     if (!saved) return DEFAULT_HOME_APPEARANCE;
     const parsed = { ...DEFAULT_HOME_APPEARANCE, ...JSON.parse(saved) };
-    if (parsed.productName === '金山政务一体机' || parsed.productName === '金山文澜智能创作平台') {
+    if (parsed.productName === '金山政务一体机' || parsed.productName === '金山文澜' || parsed.productName === '金山文澜智能创作平台') {
       return { ...parsed, productName: DEFAULT_HOME_APPEARANCE.productName, productSubtitle: DEFAULT_HOME_APPEARANCE.productSubtitle };
     }
     return parsed;
@@ -271,7 +271,7 @@ export default function App() {
     },
     {
       id: 'weboffice',
-      label: '公文写作',
+      label: '新建空白稿',
       icon: FileText,
       iconKey: 'feature-web-office',
       tab: 'console-writing',
@@ -286,7 +286,7 @@ export default function App() {
     },
     {
       id: 'expert-management',
-      label: '专家市场',
+      label: '智能体市场',
       icon: Bot,
       iconKey: 'nav-expert',
       tab: 'expert-management'
@@ -362,7 +362,7 @@ export default function App() {
   ];
 
   const viewTitles: Record<ActiveTab, string> = {
-    'console-writing': '公文写作',
+    'console-writing': '智能公文',
     'ai-console': 'AI中台',
     agents: '数字专家',
     sessions: 'AI会话',
@@ -371,7 +371,7 @@ export default function App() {
     connectors: '系统集成',
     'automation-schedules': '定时任务',
     'doc-review': 'AI审校',
-    'expert-management': '专家市场'
+    'expert-management': '智能体市场'
   };
 
   const adminViewTitles: Partial<Record<AdminSection, string>> = {
@@ -452,7 +452,7 @@ export default function App() {
     setSidebarMode('home');
     setFocusedBusinessNav(item.id);
     setActiveTab(item.tab);
-    setIsDocumentNavExpanded(['write', 'copy', 'polish', 'template-layout', 'check'].includes(item.id));
+    setIsDocumentNavExpanded(['weboffice', 'write', 'copy', 'polish', 'template-layout', 'check'].includes(item.id));
     if (item.writingView) {
       setWritingNavigation({ view: item.writingView, key: Date.now() });
     }
@@ -472,7 +472,7 @@ export default function App() {
     setSidebarMode('home');
     setActiveTab('console-writing');
     setFocusedBusinessNav(id);
-    setIsDocumentNavExpanded(['write', 'copy', 'polish', 'template-layout', 'check'].includes(id));
+    setIsDocumentNavExpanded(['weboffice', 'write', 'copy', 'polish', 'template-layout', 'check'].includes(id));
   };
 
   const openAiFeatureTab = (tab: AiFeatureNavItem['id']) => {
@@ -681,15 +681,31 @@ export default function App() {
     }
 
     if (sidebarMode === 'home') {
-      const primaryItems = [
-        { id: 'home' as const, label: '新建任务', icon: PenTool, iconKey: 'nav-new-task' },
-        { id: 'write' as const, label: '智能公文', icon: FileText, iconKey: 'nav-smart-doc' },
-        { id: 'weboffice' as const, label: '公文写作', icon: FileText, iconKey: 'feature-web-office' },
-        { id: 'documents' as const, label: '知识库', icon: Folder, iconKey: 'nav-knowledge' },
-        { id: 'expert-management' as const, label: '专家市场', icon: Bot, iconKey: 'nav-expert' }
+      const primaryGroups = [
+        {
+          key: 'create',
+          items: [
+            { id: 'home' as const, label: '新建任务', icon: PenTool, iconKey: 'nav-new-task' },
+            { id: 'write' as const, label: '智能公文', icon: FileText, iconKey: 'nav-smart-doc' }
+          ]
+        },
+        {
+          key: 'knowledge',
+          items: [
+            { id: 'documents' as const, label: '知识库', icon: Folder, iconKey: 'nav-knowledge' }
+          ]
+        },
+        {
+          key: 'market',
+          items: [
+            { id: 'expert-management' as const, label: '智能体市场', icon: Bot, iconKey: 'nav-expert' },
+            { id: 'developer-entry' as const, label: '开发者入口', icon: Code2, externalUrl: 'https://kinsight.ksyun.com/admin/agent' }
+          ]
+        }
       ];
-      const documentFeatureIds: BusinessNavId[] = ['write', 'copy', 'polish', 'template-layout', 'check'];
+      const documentFeatureIds: BusinessNavId[] = ['weboffice', 'write', 'copy', 'polish', 'template-layout', 'check'];
       const documentFeatureItems = [
+        { id: 'weboffice' as const, label: '新建空白稿', icon: FileText, iconKey: 'feature-web-office' },
         { id: 'write' as const, label: '场景创作', icon: PenTool, iconKey: 'write-mode-outline' },
         { id: 'copy' as const, label: '以稿写稿', icon: Layers, iconKey: 'nav-ai-copy' },
         { id: 'polish' as const, label: '文风润色', icon: Sparkles, iconKey: 'nav-ai-polish' },
@@ -708,68 +724,81 @@ export default function App() {
             </div>
           </div>
 
-          <nav className="space-y-1">
-            {primaryItems.map((item) => {
-              const isSelected =
-                focusedBusinessNav === item.id ||
-                (item.id === 'write' && (isDocumentNavExpanded || (focusedBusinessNav !== null && documentFeatureIds.includes(focusedBusinessNav)))) ||
-                (item.id === 'documents' && activeTab === 'documents') ||
-                (item.id === 'expert-management' && activeTab === 'expert-management') ||
-                (item.id === 'home' && activeTab === 'console-writing' && focusedBusinessNav === 'home');
+          <nav className="space-y-3">
+            {primaryGroups.map((group, groupIndex) => (
+              <div key={group.key} className={`${groupIndex > 0 ? 'border-t border-dashed border-[#d6dbe5] pt-3' : ''} space-y-1`}>
+                {group.items.map((item) => {
+                  const isDeveloperEntry = item.id === 'developer-entry';
+                  const IconComponent = item.icon;
+                  const isSelected =
+                    !isDeveloperEntry &&
+                    (focusedBusinessNav === item.id ||
+                      (item.id === 'write' && (isDocumentNavExpanded || (focusedBusinessNav !== null && documentFeatureIds.includes(focusedBusinessNav)))) ||
+                      (item.id === 'documents' && activeTab === 'documents') ||
+                      (item.id === 'expert-management' && activeTab === 'expert-management') ||
+                      (item.id === 'home' && activeTab === 'console-writing' && focusedBusinessNav === 'home'));
 
-              return (
-                <div key={item.id}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (item.id === 'write') {
-                        openDocumentNavGroup();
-                      } else {
-                        openBusinessTab(item.id);
-                      }
-                    }}
-                    className={`flex h-12 w-full items-center justify-between rounded-[13px] px-3 text-left transition ${
-                      isSelected
-                        ? 'bg-white text-[#111827] shadow-[0_8px_22px_rgba(15,23,42,0.08)]'
-                        : 'text-[#24272f] hover:bg-white/70'
-                    }`}
-                  >
-                    <span className="flex min-w-0 items-center gap-3">
-                      <PrototypeIcon name={item.iconKey} size={30} alt={`${item.label}图标`} />
-                      <span className="truncate text-[15px] font-semibold">{item.label}</span>
-                    </span>
-                    {item.id === 'write' ? (
-                      <ChevronDown size={14} className={`text-[#a6abb4] transition ${isSelected ? 'rotate-180' : ''}`} />
-                    ) : item.shortcut ? (
-                      <span className="text-[12px] font-medium text-[#a6abb4]">{item.shortcut}</span>
-                    ) : null}
-                  </button>
+                  return (
+                    <div key={item.id}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (isDeveloperEntry) {
+                            window.open(item.externalUrl, '_blank', 'noopener,noreferrer');
+                          } else if (item.id === 'write') {
+                            openDocumentNavGroup();
+                          } else {
+                            openBusinessTab(item.id as BusinessNavItem['id']);
+                          }
+                        }}
+                        className={`flex h-12 w-full items-center justify-between rounded-[13px] px-3 text-left transition ${
+                          isSelected
+                            ? 'bg-white text-[#111827] shadow-[0_8px_22px_rgba(15,23,42,0.08)]'
+                            : 'text-[#24272f] hover:bg-white/70'
+                        }`}
+                      >
+                        <span className="flex min-w-0 items-center gap-3">
+                          {item.iconKey ? (
+                            <PrototypeIcon name={item.iconKey} size={30} alt={`${item.label}图标`} />
+                          ) : (
+                            <span className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-[#f2f5ff] text-[#5f6bff] shadow-[0_8px_18px_rgba(95,107,255,0.12)]">
+                              <IconComponent size={17} />
+                            </span>
+                          )}
+                          <span className="truncate text-[15px] font-semibold">{item.label}</span>
+                        </span>
+                        {item.id === 'write' ? (
+                          <ChevronDown size={14} className={`text-[#a6abb4] transition ${isSelected ? 'rotate-180' : ''}`} />
+                        ) : null}
+                      </button>
 
-                  {item.id === 'write' && isSelected ? (
-                    <div className="ml-8 mt-1 space-y-1 border-l border-black/[0.06] pl-2">
-                      {documentFeatureItems.map((feature) => {
-                        const isFeatureSelected = focusedBusinessNav === feature.id && writingNavigation.view === feature.id;
-                        return (
-                          <button
-                            key={feature.id}
-                            type="button"
-                            onClick={() => openBusinessTab(feature.id)}
-                            className={`flex h-9 w-full items-center gap-2 rounded-[10px] px-2.5 text-left transition ${
-                              isFeatureSelected
-                                ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)]'
-                                : 'text-[#5f6670] hover:bg-white/80 hover:text-[#111827]'
-                            }`}
-                          >
-                            <PrototypeIcon name={feature.iconKey} size={24} alt={`${feature.label}图标`} />
-                            <span className="text-[13px] font-semibold">{feature.label}</span>
-                          </button>
-                        );
-                      })}
+                      {item.id === 'write' && isSelected ? (
+                        <div className="ml-8 mt-1 space-y-1 border-l border-black/[0.06] pl-2">
+                          {documentFeatureItems.map((feature) => {
+                            const isFeatureSelected = focusedBusinessNav === feature.id && writingNavigation.view === feature.id;
+                            return (
+                              <button
+                                key={feature.id}
+                                type="button"
+                                onClick={() => openBusinessTab(feature.id)}
+                                className={`flex h-9 w-full items-center gap-2 rounded-[10px] px-2.5 text-left transition ${
+                                  isFeatureSelected
+                                    ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)]'
+                                    : 'text-[#5f6670] hover:bg-white/80 hover:text-[#111827]'
+                                }`}
+                              >
+                                <PrototypeIcon name={feature.iconKey} size={24} alt={`${feature.label}图标`} />
+                                <span className="text-[13px] font-semibold">{feature.label}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ) : null}
                     </div>
-                  ) : null}
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            ))}
           </nav>
 
           <div className="mt-8 flex-1">
@@ -942,10 +971,10 @@ export default function App() {
     polish: '文风润色',
     'template-layout': '智能排版',
     check: '智能校对',
-    weboffice: '公文写作',
+    weboffice: '新建空白稿',
     documents: '知识库',
     history: '历史记录',
-    'expert-management': '专家市场'
+    'expert-management': '智能体市场'
   };
   const headerTitle =
     activeSpace === 'admin'
@@ -1392,7 +1421,7 @@ function ExpertManagementView({
       <div className="mx-auto w-full max-w-[1560px] space-y-5">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-[24px] font-bold tracking-normal text-[#151922]">专家市场</p>
+            <p className="text-[24px] font-bold tracking-normal text-[#151922]">智能体市场</p>
             <p className="mt-2 text-[13px] leading-6 text-[#7a808a]">选择专家后回到首页，以对应专家身份发起问答和任务处理。</p>
           </div>
           <div className="flex h-11 min-w-[320px] items-center gap-2 rounded-[13px] border border-black/[0.06] bg-white px-4 shadow-[0_10px_26px_rgba(15,23,42,0.05)]">
@@ -1602,7 +1631,7 @@ function LoginView({ captcha, appearance, onRefreshCaptcha, onLogin }: LoginView
             让公文流转更轻，让智能办公更近
           </p>
           <p className="mt-8 max-w-[540px] text-[15px] font-medium leading-7 text-[#6f7886]">
-            金山文澜已接入公文写作、智能校对、排版审查与智能体协同能力，面向政务办公全流程提效。
+            金山政务智能办公平台已接入公文写作、智能校对、排版审查与智能体协同能力，面向政务办公全流程提效。
           </p>
         </section>
 
