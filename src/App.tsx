@@ -307,7 +307,7 @@ export default function App() {
     },
     {
       id: 'scenario-flows',
-      label: '场景流程库',
+      label: '编排方案库',
       icon: ClipboardList,
       tab: 'scenario-flows'
     },
@@ -390,7 +390,7 @@ export default function App() {
     'local-resources': '本地资源',
     history: '历史记录',
     connectors: '数据连接',
-    'scenario-flows': '场景流程库',
+    'scenario-flows': '编排方案库',
     'automation-schedules': '定时任务',
     'doc-review': 'AI审校',
     'expert-management': '智能体市场'
@@ -729,7 +729,7 @@ export default function App() {
           label: '场景化支持',
           items: [
             { id: 'expert-management' as const, label: '智能体市场', icon: Bot, iconKey: 'nav-expert' },
-            { id: 'scenario-flows' as const, label: '场景流程库', icon: ClipboardList },
+            { id: 'scenario-flows' as const, label: '编排方案库', icon: ClipboardList },
             { id: 'developer-entry' as const, label: '开发者入口', icon: Code2, externalUrl: 'https://kinsight.ksyun.com/admin/agent' }
           ]
         }
@@ -1009,7 +1009,7 @@ export default function App() {
     documents: '知识库',
     'local-resources': '本地资源',
     connectors: '数据连接',
-    'scenario-flows': '场景流程库',
+    'scenario-flows': '编排方案库',
     history: '历史记录',
     'expert-management': '智能体市场'
   };
@@ -1525,12 +1525,12 @@ function ScenarioFlowsView() {
       <div className="mx-auto max-w-[1480px] space-y-5">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-[24px] font-bold tracking-normal text-[#151922]">场景流程库</p>
-            <p className="mt-2 text-[13px] leading-6 text-[#7a808a]">沉淀客户已固化的业务编排流程，按场景复用智能体、知识库和数据连接能力。</p>
+            <p className="text-[24px] font-bold tracking-normal text-[#151922]">编排方案库</p>
+            <p className="mt-2 text-[13px] leading-6 text-[#7a808a]">沉淀客户已固化的 AI 方案资产，组合复用智能体、知识库和数据连接能力。</p>
           </div>
           <button type="button" className="inline-flex h-10 items-center gap-2 rounded-[10px] bg-[var(--gov-red)] px-4 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(225,61,78,0.18)] transition hover:bg-[var(--gov-red-deep)]">
             <Plus size={15} />
-            新建流程
+            新建方案
           </button>
         </div>
 
@@ -1560,7 +1560,7 @@ function ScenarioFlowsView() {
               </div>
               <div className="mt-5 flex justify-end gap-2 border-t border-black/[0.05] pt-4">
                 <button type="button" className="rounded-[9px] border border-black/[0.08] bg-white px-3 py-2 text-[12px] font-semibold text-[#596170] transition hover:bg-[#f7f8fa]">查看配置</button>
-                <button type="button" className="rounded-[9px] border border-[rgba(231,77,94,0.14)] bg-[var(--gov-red-soft)] px-3 py-2 text-[12px] font-semibold text-[var(--gov-red-deep)] transition hover:bg-white">发起流程</button>
+                <button type="button" className="rounded-[9px] border border-[rgba(231,77,94,0.14)] bg-[var(--gov-red-soft)] px-3 py-2 text-[12px] font-semibold text-[var(--gov-red-deep)] transition hover:bg-white">启用方案</button>
               </div>
             </div>
           ))}
