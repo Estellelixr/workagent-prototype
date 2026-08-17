@@ -104,7 +104,7 @@ export type HomeAppearance = {
 
 export const DEFAULT_HOME_APPEARANCE: HomeAppearance = {
   logoUrl: DEFAULT_PRODUCT_ICON_URL,
-  productName: '金山政务一体机',
+  productName: '金山文澜智能创作平台',
   slogan: '一步开启高效公文写作新体验'
 };
 
@@ -114,7 +114,12 @@ const loadHomeAppearance = (): HomeAppearance => {
   if (typeof window === 'undefined') return DEFAULT_HOME_APPEARANCE;
   try {
     const saved = window.localStorage.getItem(HOME_APPEARANCE_STORAGE_KEY);
-    return saved ? { ...DEFAULT_HOME_APPEARANCE, ...JSON.parse(saved) } : DEFAULT_HOME_APPEARANCE;
+    if (!saved) return DEFAULT_HOME_APPEARANCE;
+    const parsed = { ...DEFAULT_HOME_APPEARANCE, ...JSON.parse(saved) };
+    if (parsed.productName === '金山政务一体机') {
+      return { ...parsed, productName: DEFAULT_HOME_APPEARANCE.productName };
+    }
+    return parsed;
   } catch {
     return DEFAULT_HOME_APPEARANCE;
   }
@@ -1592,13 +1597,13 @@ function LoginView({ captcha, onRefreshCaptcha, onLogin }: LoginViewProps) {
       <main className="relative z-10 mx-auto grid min-h-[calc(100vh-84px)] w-full max-w-[1220px] grid-cols-1 items-center gap-5 py-10 lg:grid-cols-[620px_540px]">
         <section className="max-w-[620px]">
           <h1 className="text-[40px] font-semibold leading-[1.14] tracking-normal text-[#db4053] sm:text-[50px] lg:whitespace-nowrap">
-            金山智能政务办公平台
+            金山文澜智能创作平台
           </h1>
           <p className="mt-4 text-[23px] font-semibold tracking-normal text-[#39404c] sm:text-[28px]">
             让公文流转更轻，让智能办公更近
           </p>
           <p className="mt-8 max-w-[540px] text-[15px] font-medium leading-7 text-[#6f7886]">
-            金山政务 AI 一体机已接入公文写作、智能校对、排版审查与智能体协同能力，面向政务办公全流程提效。
+            金山文澜已接入公文写作、智能校对、排版审查与智能体协同能力，面向政务办公全流程提效。
           </p>
         </section>
 
