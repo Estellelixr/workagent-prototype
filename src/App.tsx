@@ -48,20 +48,21 @@ type ActiveTab =
   | 'local-resources'
   | 'history'
   | 'connectors'
+  | 'scenario-flows'
   | 'automation-schedules'
   | 'console-writing'
   | 'doc-review'
   | 'expert-management';
 
 type WritingShortcutView = 'home' | 'quick-create' | 'write' | 'copy' | 'polish' | 'template-layout' | 'check' | 'weboffice';
-type BusinessNavId = WritingShortcutView | 'documents' | 'local-resources' | 'connectors' | 'history' | 'expert-management';
+type BusinessNavId = WritingShortcutView | 'documents' | 'local-resources' | 'connectors' | 'scenario-flows' | 'history' | 'expert-management';
 
 type BusinessNavItem = {
   id: BusinessNavId;
   label: string;
   icon: typeof FileText;
   iconKey?: string;
-  tab: 'console-writing' | 'documents' | 'local-resources' | 'connectors' | 'history' | 'expert-management';
+  tab: 'console-writing' | 'documents' | 'local-resources' | 'connectors' | 'scenario-flows' | 'history' | 'expert-management';
   writingView?: WritingShortcutView;
 };
 
@@ -305,6 +306,12 @@ export default function App() {
       tab: 'expert-management'
     },
     {
+      id: 'scenario-flows',
+      label: '场景流程库',
+      icon: ClipboardList,
+      tab: 'scenario-flows'
+    },
+    {
       id: 'history',
       label: '历史记录',
       icon: History,
@@ -383,6 +390,7 @@ export default function App() {
     'local-resources': '本地资源',
     history: '历史记录',
     connectors: '数据连接',
+    'scenario-flows': '场景流程库',
     'automation-schedules': '定时任务',
     'doc-review': 'AI审校',
     'expert-management': '智能体市场'
@@ -517,7 +525,7 @@ export default function App() {
     setActiveSpace('workbench');
     setSidebarMode(mode);
     if (mode === 'home') {
-      if (!['console-writing', 'documents', 'local-resources', 'connectors', 'history', 'expert-management'].includes(activeTab)) {
+      if (!['console-writing', 'documents', 'local-resources', 'connectors', 'scenario-flows', 'history', 'expert-management'].includes(activeTab)) {
         setActiveTab('console-writing');
         setFocusedBusinessNav('home');
         setWritingNavigation({ view: 'home', key: Date.now() });
@@ -718,9 +726,10 @@ export default function App() {
         },
         {
           key: 'market',
-          label: '能力生态',
+          label: '场景化支持',
           items: [
             { id: 'expert-management' as const, label: '智能体市场', icon: Bot, iconKey: 'nav-expert' },
+            { id: 'scenario-flows' as const, label: '场景流程库', icon: ClipboardList },
             { id: 'developer-entry' as const, label: '开发者入口', icon: Code2, externalUrl: 'https://kinsight.ksyun.com/admin/agent' }
           ]
         }
@@ -759,6 +768,7 @@ export default function App() {
                       (item.id === 'documents' && activeTab === 'documents') ||
                       (item.id === 'local-resources' && activeTab === 'local-resources') ||
                       (item.id === 'connectors' && activeTab === 'connectors') ||
+                      (item.id === 'scenario-flows' && activeTab === 'scenario-flows') ||
                       (item.id === 'expert-management' && activeTab === 'expert-management') ||
                       (item.id === 'home' && activeTab === 'console-writing' && focusedBusinessNav === 'home'));
 
@@ -999,6 +1009,7 @@ export default function App() {
     documents: '知识库',
     'local-resources': '本地资源',
     connectors: '数据连接',
+    'scenario-flows': '场景流程库',
     history: '历史记录',
     'expert-management': '智能体市场'
   };
@@ -1136,7 +1147,7 @@ export default function App() {
                 </AnimatePresence>
               </div>
             </div>
-          ) : activeTab === 'sessions' || activeTab === 'documents' || activeTab === 'local-resources' || activeTab === 'history' || activeTab === 'expert-management' || activeTab === 'console-writing' || activeTab === 'doc-review' ? (
+          ) : activeTab === 'sessions' || activeTab === 'documents' || activeTab === 'local-resources' || activeTab === 'scenario-flows' || activeTab === 'history' || activeTab === 'expert-management' || activeTab === 'console-writing' || activeTab === 'doc-review' ? (
             <div className="ai-workspace-bg relative flex-1 overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -1168,6 +1179,10 @@ export default function App() {
 
                   {activeTab === 'local-resources' && (
                     <LocalResourcesView documents={documents} />
+                  )}
+
+                  {activeTab === 'scenario-flows' && (
+                    <ScenarioFlowsView />
                   )}
 
                   {activeTab === 'history' && <HistoryView key={selectedHistoryId} initialSelectedId={selectedHistoryId} />}
@@ -1491,6 +1506,64 @@ function LocalResourcesView({ documents }: { documents: DocumentInfo[] }) {
               <div className="px-5 py-12 text-center text-[13px] text-[#98a2b3]">暂无本地资源</div>
             ) : null}
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ScenarioFlowsView() {
+  const flows = [
+    { title: '周报数据分析生成', dept: '办公室 / 指挥中心', status: '已启用', steps: ['数据读取', '指标分析', '模板替换', '生成周报'], desc: '面向固定周报模板，自动完成数据汇总、同比环比分析和文稿生成。' },
+    { title: '重点专项工作汇报', dept: '督查督办专班', status: '已启用', steps: ['素材归集', '成绩提取', '问题归纳', '汇报成稿'], desc: '围绕专项主题从多部门材料中抽取成绩、问题和下一步举措。' },
+    { title: '会议纪要结构化生成', dept: '综合文秘科', status: '试运行', steps: ['纪要录入', '议题识别', '任务拆解', '纪要输出'], desc: '将会议材料快速整理为规范纪要，并沉淀责任事项和完成时限。' },
+    { title: '领导讲话材料润色', dept: '政研室', status: '已启用', steps: ['原稿识别', '风格匹配', '语气润色', '格式校验'], desc: '基于既定领导文风和场景要求，完成讲话稿表达优化。' }
+  ];
+
+  return (
+    <div className="h-full overflow-y-auto p-6">
+      <div className="mx-auto max-w-[1480px] space-y-5">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-[24px] font-bold tracking-normal text-[#151922]">场景流程库</p>
+            <p className="mt-2 text-[13px] leading-6 text-[#7a808a]">沉淀客户已固化的业务编排流程，按场景复用智能体、知识库和数据连接能力。</p>
+          </div>
+          <button type="button" className="inline-flex h-10 items-center gap-2 rounded-[10px] bg-[var(--gov-red)] px-4 text-[13px] font-semibold text-white shadow-[0_12px_26px_rgba(225,61,78,0.18)] transition hover:bg-[var(--gov-red-deep)]">
+            <Plus size={15} />
+            新建流程
+          </button>
+        </div>
+
+        <div className="grid gap-4 xl:grid-cols-2">
+          {flows.map((flow) => (
+            <div key={flow.title} className="rounded-[18px] border border-black/[0.06] bg-white p-5 shadow-[0_16px_42px_rgba(15,23,42,0.055)]">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex min-w-0 items-start gap-3">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[13px] bg-[#fff1f2] text-[var(--gov-red)]">
+                    <ClipboardList size={20} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-[17px] font-bold text-[#202124]">{flow.title}</p>
+                    <p className="mt-1 text-[12px] font-medium text-[#98a2b3]">{flow.dept}</p>
+                  </div>
+                </div>
+                <span className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${flow.status === '已启用' ? 'bg-[#ecfdf3] text-[#027a48]' : 'bg-[#fff7ed] text-[#c2410c]'}`}>{flow.status}</span>
+              </div>
+              <p className="mt-4 text-[13px] leading-6 text-[#667085]">{flow.desc}</p>
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                {flow.steps.map((step, index) => (
+                  <React.Fragment key={step}>
+                    <span className="rounded-full bg-[#f6f7fb] px-3 py-1.5 text-[12px] font-semibold text-[#4b5563]">{step}</span>
+                    {index < flow.steps.length - 1 ? <ChevronRight size={14} className="text-[#c0c6d0]" /> : null}
+                  </React.Fragment>
+                ))}
+              </div>
+              <div className="mt-5 flex justify-end gap-2 border-t border-black/[0.05] pt-4">
+                <button type="button" className="rounded-[9px] border border-black/[0.08] bg-white px-3 py-2 text-[12px] font-semibold text-[#596170] transition hover:bg-[#f7f8fa]">查看配置</button>
+                <button type="button" className="rounded-[9px] border border-[rgba(231,77,94,0.14)] bg-[var(--gov-red-soft)] px-3 py-2 text-[12px] font-semibold text-[var(--gov-red-deep)] transition hover:bg-white">发起流程</button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
