@@ -2556,42 +2556,41 @@ ${resultSummary}
             </h1>
           </div>
 
-          {useDefaultHomeWritingControl ? (
-            <div className="home-skill-tabs relative z-30 mb-4 grid w-full max-w-[920px] grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-6">
-              {homeSkillTabs.map((skill) => {
-                const isSelected =
-                  skill.id === 'qa'
-                    ? homeActiveCapability === 'qa'
-                    : homeActiveCapability === 'write' && selectedWritingMode === skill.id;
-                return (
-                  <button
-                    key={skill.id}
-                    type="button"
-                    onClick={() => handleSelectHomeSkill(skill.id)}
-                    className={`group flex h-12 items-center justify-center gap-2.5 rounded-[13px] border bg-white px-3 text-[14px] font-bold transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_rgba(15,23,42,0.10)] ${
-                      isSelected
-                        ? 'border-[var(--gov-red-line)] text-[var(--gov-red-deep)] shadow-[0_18px_38px_rgba(190,51,62,0.13)] ring-4 ring-[rgba(231,77,94,0.07)]'
-                        : 'border-black/[0.06] text-[#344054] shadow-[0_12px_28px_rgba(15,23,42,0.06)] hover:border-black/[0.10]'
-                    }`}
-                  >
-                    <span
-                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px] bg-white shadow-[0_8px_18px_rgba(15,23,42,0.07)] ring-1 ring-black/[0.04]"
-                      style={{ color: skill.color }}
+          <div className={`ai-prompt-shell relative z-30 w-full max-w-[920px] shrink-0 overflow-visible rounded-[16px] p-4 text-left ${useDefaultHomeWritingControl ? 'mt-7' : ''}`}>
+            {useDefaultHomeWritingControl ? (
+              <div className="home-skill-tabs absolute -top-8 left-4 z-[180] flex max-w-[calc(100%-32px)] flex-wrap items-center justify-start gap-1.5">
+                {homeSkillTabs.map((skill) => {
+                  const isSelected =
+                    skill.id === 'qa'
+                      ? homeActiveCapability === 'qa'
+                      : homeActiveCapability === 'write' && selectedWritingMode === skill.id;
+                  return (
+                    <button
+                      key={skill.id}
+                      type="button"
+                      onClick={() => handleSelectHomeSkill(skill.id)}
+                      className={`group inline-flex h-7 items-center justify-center gap-1.5 rounded-[8px] border px-2 text-[11px] font-bold backdrop-blur transition duration-200 hover:-translate-y-0.5 ${
+                        isSelected
+                          ? 'border-[var(--gov-red-line)] bg-white text-[var(--gov-red-deep)] shadow-[0_8px_20px_rgba(190,51,62,0.12)]'
+                          : 'border-black/[0.06] bg-white/78 text-[#667085] shadow-[0_6px_16px_rgba(15,23,42,0.05)] hover:border-black/[0.10] hover:bg-white hover:text-[#344054]'
+                      }`}
                     >
-                      {skill.id === 'qa' ? (
-                        <MessageCircle size={17} strokeWidth={2.1} />
-                      ) : (
-                        <PrototypeIcon name={skill.iconKey} size={27} alt={`${skill.label}图标`} />
-                      )}
-                    </span>
-                    <span className="truncate">{skill.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          ) : null}
-
-          <div className="ai-prompt-shell relative z-30 w-full max-w-[920px] shrink-0 overflow-visible rounded-[16px] p-4 text-left">
+                      <span
+                        className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] bg-white shadow-[0_4px_10px_rgba(15,23,42,0.05)] ring-1 ring-black/[0.04]"
+                        style={{ color: skill.color }}
+                      >
+                        {skill.id === 'qa' ? (
+                          <MessageCircle size={12} strokeWidth={2.1} />
+                        ) : (
+                          <PrototypeIcon name={skill.iconKey} size={18} alt={`${skill.label}图标`} />
+                        )}
+                      </span>
+                      <span className="truncate">{skill.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            ) : null}
             <div className={`home-prompt-main-row relative z-50 flex gap-4 ${isSourceBasedHomeWriting ? 'flex-col items-stretch' : 'items-start'}`}>
               {!useDefaultHomeWritingControl ? (
                 <div className="flex shrink-0 justify-start">
