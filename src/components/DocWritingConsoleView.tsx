@@ -2547,17 +2547,17 @@ ${resultSummary}
         exit={{ opacity: 0, y: -4 }}
         className="ai-workspace-bg ai-home-bg relative flex h-full flex-col overflow-hidden"
       >
-        <section className="mx-auto flex min-h-0 w-full max-w-[1260px] flex-1 flex-col items-center justify-start px-[clamp(28px,4vw,64px)] pb-7 pt-[clamp(36px,7vh,74px)]">
-          <div className="mb-6 flex shrink-0 flex-col items-center text-center">
-            <div className="relative"><div className="absolute -inset-1.5 rounded-[23px] border border-[var(--gov-red-line)] bg-white/60" /><img src={resolvePublicAssetUrl(appearance?.logoUrl ?? DEFAULT_PRODUCT_ICON_URL)} alt="产品 logo" className="relative h-[72px] w-[72px] rounded-[19px] border border-white object-cover shadow-[0_16px_34px_rgba(176,64,70,0.16)]" /><span className="absolute -bottom-1.5 -right-2 flex h-7 w-7 items-center justify-center rounded-[9px] border-2 border-white bg-[var(--gov-red)] text-white shadow-[0_7px_16px_rgba(181,47,61,0.24)]"><Sparkles size={13} /></span></div>
-            <h1 className="mt-5 text-[31px] font-semibold leading-tight tracking-normal">
+        <section className="mx-auto flex min-h-0 w-full max-w-[1134px] flex-1 flex-col items-center justify-start px-[clamp(24px,3.6vw,58px)] pb-6 pt-[clamp(32px,6.3vh,66px)]">
+          <div className="mb-5 flex shrink-0 flex-col items-center text-center">
+            <div className="relative"><div className="absolute -inset-1.5 rounded-[21px] border border-[var(--gov-red-line)] bg-white/60" /><img src={resolvePublicAssetUrl(appearance?.logoUrl ?? DEFAULT_PRODUCT_ICON_URL)} alt="产品 logo" className="relative h-[65px] w-[65px] rounded-[17px] border border-white object-cover shadow-[0_14px_30px_rgba(176,64,70,0.15)]" /><span className="absolute -bottom-1.5 -right-2 flex h-6 w-6 items-center justify-center rounded-[8px] border-2 border-white bg-[var(--gov-red)] text-white shadow-[0_6px_14px_rgba(181,47,61,0.22)]"><Sparkles size={12} /></span></div>
+            <h1 className="mt-4 text-[28px] font-semibold leading-tight tracking-normal">
               <span className="text-[#202124]">全能助手，</span>
               <span className="text-[var(--gov-red-deep)]">{appearance?.slogan ?? '一步开启高效公文写作新体验'}</span>
             </h1>
           </div>
 
           {useDefaultHomeWritingControl ? (
-            <div className="home-skill-tabs relative z-40 mb-4 flex w-full max-w-[1060px] flex-wrap items-center justify-center gap-2.5">
+            <div className="home-skill-tabs relative z-40 mb-3.5 flex w-full max-w-[954px] flex-wrap items-center justify-start gap-2">
               {homeSkillTabs.map((skill) => {
                 const isSelected =
                   skill.id === 'qa'
@@ -2568,20 +2568,20 @@ ${resultSummary}
                     key={skill.id}
                     type="button"
                     onClick={() => handleSelectHomeSkill(skill.id)}
-                    className={`group inline-flex h-11 min-w-[132px] items-center justify-center gap-2 rounded-[12px] border px-4 text-[13px] font-bold transition duration-200 hover:-translate-y-0.5 ${
+                    className={`group inline-flex h-10 min-w-[119px] items-center justify-center gap-2 rounded-[11px] border px-3 text-[12px] font-bold transition duration-200 hover:-translate-y-0.5 ${
                       isSelected
                         ? 'border-[var(--gov-red-line)] bg-white text-[var(--gov-red-deep)] shadow-[0_12px_28px_rgba(190,51,62,0.14)]'
                         : 'border-black/[0.06] bg-white/88 text-[#4b5563] shadow-[0_10px_24px_rgba(15,23,42,0.06)] hover:border-black/[0.10] hover:bg-white hover:text-[#344054]'
                     }`}
                   >
                     <span
-                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px] bg-white shadow-[0_7px_16px_rgba(15,23,42,0.07)] ring-1 ring-black/[0.04]"
+                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[7px] bg-white shadow-[0_6px_14px_rgba(15,23,42,0.07)] ring-1 ring-black/[0.04]"
                       style={{ color: skill.color }}
                     >
                       {skill.id === 'qa' ? (
-                        <MessageCircle size={17} strokeWidth={2.1} />
+                        <MessageCircle size={15} strokeWidth={2.1} />
                       ) : (
-                        <PrototypeIcon name={skill.iconKey} size={27} alt={`${skill.label}图标`} />
+                        <PrototypeIcon name={skill.iconKey} size={24} alt={`${skill.label}图标`} />
                       )}
                     </span>
                     <span className="truncate">{skill.label}</span>
@@ -2591,7 +2591,7 @@ ${resultSummary}
             </div>
           ) : null}
 
-          <div className="ai-prompt-shell relative z-30 w-full max-w-[1060px] shrink-0 overflow-visible rounded-[18px] p-5 text-left">
+          <div className="ai-prompt-shell relative z-30 w-full max-w-[954px] shrink-0 overflow-visible rounded-[16px] p-4 text-left">
             <div className={`home-prompt-main-row relative z-50 flex gap-4 ${isSourceBasedHomeWriting ? 'flex-col items-stretch' : 'items-start'}`}>
               {!useDefaultHomeWritingControl ? (
                 <div className="flex shrink-0 justify-start">
@@ -2701,7 +2701,7 @@ ${resultSummary}
                           }
                         }}
                         rows={3}
-                        className="h-[130px] w-full resize-none bg-transparent px-1 py-2 pr-16 text-[15px] leading-7 text-[#202124] outline-none placeholder:text-[#9aa0a6]"
+                        className="h-[117px] w-full resize-none bg-transparent px-1 py-2 pr-16 text-[14px] leading-6 text-[#202124] outline-none placeholder:text-[#9aa0a6]"
                         placeholder={homePromptPlaceholder}
                       />
                       <span
@@ -2849,7 +2849,7 @@ ${resultSummary}
 
           {!isQuickCreateHome ? (
             <>
-              <div className="relative z-10 mt-7 grid w-full max-w-[1060px] grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="relative z-10 mt-6 grid w-full max-w-[954px] grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
                 {homePromotedFeatures.map((feature) => (
                   <button
                     key={feature.id}
@@ -2861,17 +2861,17 @@ ${resultSummary}
                       }
                       openHomeFeature(feature.id);
                     }}
-                    className={`group relative min-h-[86px] overflow-hidden rounded-[14px] border border-white/85 bg-gradient-to-br ${feature.tone} px-5 py-4 text-left shadow-[0_12px_28px_rgba(43,69,97,0.08)] transition hover:-translate-y-0.5 hover:border-[var(--gov-red-line)] hover:bg-white hover:shadow-[0_20px_42px_rgba(43,69,97,0.12)] active:scale-[0.99]`}
+                    className={`group relative min-h-[78px] overflow-hidden rounded-[13px] border border-white/85 bg-gradient-to-br ${feature.tone} px-4 py-3.5 text-left shadow-[0_10px_24px_rgba(43,69,97,0.08)] transition hover:-translate-y-0.5 hover:border-[var(--gov-red-line)] hover:bg-white hover:shadow-[0_18px_38px_rgba(43,69,97,0.12)] active:scale-[0.99]`}
                   >
                     <span className="pointer-events-none absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white/30 blur-lg transition group-hover:scale-125" />
                     <span className="relative flex h-full items-center justify-between gap-4">
                       <span className="flex min-w-0 items-center gap-3">
-                        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] ${feature.iconTone} shadow-[inset_0_-5px_12px_rgba(15,23,42,0.04),0_10px_20px_rgba(15,23,42,0.06)]`}>
-                          <PrototypeIcon name={feature.iconKey} size={30} alt={`${feature.title}图标`} />
+                        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[12px] ${feature.iconTone} shadow-[inset_0_-5px_12px_rgba(15,23,42,0.04),0_9px_18px_rgba(15,23,42,0.06)]`}>
+                          <PrototypeIcon name={feature.iconKey} size={27} alt={`${feature.title}图标`} />
                         </span>
                         <span className="min-w-0">
-                          <span className="block truncate text-[15px] font-extrabold text-[#202124]">{feature.title}</span>
-                          <span className="mt-1 block truncate text-[12px] leading-5 text-[#7a8392]">{feature.desc}</span>
+                          <span className="block truncate text-[14px] font-extrabold text-[#202124]">{feature.title}</span>
+                          <span className="mt-0.5 block truncate text-[11px] leading-5 text-[#7a8392]">{feature.desc}</span>
                         </span>
                       </span>
                       <ChevronDown size={16} className={`-rotate-90 shrink-0 transition group-hover:translate-x-0.5 ${feature.arrowTone}`} />
