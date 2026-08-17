@@ -21,8 +21,7 @@ import {
   Role,
   ActiveSpace,
   AdminSection,
-  AdminSubSection,
-  AGENT_CATEGORY_OPTIONS
+  AdminSubSection
 } from './types';
 
 import DocWritingConsoleView from './components/DocWritingConsoleView';
@@ -35,7 +34,7 @@ import ConnectorsView from './components/ConnectorsView';
 import WorkflowsView from './components/WorkflowsView';
 import AdminView from './components/AdminView';
 import PrototypeIcon from './components/PrototypeIcon';
-import { DEFAULT_HOME_EXPERT_ID, HOME_EXPERTS, HomeExpertId } from './homeExperts';
+import { DEFAULT_HOME_EXPERT_ID, HOME_EXPERTS, HomeExpertId, HomeExpertMarketCategory } from './homeExperts';
 import { DEFAULT_PRODUCT_ICON_URL, resolvePublicAssetUrl } from './utils/publicAsset';
 
 import { Bell, Bot, CheckCircle, ChevronDown, ChevronRight, ClipboardList, Clock, FileSearch, FileText, Folder, History, Home, KeyRound, Layers, Link2, LockKeyhole, LogOut, MessageCircle, MoreHorizontal, Network, PenTool, Pin, Plus, RefreshCw, Search, Settings, ShieldCheck, SlidersHorizontal, Sparkles, Stamp, Trash2, UserRound, Users } from 'lucide-react';
@@ -289,7 +288,7 @@ export default function App() {
     },
     {
       id: 'expert-management',
-      label: '专家管理',
+      label: '专家市场',
       icon: Bot,
       iconKey: 'nav-expert',
       tab: 'expert-management'
@@ -374,7 +373,7 @@ export default function App() {
     connectors: '系统集成',
     'automation-schedules': '定时任务',
     'doc-review': 'AI审校',
-    'expert-management': '专家管理'
+    'expert-management': '专家市场'
   };
 
   const adminViewTitles: Partial<Record<AdminSection, string>> = {
@@ -692,7 +691,7 @@ export default function App() {
         { id: 'write' as const, label: '智能公文', icon: FileText, iconKey: 'nav-smart-doc' },
         { id: 'weboffice' as const, label: '公文写作', icon: FileText, iconKey: 'feature-web-office' },
         { id: 'documents' as const, label: '知识库', icon: Folder, iconKey: 'nav-knowledge' },
-        { id: 'expert-management' as const, label: '专家管理', icon: Bot, iconKey: 'nav-expert' }
+        { id: 'expert-management' as const, label: '专家市场', icon: Bot, iconKey: 'nav-expert' }
       ];
       const documentFeatureIds: BusinessNavId[] = ['quick-create', 'write', 'copy', 'polish', 'template-layout', 'check'];
       const documentFeatureItems = [
@@ -966,7 +965,7 @@ export default function App() {
     weboffice: '公文写作',
     documents: '知识库',
     history: '历史记录',
-    'expert-management': '专家管理'
+    'expert-management': '专家市场'
   };
   const headerTitle =
     activeSpace === 'admin'
@@ -1431,9 +1430,9 @@ function ExpertManagementView({
   selectedExpertId: HomeExpertId;
   onSummon: (expertId: HomeExpertId) => void;
 }) {
-  const [activeCategory, setActiveCategory] = useState('全部');
-  const categories = ['全部', ...AGENT_CATEGORY_OPTIONS];
-  const visibleExperts = HOME_EXPERTS.filter((expert) => activeCategory === '全部' || expert.category === activeCategory);
+  const [activeCategory, setActiveCategory] = useState<'全部' | HomeExpertMarketCategory>('全部');
+  const categories: Array<'全部' | HomeExpertMarketCategory> = ['全部', '政务', '办公', '写作', '数据', '法律', '金融'];
+  const visibleExperts = HOME_EXPERTS.filter((expert) => activeCategory === '全部' || expert.marketCategories.includes(activeCategory));
   const iconPalette = [
     { icon: FileText, bg: 'linear-gradient(145deg,#fff1f2,#ffffff)', color: '#d9364b', glow: 'rgba(217,54,75,0.14)' },
     { icon: ClipboardList, bg: 'linear-gradient(145deg,#eef4ff,#ffffff)', color: '#3b63d9', glow: 'rgba(59,99,217,0.13)' },
@@ -1448,7 +1447,7 @@ function ExpertManagementView({
       <div className="mx-auto w-full max-w-[1560px] space-y-5">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-[24px] font-bold tracking-normal text-[#151922]">专家管理</p>
+            <p className="text-[24px] font-bold tracking-normal text-[#151922]">专家市场</p>
             <p className="mt-2 text-[13px] leading-6 text-[#7a808a]">选择专家后回到首页，以对应专家身份发起问答和任务处理。</p>
           </div>
           <div className="flex h-11 min-w-[320px] items-center gap-2 rounded-[13px] border border-black/[0.06] bg-white px-4 shadow-[0_10px_26px_rgba(15,23,42,0.05)]">
