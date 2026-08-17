@@ -100,7 +100,7 @@ export const INITIAL_AGENTS: Agent[] = [
     category: '电商',
     domain: 'purchase',
     description: '解析招标文件，智能核验供应商资质、投标书响应矩阵，筛查串标、围标风险。',
-    connectedSystem: ['电子招采平台', '达梦数据库'],
+    connectedSystem: ['电子招采平台', '数据中台'],
     isEnabled: false
   },
   {
@@ -152,7 +152,7 @@ export const INITIAL_CONNECTORS: Connector[] = [
   },
   {
     id: 'conn-4',
-    name: '达梦数据库 (DM8)',
+    name: '数据中台',
     icon: '💾',
     purpose: '核心数据底盘存储。存放审计底稿、合规索引文件库、历史表底和数据脱敏词典。',
     status: 'connected',
@@ -160,7 +160,7 @@ export const INITIAL_CONNECTORS: Connector[] = [
     dataReadPermission: '限制在 `LAW_SCHEMA_2026` 生产实例视图中，不涉及机要保密视图。',
     category: '分析',
     metrics: '↓ 12.5万',
-    developer: '达梦数据'
+    developer: '数据中台'
   },
   {
     id: 'conn-7',
@@ -254,7 +254,7 @@ export const INITIAL_DOCUMENTS: DocumentInfo[] = [
 第三章 合规审查制度规范
 第十六条 中央企业应当建立健全合规审查机制，合规管理部门应当作为合同呈审、战略决策、重组投资等重大经营决策的必经前置程序。
 第十七条 业务部门应当在论证、谈判、起草等前期环节严格遵循。确保关键节点有据可查、一岗双责，对于未经合规审查的，不得提请总经理办公会、董事会研究。
-本指引内置于达梦数据库 `
+本指引内置于数据中台 `
   },
 
   // Template Library Items
@@ -381,4 +381,3 @@ export const INITIAL_SKILLS: SkillItem[] = [
     mountedAgentsCount: 1
   }
 ];
-

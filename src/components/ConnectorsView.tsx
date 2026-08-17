@@ -11,9 +11,9 @@ import {
   KeyRound,
   Menu,
   Monitor,
-  MoreHorizontal,
   Network,
   PlugZap,
+  Plus,
   Search,
   SearchCheck,
   UserRound,
@@ -23,7 +23,6 @@ import {
 
 import zhiyuanOaLogo from '../../致远OA.svg';
 import yonyouLogo from '../../YONGYOU.svg';
-import damengLogo from '../../达梦数据库.svg';
 import jinshanDocLogo from '../../金山文档.svg';
 
 interface ConnectorsViewProps {
@@ -61,7 +60,7 @@ const getConnectorTools = (name: string) => {
     ['get_receivables', '查询应收应付往来明细'],
     ['create_reimbursement', '创建费用报销单'],
   ];
-  if (name.includes('达梦')) return [
+  if (name.includes('数据中台')) return [
     ['query_authorized_view', '查询授权业务视图'],
     ['get_table_schema', '读取数据表结构与字段定义'],
     ['search_audit_records', '检索审计底稿和历史记录'],
@@ -89,7 +88,13 @@ const getLogo = (name: string, sizeClass = 'h-12 w-12') => {
   const n = name || '';
   if (n.includes('致远')) return <img src={zhiyuanOaLogo} alt="致远OA" className={sizeClass} />;
   if (n.includes('用友')) return <img src={yonyouLogo} alt="用友" className={sizeClass} />;
-  if (n.includes('达梦')) return <img src={damengLogo} alt="达梦数据库" className={sizeClass} />;
+  if (n.includes('数据中台')) {
+    return (
+      <span className={`${sizeClass} flex items-center justify-center rounded-[14px] bg-[#eef6ff] text-[#2f80ed]`}>
+        <Database size={24} />
+      </span>
+    );
+  }
   if (n.includes('金山协作') || n.includes('金山文档')) return <img src={jinshanDocLogo} alt="金山" className={sizeClass} />;
   if (n.includes('国资委')) {
     return (
@@ -127,7 +132,7 @@ const getServiceLabel = (connector: Connector) => {
 
 const getConnectorAccent = (connector: Connector) => {
   if (connector.name.includes('用友')) return 'from-[#f8fbff] via-[#f6f9ff] to-[#eef4ff]';
-  if (connector.name.includes('达梦')) return 'from-[#f6f7ff] via-[#f7fbff] to-[#eef9ff]';
+  if (connector.name.includes('数据中台')) return 'from-[#f7fbff] via-white to-[#f1f7ff]';
   if (connector.name.includes('金山')) return 'from-[#fff7f6] via-[#fffafa] to-[#f8fbff]';
   if (connector.name.includes('国资委')) return 'from-[#fff7f7] via-[#fffafa] to-[#fff4f5]';
   if (connector.name.includes('招采')) return 'from-[#f3fffb] via-[#f8fffd] to-[#eefbf8]';
@@ -174,11 +179,11 @@ export default function ConnectorsView({ connectors, role, onAddConnector }: Con
   }, [connectors, searchQuery, selectedCategory]);
 
   return (
-    <div className="min-h-full overflow-y-auto bg-white px-8 py-7">
-      <div className="mx-auto max-w-[1560px]">
-        <div className="flex flex-col gap-7">
-          <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
-            <nav className="flex flex-wrap items-center gap-x-9 gap-y-4">
+    <div className="min-h-full overflow-y-auto bg-[#fbfbfc] px-6 py-5">
+      <div className="mx-auto max-w-[1500px]">
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+            <nav className="flex flex-wrap items-center gap-2">
               {categories.map((category) => {
                 const Icon = category.icon;
                 const isActive = selectedCategory === category.id;
@@ -187,88 +192,78 @@ export default function ConnectorsView({ connectors, role, onAddConnector }: Con
                     key={category.id}
                     type="button"
                     onClick={() => setSelectedCategory(category.id)}
-                    className={`group inline-flex items-center gap-2.5 rounded-[12px] px-2 py-2 text-[17px] font-semibold tracking-normal transition ${
-                      isActive ? 'text-[#151922]' : 'text-[#6f747c] hover:text-[#242832]'
+                    className={`group inline-flex h-9 items-center gap-1.5 rounded-[10px] px-3 text-[13px] font-semibold tracking-normal transition ${
+                      isActive ? 'bg-white text-[#151922] shadow-[0_8px_20px_rgba(15,23,42,0.06)] ring-1 ring-black/[0.04]' : 'text-[#717784] hover:bg-white hover:text-[#242832]'
                     }`}
                   >
-                    <Icon size={20} strokeWidth={isActive ? 2.4 : 2} className={isActive ? 'text-[#151922]' : 'text-[#6f747c] group-hover:text-[#242832]'} />
+                    <Icon size={15} strokeWidth={isActive ? 2.4 : 2} className={isActive ? 'text-[var(--gov-red)]' : 'text-[#8a9099] group-hover:text-[#242832]'} />
                     <span>{category.label}</span>
-                    {isActive ? <span className="h-1.5 w-1.5 rounded-full bg-[var(--gov-red)]" /> : null}
                   </button>
                 );
               })}
             </nav>
 
-            <div className="relative w-full max-w-[320px] xl:w-[320px]">
-              <Search size={22} className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-[#6f747c]" />
+            <div className="relative w-full max-w-[260px] xl:w-[260px]">
+              <Search size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#8a9099]" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.target.value)}
                 placeholder="搜索MCP服务"
-                className="h-14 w-full rounded-full border border-black/[0.14] bg-white pl-14 pr-5 text-[16px] font-semibold text-[#20242c] outline-none transition placeholder:text-[#73777f] hover:border-black/[0.22] focus:border-[var(--gov-red)] focus:shadow-[0_0_0_4px_rgba(231,77,94,0.08)]"
+                className="h-10 w-full rounded-full border border-black/[0.08] bg-white pl-10 pr-4 text-[13px] font-semibold text-[#20242c] outline-none transition placeholder:text-[#9aa1ad] hover:border-black/[0.14] focus:border-[var(--gov-red)] focus:shadow-[0_0_0_3px_rgba(231,77,94,0.07)]"
               />
             </div>
           </div>
 
-          <div className="flex items-end justify-between gap-4">
+          <div className="flex items-end justify-between gap-4 pt-1">
             <div>
-              <p className="text-[20px] font-bold tracking-normal text-[#151922]">
-                {selectedCategory}MCP服务 <span className="font-semibold text-[#333]">({filteredConnectors.length})</span>
+              <p className="text-[18px] font-bold tracking-normal text-[#151922]">
+                {selectedCategory}MCP工具 <span className="font-semibold text-[#5f6673]">({filteredConnectors.length})</span>
               </p>
-              <p className="mt-2 text-[13px] leading-6 text-[#858b96]">
+              <p className="mt-1 text-[12px] leading-5 text-[#8a9099]">
                 面向智能体与业务方案的授权数据通道，支持按服务类型快速查找、查看工具和权限边界。
               </p>
             </div>
-            <span className="hidden rounded-full bg-[#fff1f2] px-4 py-2 text-[12px] font-semibold text-[var(--gov-red)] md:inline-flex">
+            <span className="hidden rounded-full bg-white px-3 py-1.5 text-[11px] font-semibold text-[#8a9099] ring-1 ring-black/[0.05] md:inline-flex">
               {role === 'admin' ? '系统管理员视图' : '用户授权视图'}
             </span>
           </div>
 
           {filteredConnectors.length > 0 ? (
-            <div className="grid gap-6 xl:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
               {filteredConnectors.map((connector) => (
                 <button
                   key={connector.id}
                   type="button"
                   onClick={() => setSelectedConnector(connector)}
-                  className={`group relative min-h-[252px] overflow-hidden rounded-[26px] bg-gradient-to-br ${getConnectorAccent(connector)} p-7 text-left shadow-[0_16px_40px_rgba(15,23,42,0.055)] ring-1 ring-black/[0.035] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_20px_50px_rgba(15,23,42,0.09)]`}
+                  className={`group relative min-h-[174px] overflow-hidden rounded-[18px] bg-gradient-to-br ${getConnectorAccent(connector)} p-5 text-left shadow-[0_12px_28px_rgba(15,23,42,0.045)] ring-1 ring-black/[0.035] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_38px_rgba(15,23,42,0.08)]`}
                 >
-                  <div className="absolute inset-x-8 bottom-[70px] h-px bg-black/[0.06]" />
-                  <div className="flex items-start justify-between gap-5">
-                    <div className="flex min-w-0 items-start gap-5">
-                      <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_10px_28px_rgba(15,23,42,0.08)] ring-1 ring-black/[0.04]">
-                        {getLogo(connector.name, 'h-11 w-11')}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex min-w-0 items-start gap-3">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-white shadow-[0_8px_20px_rgba(15,23,42,0.065)] ring-1 ring-black/[0.04]">
+                        {getLogo(connector.name, 'h-8 w-8')}
                       </span>
                       <div className="min-w-0">
-                        <p className="truncate text-[22px] font-bold leading-8 tracking-normal text-[#07090d]">{connector.name}</p>
-                        <div className="mt-2 flex items-center gap-2">
-                          <span className="h-3 w-[138px] rounded-full bg-gradient-to-r from-[#dde2e9] via-[#eef0f3] to-transparent blur-[1px]" />
-                          <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${connector.status === 'connected' ? 'bg-[#eafaf2] text-[#087443]' : connector.status === 'pending' ? 'bg-[#fff3df] text-[#b76b00]' : 'bg-[#feecef] text-[#cf3348]'}`}>
-                            {connector.status === 'connected' ? '已连接' : connector.status === 'pending' ? '待授权' : '未连接'}
-                          </span>
-                        </div>
+                        <p className="truncate text-[16px] font-bold leading-6 tracking-normal text-[#151922]">{connector.name}</p>
+                        <p className="mt-0.5 truncate text-[11px] font-medium text-[#9aa1ad]">{getServiceLabel(connector)} · {getConnectorTools(connector.name).length} 个工具</p>
                       </div>
                     </div>
-                    <MoreHorizontal size={24} className="mt-1 shrink-0 text-[#191b20]" />
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-white/80 text-[#151922] shadow-[0_6px_14px_rgba(15,23,42,0.055)] transition group-hover:bg-[var(--gov-red)] group-hover:text-white">
+                      <Plus size={17} />
+                    </span>
                   </div>
 
-                  <p className="mt-7 line-clamp-2 min-h-[64px] text-[17px] font-medium leading-8 tracking-normal text-[#5f636b]">
+                  <p className="mt-4 line-clamp-2 min-h-[42px] text-[13px] font-medium leading-5 tracking-normal text-[#666d78]">
                     {connector.purpose}
                   </p>
 
-                  <div className="mt-5 flex flex-wrap items-center gap-2">
-                    <span className="rounded-[8px] bg-black/[0.055] px-3 py-1.5 text-[14px] font-semibold text-[#666a72]">
+                  <div className="mt-4 flex flex-wrap items-center gap-1.5">
+                    <span className="rounded-[7px] bg-black/[0.045] px-2 py-1 text-[11px] font-semibold text-[#667085]">
                       {getServiceLabel(connector)}
                     </span>
-                    <span className="rounded-[8px] bg-white/75 px-3 py-1.5 text-[14px] font-semibold text-[#7a808a]">
-                      {getConnectorTools(connector.name).length} 个工具
+                    <span className={`rounded-[7px] px-2 py-1 text-[11px] font-semibold ${connector.status === 'connected' ? 'bg-[#ecfdf3] text-[#087443]' : connector.status === 'pending' ? 'bg-[#fff7ed] text-[#b76b00]' : 'bg-[#feecef] text-[#cf3348]'}`}>
+                      {connector.status === 'connected' ? '已接入' : connector.status === 'pending' ? '待授权' : '未接入'}
                     </span>
-                  </div>
-
-                  <div className="absolute bottom-6 left-8 right-8 flex items-center justify-between gap-4">
-                    <span className="h-7 w-[220px] rounded-full bg-gradient-to-r from-[#edf2fb] via-[#f4f5f7] to-transparent blur-[2px]" />
-                    <span className="shrink-0 text-[13px] font-semibold text-[#8c929d]">{connector.developer || '官方适配'} · {connector.syncTime}</span>
                   </div>
                 </button>
               ))}
