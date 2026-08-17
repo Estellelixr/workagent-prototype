@@ -2591,7 +2591,7 @@ ${resultSummary}
             </div>
           ) : null}
 
-          <div className="ai-prompt-shell relative z-30 w-full max-w-[954px] shrink-0 overflow-visible rounded-[16px] p-4 text-left">
+          <div className="ai-prompt-shell relative z-[60] w-full max-w-[954px] shrink-0 overflow-visible rounded-[16px] p-4 text-left">
             <div className={`home-prompt-main-row relative z-50 flex gap-4 ${isSourceBasedHomeWriting ? 'flex-col items-stretch' : 'items-start'}`}>
               {!useDefaultHomeWritingControl ? (
                 <div className="flex shrink-0 justify-start">
@@ -2737,7 +2737,7 @@ ${resultSummary}
                       <span className="ml-1.5">{isSourceBasedHomeWriting ? '添加参考素材' : '添加参考文档'}</span>
                     </button>
                     {isHomeUploadMenuOpen ? (
-                      <div className="home-prompt-reference-menu absolute bottom-11 left-0 z-[320] w-[190px] rounded-[14px] border border-black/[0.08] bg-white p-2 shadow-[0_18px_44px_rgba(15,23,42,0.12)]">
+                      <div className="home-prompt-reference-menu absolute bottom-11 left-0 z-[1000] w-[190px] rounded-[14px] border border-black/[0.08] bg-white p-2 shadow-[0_18px_44px_rgba(15,23,42,0.12)]">
                         <label className="flex h-10 w-full cursor-pointer items-center justify-between rounded-[10px] px-3 text-left text-[13px] font-semibold text-[#344054] transition hover:bg-[#f7f7f7] hover:text-[var(--gov-red-deep)]">
                           <span className="flex items-center gap-2.5">
                             <FileUp size={15} className="text-[#7a808a]" />
@@ -2782,7 +2782,7 @@ ${resultSummary}
                       <ChevronDown size={14} className={`text-[#98a2b3] transition ${isHomeExpertMenuOpen ? 'rotate-180' : ''}`} />
                     </button>
                     {isHomeExpertMenuOpen ? (
-                      <div className="home-prompt-expert-menu absolute bottom-12 left-0 z-[320] w-[244px] overflow-hidden rounded-[14px] border border-black/[0.08] bg-white p-1.5 shadow-[0_18px_46px_rgba(15,23,42,0.14)]">
+                      <div className="home-prompt-expert-menu absolute bottom-12 left-0 z-[1000] w-[244px] overflow-hidden rounded-[14px] border border-black/[0.08] bg-white p-1.5 shadow-[0_18px_46px_rgba(15,23,42,0.14)]">
                         <p className="px-3 py-2 text-[12px] font-semibold text-[#98a2b3]">推荐专家</p>
                         <div className="max-h-[312px] space-y-1 overflow-y-auto">
                         {HOME_EXPERTS.map((expert, index) => {
