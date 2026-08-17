@@ -2502,10 +2502,10 @@ ${resultSummary}
     const homeSourceTextLength = sourceOutlineText.length;
     const homeSourceLabel = selectedWritingMode === '大纲成文' ? '已有大纲' : selectedWritingMode === '生成结语' ? '原文/大纲' : '已有正文';
     const homePromotedFeatures = [
-      { id: 'copy' as const, title: '以稿写稿', desc: '参考范文延续结构、语气和口径', hint: '稿子为蓝本，二次创作', iconKey: 'feature-ai-copy', tone: 'from-[#f7f3ff] via-[#f4f6ff] to-[#edf4ff]', iconTone: 'bg-[#f0eaff] text-[#7a5cff]', glow: 'bg-[#9272ff]/18' },
-      { id: 'scenario-writing' as const, title: '场景写作', desc: '按具体场景先生成结构化大纲', hint: '围绕文种和场景起草', iconKey: 'write-mode-outline', tone: 'from-[#fff6f5] via-[#fff2f5] to-[#f9f2ff]', iconTone: 'bg-[#fff0e8] text-[#ff7a45]', glow: 'bg-[#ff8a5c]/18' },
-      { id: 'template-layout' as const, title: '智能排版', desc: '模板样式一键规范排版', hint: '套模板、控格式、快交付', iconKey: 'feature-layout', tone: 'from-[#effaf7] via-[#eef8ff] to-[#f6f4ff]', iconTone: 'bg-[#e7faf2] text-[#16a085]', glow: 'bg-[#1abc9c]/16' },
-      { id: 'check' as const, title: '智能校对', desc: '检查错漏、敏感表述与格式问题', hint: '交付前查错和规范检查', iconKey: 'feature-proofread', tone: 'from-[#f2f7ff] via-[#f5f1ff] to-[#fff4f6]', iconTone: 'bg-[#eaf1ff] text-[#4169d8]', glow: 'bg-[#6384ff]/16' },
+      { id: 'copy' as const, title: '以稿写稿', desc: '参考样稿快速成文', iconKey: 'feature-ai-copy', tone: 'from-[#f8f5ff] to-[#f3f6ff]', iconTone: 'bg-[#f0eaff] text-[#7a5cff]', arrowTone: 'text-[#8b5cf6]' },
+      { id: 'scenario-writing' as const, title: '场景写作', desc: '按场景生成结构化大纲', iconKey: 'write-mode-outline', tone: 'from-[#fff8f4] to-[#fff4fb]', iconTone: 'bg-[#fff0e8] text-[#ff7a45]', arrowTone: 'text-[#f97316]' },
+      { id: 'template-layout' as const, title: '智能排版', desc: '一键规范版式结构', iconKey: 'feature-layout', tone: 'from-[#f0fbf8] to-[#f3faff]', iconTone: 'bg-[#e7faf2] text-[#16a085]', arrowTone: 'text-[#22a6a1]' },
+      { id: 'check' as const, title: '智能校对', desc: '查错别字与用语规范', iconKey: 'feature-proofread', tone: 'from-[#f5f4ff] to-[#fff7fb]', iconTone: 'bg-[#edf2ff] text-[#4169d8]', arrowTone: 'text-[#48b978]' },
     ];
     const homeSkillTabs = [
       { id: 'qa' as const, label: '智能问答', iconKey: 'qa', color: '#0f96b8' },
@@ -2547,50 +2547,51 @@ ${resultSummary}
         exit={{ opacity: 0, y: -4 }}
         className="ai-workspace-bg ai-home-bg relative flex h-full flex-col overflow-hidden"
       >
-        <section className="mx-auto flex min-h-0 w-full max-w-[1160px] flex-1 flex-col items-center justify-start px-[clamp(28px,4vw,64px)] pb-5 pt-[clamp(24px,5vh,50px)]">
-          <div className="mb-4 flex shrink-0 flex-col items-center text-center">
-            <div className="relative"><div className="absolute -inset-1.5 rounded-[21px] border border-[var(--gov-red-line)] bg-white/60" /><img src={resolvePublicAssetUrl(appearance?.logoUrl ?? DEFAULT_PRODUCT_ICON_URL)} alt="产品 logo" className="relative h-16 w-16 rounded-[18px] border border-white object-cover shadow-[0_14px_30px_rgba(176,64,70,0.16)]" /><span className="absolute -bottom-1.5 -right-2 flex h-7 w-7 items-center justify-center rounded-[9px] border-2 border-white bg-[var(--gov-red)] text-white shadow-[0_7px_16px_rgba(181,47,61,0.24)]"><Sparkles size={13} /></span></div>
-            <h1 className="mt-4 text-[28px] font-semibold leading-tight tracking-normal">
+        <section className="mx-auto flex min-h-0 w-full max-w-[1260px] flex-1 flex-col items-center justify-start px-[clamp(28px,4vw,64px)] pb-7 pt-[clamp(36px,7vh,74px)]">
+          <div className="mb-6 flex shrink-0 flex-col items-center text-center">
+            <div className="relative"><div className="absolute -inset-1.5 rounded-[23px] border border-[var(--gov-red-line)] bg-white/60" /><img src={resolvePublicAssetUrl(appearance?.logoUrl ?? DEFAULT_PRODUCT_ICON_URL)} alt="产品 logo" className="relative h-[72px] w-[72px] rounded-[19px] border border-white object-cover shadow-[0_16px_34px_rgba(176,64,70,0.16)]" /><span className="absolute -bottom-1.5 -right-2 flex h-7 w-7 items-center justify-center rounded-[9px] border-2 border-white bg-[var(--gov-red)] text-white shadow-[0_7px_16px_rgba(181,47,61,0.24)]"><Sparkles size={13} /></span></div>
+            <h1 className="mt-5 text-[31px] font-semibold leading-tight tracking-normal">
               <span className="text-[#202124]">全能助手，</span>
               <span className="text-[var(--gov-red-deep)]">{appearance?.slogan ?? '一步开启高效公文写作新体验'}</span>
             </h1>
           </div>
 
-          <div className={`ai-prompt-shell relative z-30 w-full max-w-[920px] shrink-0 overflow-visible rounded-[16px] p-4 text-left ${useDefaultHomeWritingControl ? 'mt-7' : ''}`}>
-            {useDefaultHomeWritingControl ? (
-              <div className="home-skill-tabs absolute -top-8 left-4 z-[180] flex max-w-[calc(100%-32px)] flex-wrap items-center justify-start gap-1.5">
-                {homeSkillTabs.map((skill) => {
-                  const isSelected =
-                    skill.id === 'qa'
-                      ? homeActiveCapability === 'qa'
-                      : homeActiveCapability === 'write' && selectedWritingMode === skill.id;
-                  return (
-                    <button
-                      key={skill.id}
-                      type="button"
-                      onClick={() => handleSelectHomeSkill(skill.id)}
-                      className={`group inline-flex h-7 items-center justify-center gap-1.5 rounded-[8px] border px-2 text-[11px] font-bold backdrop-blur transition duration-200 hover:-translate-y-0.5 ${
-                        isSelected
-                          ? 'border-[var(--gov-red-line)] bg-white text-[var(--gov-red-deep)] shadow-[0_8px_20px_rgba(190,51,62,0.12)]'
-                          : 'border-black/[0.06] bg-white/78 text-[#667085] shadow-[0_6px_16px_rgba(15,23,42,0.05)] hover:border-black/[0.10] hover:bg-white hover:text-[#344054]'
-                      }`}
+          {useDefaultHomeWritingControl ? (
+            <div className="home-skill-tabs relative z-40 mb-4 flex w-full max-w-[1060px] flex-wrap items-center justify-center gap-2.5">
+              {homeSkillTabs.map((skill) => {
+                const isSelected =
+                  skill.id === 'qa'
+                    ? homeActiveCapability === 'qa'
+                    : homeActiveCapability === 'write' && selectedWritingMode === skill.id;
+                return (
+                  <button
+                    key={skill.id}
+                    type="button"
+                    onClick={() => handleSelectHomeSkill(skill.id)}
+                    className={`group inline-flex h-11 min-w-[132px] items-center justify-center gap-2 rounded-[12px] border px-4 text-[13px] font-bold transition duration-200 hover:-translate-y-0.5 ${
+                      isSelected
+                        ? 'border-[var(--gov-red-line)] bg-white text-[var(--gov-red-deep)] shadow-[0_12px_28px_rgba(190,51,62,0.14)]'
+                        : 'border-black/[0.06] bg-white/88 text-[#4b5563] shadow-[0_10px_24px_rgba(15,23,42,0.06)] hover:border-black/[0.10] hover:bg-white hover:text-[#344054]'
+                    }`}
+                  >
+                    <span
+                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px] bg-white shadow-[0_7px_16px_rgba(15,23,42,0.07)] ring-1 ring-black/[0.04]"
+                      style={{ color: skill.color }}
                     >
-                      <span
-                        className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] bg-white shadow-[0_4px_10px_rgba(15,23,42,0.05)] ring-1 ring-black/[0.04]"
-                        style={{ color: skill.color }}
-                      >
-                        {skill.id === 'qa' ? (
-                          <MessageCircle size={12} strokeWidth={2.1} />
-                        ) : (
-                          <PrototypeIcon name={skill.iconKey} size={18} alt={`${skill.label}图标`} />
-                        )}
-                      </span>
-                      <span className="truncate">{skill.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            ) : null}
+                      {skill.id === 'qa' ? (
+                        <MessageCircle size={17} strokeWidth={2.1} />
+                      ) : (
+                        <PrototypeIcon name={skill.iconKey} size={27} alt={`${skill.label}图标`} />
+                      )}
+                    </span>
+                    <span className="truncate">{skill.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          ) : null}
+
+          <div className="ai-prompt-shell relative z-30 w-full max-w-[1060px] shrink-0 overflow-visible rounded-[18px] p-5 text-left">
             <div className={`home-prompt-main-row relative z-50 flex gap-4 ${isSourceBasedHomeWriting ? 'flex-col items-stretch' : 'items-start'}`}>
               {!useDefaultHomeWritingControl ? (
                 <div className="flex shrink-0 justify-start">
@@ -2700,7 +2701,7 @@ ${resultSummary}
                           }
                         }}
                         rows={3}
-                        className="h-[118px] w-full resize-none bg-transparent px-1 py-2 pr-16 text-[15px] leading-7 text-[#202124] outline-none placeholder:text-[#9aa0a6]"
+                        className="h-[130px] w-full resize-none bg-transparent px-1 py-2 pr-16 text-[15px] leading-7 text-[#202124] outline-none placeholder:text-[#9aa0a6]"
                         placeholder={homePromptPlaceholder}
                       />
                       <span
@@ -2723,7 +2724,7 @@ ${resultSummary}
                 )}
               </div>
             </div>
-            <div className="home-prompt-toolbar relative z-[160] mt-2.5 flex flex-wrap items-center justify-between gap-3 border-t border-black/[0.06] pt-3">
+            <div className="home-prompt-toolbar relative z-[160] mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-black/[0.06] pt-3">
               <div className="flex flex-wrap items-center gap-2">
                 {homeActiveCapability === 'write' || homeActiveCapability === 'qa' ? (
                   <div className="relative">
@@ -2848,14 +2849,7 @@ ${resultSummary}
 
           {!isQuickCreateHome ? (
             <>
-              <div className="relative z-10 mt-5 flex w-full max-w-[920px] items-end justify-start gap-4">
-                <div>
-                  <p className="text-[17px] font-extrabold text-[#202124]">更多创作方式</p>
-                  <p className="mt-1 text-[12px] text-[#8a93a3]">按材料来源、写作场景和交付动作快速进入对应流程</p>
-                </div>
-              </div>
-
-              <div className="relative z-10 mt-3 grid w-full max-w-[920px] grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="relative z-10 mt-7 grid w-full max-w-[1060px] grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 {homePromotedFeatures.map((feature) => (
                   <button
                     key={feature.id}
@@ -2867,22 +2861,20 @@ ${resultSummary}
                       }
                       openHomeFeature(feature.id);
                     }}
-                    className={`group relative min-h-[112px] overflow-hidden rounded-[16px] border border-white/85 bg-gradient-to-br ${feature.tone} px-4 py-4 text-left shadow-[0_16px_34px_rgba(43,69,97,0.09)] transition hover:-translate-y-1 hover:border-[var(--gov-red-line)] hover:bg-white hover:shadow-[0_24px_48px_rgba(43,69,97,0.13)] active:scale-[0.99]`}
+                    className={`group relative min-h-[86px] overflow-hidden rounded-[14px] border border-white/85 bg-gradient-to-br ${feature.tone} px-5 py-4 text-left shadow-[0_12px_28px_rgba(43,69,97,0.08)] transition hover:-translate-y-0.5 hover:border-[var(--gov-red-line)] hover:bg-white hover:shadow-[0_20px_42px_rgba(43,69,97,0.12)] active:scale-[0.99]`}
                   >
-                    <span className={`pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full ${feature.glow} blur-xl transition group-hover:scale-125`} />
-                    <span className="pointer-events-none absolute bottom-0 right-0 h-20 w-24 rounded-tl-[42px] bg-white/24" />
-                    <span className="relative flex h-full flex-col justify-between gap-4">
-                      <span className="flex items-start justify-between gap-3">
+                    <span className="pointer-events-none absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white/30 blur-lg transition group-hover:scale-125" />
+                    <span className="relative flex h-full items-center justify-between gap-4">
+                      <span className="flex min-w-0 items-center gap-3">
                         <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] ${feature.iconTone} shadow-[inset_0_-5px_12px_rgba(15,23,42,0.04),0_10px_20px_rgba(15,23,42,0.06)]`}>
                           <PrototypeIcon name={feature.iconKey} size={30} alt={`${feature.title}图标`} />
                         </span>
-                        <ChevronDown size={17} className="-rotate-90 text-[#98a2b3] transition group-hover:translate-x-0.5 group-hover:text-[var(--gov-red-deep)]" />
+                        <span className="min-w-0">
+                          <span className="block truncate text-[15px] font-extrabold text-[#202124]">{feature.title}</span>
+                          <span className="mt-1 block truncate text-[12px] leading-5 text-[#7a8392]">{feature.desc}</span>
+                        </span>
                       </span>
-                      <span className="min-w-0">
-                        <span className="block truncate text-[16px] font-extrabold text-[#202124]">{feature.title}</span>
-                        <span className="mt-1 block text-[12px] leading-5 text-[#7a8392]">{feature.desc}</span>
-                        <span className="mt-2 inline-flex rounded-full bg-white/58 px-2.5 py-1 text-[11px] font-semibold text-[#667085] ring-1 ring-white/70">{feature.hint}</span>
-                      </span>
+                      <ChevronDown size={16} className={`-rotate-90 shrink-0 transition group-hover:translate-x-0.5 ${feature.arrowTone}`} />
                     </span>
                   </button>
                 ))}
