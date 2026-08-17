@@ -1376,7 +1376,7 @@ function ExpertManagementView({
   onSummon: (expertId: HomeExpertId) => void;
 }) {
   const [activeCategory, setActiveCategory] = useState<'全部' | HomeExpertMarketCategory>('全部');
-  const categories: Array<'全部' | HomeExpertMarketCategory> = ['全部', '政务', '办公', '写作', '数据', '法律', '金融'];
+  const categories: Array<'全部' | HomeExpertMarketCategory> = ['全部', '政务', '办公', '写作', '数据'];
   const visibleExperts = HOME_EXPERTS.filter((expert) => activeCategory === '全部' || expert.marketCategories.includes(activeCategory));
   const iconPalette = [
     { icon: FileText, bg: 'linear-gradient(145deg,#fff1f2,#ffffff)', color: '#d9364b', glow: 'rgba(217,54,75,0.14)' },
