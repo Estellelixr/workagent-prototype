@@ -106,7 +106,7 @@ export type HomeAppearance = {
 
 export const DEFAULT_HOME_APPEARANCE: HomeAppearance = {
   logoUrl: DEFAULT_PRODUCT_ICON_URL,
-  productName: '金山政务智能办公平台',
+  productName: '金山智能办公平台',
   productSubtitle: '智能政务创作平台',
   slogan: '一步开启高效公文写作新体验'
 };
@@ -119,7 +119,7 @@ const loadHomeAppearance = (): HomeAppearance => {
     const saved = window.localStorage.getItem(HOME_APPEARANCE_STORAGE_KEY);
     if (!saved) return DEFAULT_HOME_APPEARANCE;
     const parsed = { ...DEFAULT_HOME_APPEARANCE, ...JSON.parse(saved) };
-    if (parsed.productName === '金山政务一体机' || parsed.productName === '金山文澜' || parsed.productName === '金山文澜智能创作平台') {
+    if (parsed.productName === '金山政务一体机' || parsed.productName === '金山文澜' || parsed.productName === '金山文澜智能创作平台' || parsed.productName === '金山政务智能办公平台') {
       return { ...parsed, productName: DEFAULT_HOME_APPEARANCE.productName, productSubtitle: DEFAULT_HOME_APPEARANCE.productSubtitle };
     }
     return parsed;
@@ -1731,7 +1731,7 @@ function LoginView({ captcha, appearance, onRefreshCaptcha, onLogin }: LoginView
             让公文流转更轻，让智能办公更近
           </p>
           <p className="mt-8 max-w-[540px] text-[15px] font-medium leading-7 text-[#6f7886]">
-            金山政务智能办公平台已接入公文写作、智能校对、排版审查与智能体协同能力，面向政务办公全流程提效。
+            金山智能办公平台已接入公文写作、智能校对、排版审查与智能体协同能力，面向政务办公全流程提效。
           </p>
         </section>
 

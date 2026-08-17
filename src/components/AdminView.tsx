@@ -88,7 +88,7 @@ type AdminOrgUnit = {
 };
 
 const initialOrgUnits: AdminOrgUnit[] = [
-  { id: 'org-root', name: '金山政务智能办公平台', code: 'KS_GOV_ROOT', leader: '系统管理员', memberCount: 5410, status: '已启用' },
+  { id: 'org-root', name: '金山智能办公平台', code: 'KS_GOV_ROOT', leader: '系统管理员', memberCount: 5410, status: '已启用' },
   { id: 'org-office', parentId: 'org-root', name: '办公室', code: 'KS_OFFICE', leader: '赵主任', memberCount: 86, status: '已启用' },
   { id: 'org-secretary', parentId: 'org-office', name: '综合文秘科', code: 'KS_OFFICE_SECRETARY', leader: '张三', memberCount: 18, status: '已启用' },
   { id: 'org-policy', parentId: 'org-root', name: '政策研究室', code: 'KS_POLICY', leader: '李敏', memberCount: 32, status: '已启用' },
@@ -2553,7 +2553,7 @@ function SystemManagementAdmin({ subSection }: { subSection: AdminSubSection }) 
 const HOME_APPEARANCE_STORAGE_KEY = 'workagent-home-appearance';
 const DEFAULT_HOME_APPEARANCE = {
   logoUrl: DEFAULT_PRODUCT_ICON_URL,
-  productName: '金山政务智能办公平台',
+  productName: '金山智能办公平台',
   productSubtitle: '智能政务创作平台',
   slogan: '一步开启高效公文写作新体验',
 };
@@ -2564,7 +2564,7 @@ function loadAppearanceDraft() {
     const saved = window.localStorage.getItem(HOME_APPEARANCE_STORAGE_KEY);
     if (!saved) return DEFAULT_HOME_APPEARANCE;
     const parsed = { ...DEFAULT_HOME_APPEARANCE, ...JSON.parse(saved) };
-    if (parsed.productName === '金山政务一体机' || parsed.productName === '金山文澜' || parsed.productName === '金山文澜智能创作平台') {
+    if (parsed.productName === '金山政务一体机' || parsed.productName === '金山文澜' || parsed.productName === '金山文澜智能创作平台' || parsed.productName === '金山政务智能办公平台') {
       return { ...parsed, productName: DEFAULT_HOME_APPEARANCE.productName, productSubtitle: DEFAULT_HOME_APPEARANCE.productSubtitle };
     }
     return parsed;
@@ -2637,7 +2637,7 @@ function AppearanceManagementPanel() {
             </div>
           </div>
           <Field label="产品名称" required>
-            <input value={appearanceDraft.productName} onChange={(event) => setAppearanceDraft({ ...appearanceDraft, productName: event.target.value })} className="gov-input h-11 w-full px-3 text-[13px]" placeholder="例如：金山政务智能办公平台" />
+            <input value={appearanceDraft.productName} onChange={(event) => setAppearanceDraft({ ...appearanceDraft, productName: event.target.value })} className="gov-input h-11 w-full px-3 text-[13px]" placeholder="例如：金山智能办公平台" />
           </Field>
           <Field label="产品副标题" required>
             <input value={appearanceDraft.productSubtitle} onChange={(event) => setAppearanceDraft({ ...appearanceDraft, productSubtitle: event.target.value })} className="gov-input h-11 w-full px-3 text-[13px]" placeholder="例如：智能政务创作平台" />
