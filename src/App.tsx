@@ -459,12 +459,15 @@ export default function App() {
   };
 
   const openDocumentNavGroup = () => {
+    const shouldCollapse = isDocumentNavExpanded && (focusedBusinessNav === 'write' || (focusedBusinessNav !== null && ['weboffice', 'copy', 'polish', 'template-layout', 'check'].includes(focusedBusinessNav)));
     setActiveSpace('workbench');
     setSidebarMode('home');
     setActiveTab('console-writing');
     setFocusedBusinessNav('write');
-    setIsDocumentNavExpanded(true);
-    setWritingNavigation({ view: 'home', key: Date.now() });
+    setIsDocumentNavExpanded(!shouldCollapse);
+    if (!shouldCollapse) {
+      setWritingNavigation({ view: 'home', key: Date.now() });
+    }
   };
 
   const syncWritingNavigation = (id: WritingShortcutView) => {
@@ -720,13 +723,21 @@ export default function App() {
             <img src={resolvePublicAssetUrl(homeAppearance.logoUrl)} alt="产品 logo" className="h-11 w-11 rounded-[14px] object-cover shadow-[0_8px_20px_rgba(176,64,70,0.10)]" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-[15px] font-semibold leading-[20px] text-[#1f2329]">{homeAppearance.productName}</p>
-              <p className="mt-0.5 truncate text-[11px] font-medium leading-[16px] text-[#98a2b3]">{homeAppearance.productSubtitle}</p>
             </div>
           </div>
 
           <nav className="space-y-3">
-            {primaryGroups.map((group, groupIndex) => (
-              <div key={group.key} className={`${groupIndex > 0 ? 'border-t border-dashed border-[#d6dbe5] pt-3' : ''} space-y-1`}>
+            {primaryGroups.map((group) => (
+              <div
+                key={group.key}
+                className={`space-y-1 rounded-[18px] border p-1.5 shadow-[0_10px_26px_rgba(15,23,42,0.045)] ${
+                  group.key === 'create'
+                    ? 'border-white/80 bg-[linear-gradient(145deg,rgba(255,255,255,0.86),rgba(255,244,247,0.56))]'
+                    : group.key === 'knowledge'
+                      ? 'border-[#d9ecff]/70 bg-[linear-gradient(145deg,rgba(255,255,255,0.78),rgba(239,248,255,0.62))]'
+                      : 'border-[#e9e4ff]/70 bg-[linear-gradient(145deg,rgba(255,255,255,0.78),rgba(247,244,255,0.62))]'
+                }`}
+              >
                 {group.items.map((item) => {
                   const isDeveloperEntry = item.id === 'developer-entry';
                   const IconComponent = item.icon;
@@ -768,11 +779,11 @@ export default function App() {
                           <span className="truncate text-[15px] font-semibold">{item.label}</span>
                         </span>
                         {item.id === 'write' ? (
-                          <ChevronDown size={14} className={`text-[#a6abb4] transition ${isSelected ? 'rotate-180' : ''}`} />
+                          <ChevronDown size={14} className={`text-[#a6abb4] transition ${isDocumentNavExpanded ? 'rotate-180' : ''}`} />
                         ) : null}
                       </button>
 
-                      {item.id === 'write' && isSelected ? (
+                      {item.id === 'write' && isDocumentNavExpanded ? (
                         <div className="ml-8 mt-1 space-y-1 border-l border-black/[0.06] pl-2">
                           {documentFeatureItems.map((feature) => {
                             const isFeatureSelected = focusedBusinessNav === feature.id && writingNavigation.view === feature.id;
