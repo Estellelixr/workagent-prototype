@@ -172,7 +172,6 @@ export default function App() {
   const [writingNavigation, setWritingNavigation] = useState<{ view: WritingShortcutView; key: number }>({ view: 'home', key: 0 });
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
   const [openHistoryMenu, setOpenHistoryMenu] = useState<string | null>(null);
   const [isHistorySearchOpen, setIsHistorySearchOpen] = useState(false);
   const [historySearchQuery, setHistorySearchQuery] = useState('');
@@ -452,7 +451,6 @@ export default function App() {
     if (!item) return;
     setActiveSpace('workbench');
     setSidebarMode('home');
-    setIsCreateMenuOpen(false);
     setFocusedBusinessNav(item.id);
     setActiveTab(item.tab);
     setIsDocumentNavExpanded(['quick-create', 'write', 'copy', 'polish', 'template-layout', 'check'].includes(item.id));
@@ -464,7 +462,6 @@ export default function App() {
   const openDocumentNavGroup = () => {
     setActiveSpace('workbench');
     setSidebarMode('home');
-    setIsCreateMenuOpen(false);
     setActiveTab('console-writing');
     setFocusedBusinessNav('write');
     setIsDocumentNavExpanded(true);
@@ -474,7 +471,6 @@ export default function App() {
   const syncWritingNavigation = (id: WritingShortcutView) => {
     setActiveSpace('workbench');
     setSidebarMode('home');
-    setIsCreateMenuOpen(false);
     setActiveTab('console-writing');
     setFocusedBusinessNav(id);
     setIsDocumentNavExpanded(['quick-create', 'write', 'copy', 'polish', 'template-layout', 'check'].includes(id));
@@ -687,7 +683,7 @@ export default function App() {
 
     if (sidebarMode === 'home') {
       const primaryItems = [
-        { id: 'home' as const, label: '智能问答', icon: PenTool, iconKey: 'nav-new-task' },
+        { id: 'home' as const, label: '新建任务', icon: PenTool, iconKey: 'nav-new-task' },
         { id: 'write' as const, label: '智能公文', icon: FileText, iconKey: 'nav-smart-doc' },
         { id: 'weboffice' as const, label: '公文写作', icon: FileText, iconKey: 'feature-web-office' },
         { id: 'documents' as const, label: '知识库', icon: Folder, iconKey: 'nav-knowledge' },
@@ -709,22 +705,6 @@ export default function App() {
           <div className="mb-4 flex items-center gap-3 px-2">
             <img src={resolvePublicAssetUrl(homeAppearance.logoUrl)} alt="产品 logo" className="h-11 w-11 rounded-[14px] object-cover shadow-[0_8px_20px_rgba(176,64,70,0.10)]" />
             <span className="min-w-0 flex-1 truncate text-[15px] font-semibold text-[#1f2329]">{homeAppearance.productName}</span>
-          </div>
-
-          <div className="mb-5 px-0.5">
-            <button
-              type="button"
-              onClick={() => setIsCreateMenuOpen((value) => !value)}
-              className={`flex h-12 w-full items-center justify-center gap-2 rounded-[14px] border text-[15px] font-extrabold transition hover:-translate-y-0.5 active:scale-[0.98] ${
-                isCreateMenuOpen
-                  ? 'border-[rgba(231,77,94,0.20)] bg-[var(--gov-red-deep)] text-white shadow-[0_12px_26px_rgba(190,51,62,0.24)] ring-4 ring-[rgba(231,77,94,0.10)]'
-                  : 'border-[rgba(231,77,94,0.12)] bg-[var(--gov-red)] text-white shadow-[0_10px_24px_rgba(190,51,62,0.18)] hover:bg-[var(--gov-red-deep)] hover:shadow-[0_14px_30px_rgba(190,51,62,0.22)]'
-              }`}
-              aria-label="新建"
-            >
-              <Plus size={18} strokeWidth={2.3} />
-              新建
-            </button>
           </div>
 
           <nav className="space-y-1">
@@ -955,7 +935,7 @@ export default function App() {
   };
 
   const businessHeaderTitles: Partial<Record<BusinessNavId, string>> = {
-    home: '智能问答',
+    home: '新建任务',
     'quick-create': '快速创作',
     write: '场景创作',
     copy: '以稿写稿',
@@ -979,42 +959,6 @@ export default function App() {
     <div className="gov-shell flex h-screen w-screen select-none flex-col overflow-hidden antialiased">
       <div className="flex flex-1 overflow-hidden">
         <aside className="gov-sidebar relative z-20 flex w-[280px] shrink-0 flex-col justify-between border-r select-none">
-          <AnimatePresence>
-            {activeSpace === 'workbench' && sidebarMode === 'home' && isCreateMenuOpen ? (
-              <motion.div
-                initial={{ opacity: 0, x: -8, scale: 0.98 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: -8, scale: 0.98 }}
-                transition={{ duration: 0.16 }}
-                className="absolute left-[292px] top-[106px] z-50 w-[236px] rounded-[18px] border border-black/[0.06] bg-white p-4 shadow-[0_24px_58px_rgba(15,23,42,0.16)]"
-              >
-                <span className="absolute -left-1.5 top-7 h-3 w-3 rotate-45 border-b border-l border-black/[0.06] bg-white" />
-                <p className="px-1 text-[13px] font-extrabold text-[#8a93a3]">新建</p>
-                <div className="mt-4 grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => openBusinessTab('weboffice')}
-                    className="group flex min-h-[104px] flex-col items-center justify-center rounded-[16px] border border-black/[0.04] bg-[#fbfcff] px-2 text-center transition hover:-translate-y-0.5 hover:border-[var(--gov-red-line)] hover:bg-white hover:shadow-[0_16px_34px_rgba(15,23,42,0.10)] active:scale-[0.98]"
-                  >
-                    <span className="flex h-12 w-12 items-center justify-center rounded-[15px] bg-white text-[#4169d8] shadow-[0_10px_24px_rgba(43,69,97,0.10)] ring-1 ring-black/[0.04]">
-                      <PrototypeIcon name="feature-web-office" size={34} alt="空白文稿图标" />
-                    </span>
-                    <span className="mt-3 text-[14px] font-bold text-[#30343b] group-hover:text-[var(--gov-red-deep)]">空白文稿</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => openBusinessTab('home')}
-                    className="group flex min-h-[104px] flex-col items-center justify-center rounded-[16px] border border-black/[0.04] bg-[#fbfcff] px-2 text-center transition hover:-translate-y-0.5 hover:border-[var(--gov-red-line)] hover:bg-white hover:shadow-[0_16px_34px_rgba(15,23,42,0.10)] active:scale-[0.98]"
-                  >
-                    <span className="flex h-12 w-12 items-center justify-center rounded-[15px] bg-white text-[var(--gov-red)] shadow-[0_10px_24px_rgba(43,69,97,0.10)] ring-1 ring-black/[0.04]">
-                      <MessageCircle size={24} strokeWidth={2.1} />
-                    </span>
-                    <span className="mt-3 text-[14px] font-bold text-[#30343b] group-hover:text-[var(--gov-red-deep)]">对话</span>
-                  </button>
-                </div>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
           <div className="min-h-0">
             <div className="h-[calc(100vh-70px)] overflow-y-auto px-3 py-5">{renderSidebarContent()}</div>
           </div>
