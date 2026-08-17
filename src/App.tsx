@@ -687,6 +687,7 @@ export default function App() {
       const primaryGroups = [
         {
           key: 'create',
+          label: '公文智能体',
           items: [
             { id: 'home' as const, label: '新建任务', icon: PenTool, iconKey: 'nav-new-task' },
             { id: 'write' as const, label: '智能公文', icon: FileText, iconKey: 'nav-smart-doc' }
@@ -694,12 +695,14 @@ export default function App() {
         },
         {
           key: 'knowledge',
+          label: '知识资源',
           items: [
             { id: 'documents' as const, label: '知识库', icon: Folder, iconKey: 'nav-knowledge' }
           ]
         },
         {
           key: 'market',
+          label: '能力生态',
           items: [
             { id: 'expert-management' as const, label: '智能体市场', icon: Bot, iconKey: 'nav-expert' },
             { id: 'developer-entry' as const, label: '开发者入口', icon: Code2, externalUrl: 'https://kinsight.ksyun.com/admin/agent' }
@@ -727,17 +730,9 @@ export default function App() {
           </div>
 
           <nav className="space-y-3">
-            {primaryGroups.map((group) => (
-              <div
-                key={group.key}
-                className={`space-y-1 rounded-[18px] border p-1.5 shadow-[0_10px_26px_rgba(15,23,42,0.045)] ${
-                  group.key === 'create'
-                    ? 'border-white/80 bg-[linear-gradient(145deg,rgba(255,255,255,0.86),rgba(255,244,247,0.56))]'
-                    : group.key === 'knowledge'
-                      ? 'border-[#d9ecff]/70 bg-[linear-gradient(145deg,rgba(255,255,255,0.78),rgba(239,248,255,0.62))]'
-                      : 'border-[#e9e4ff]/70 bg-[linear-gradient(145deg,rgba(255,255,255,0.78),rgba(247,244,255,0.62))]'
-                }`}
-              >
+            {primaryGroups.map((group, groupIndex) => (
+              <div key={group.key} className={`${groupIndex > 0 ? 'border-t border-dashed border-[#d7dce6] pt-3' : ''} space-y-1`}>
+                <div className="px-3 pb-1 text-[11px] font-semibold leading-5 tracking-[0.08em] text-[#a0a8b5]">{group.label}</div>
                 {group.items.map((item) => {
                   const isDeveloperEntry = item.id === 'developer-entry';
                   const IconComponent = item.icon;
