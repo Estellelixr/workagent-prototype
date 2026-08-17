@@ -21,6 +21,7 @@ import {
   Home,
   Layers,
   Loader2,
+  MessageCircle,
   Network,
   Paperclip,
   PenTool,
@@ -694,7 +695,7 @@ const WRITING_MODE_OPTIONS: Array<{ id: WritingMode; desc: string; icon: typeof 
 
 const MODEL_OPTIONS = ['金山政务办公大模型', 'DeepSeek-V4-Pro', 'Qwen3-235B-A22B', 'Claude-4.5-Opus'];
 
-const HOME_PROMPT_MAX_LENGTH = 300;
+const HOME_PROMPT_MAX_LENGTH = 10000;
 const HOME_SOURCE_TEXT_MAX_LENGTH = 500;
 
 const HOME_SOURCE_REQUIRED_WRITING_MODES: WritingMode[] = ['大纲成文', '继续写', '生成结语'];
@@ -934,7 +935,6 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
   const [homeDraftWordCount, setHomeDraftWordCount] = useState('');
   const [writingPreflightConfirmed, setWritingPreflightConfirmed] = useState(false);
   const [writingReferenceDecision, setWritingReferenceDecision] = useState<'pending' | 'added' | 'skip'>('pending');
-  const [isHomeModeMenuOpen, setIsHomeModeMenuOpen] = useState(false);
   const [isHomeUploadMenuOpen, setIsHomeUploadMenuOpen] = useState(false);
   const [isHomeExpertMenuOpen, setIsHomeExpertMenuOpen] = useState(false);
   const [internalHomeExpertId, setInternalHomeExpertId] = useState<HomeExpertId>(DEFAULT_HOME_EXPERT_ID);
@@ -1334,7 +1334,6 @@ export default function DocWritingConsoleView({ role: _role, onOpenDocReview: _o
       setSelectedWritingMode('生成全文');
       setNeedOutline(false);
       setOutlineInputMode('ai');
-      setIsHomeModeMenuOpen(false);
       setIsHomeExpertMenuOpen(false);
       setIsHomeUploadMenuOpen(false);
       resetOutlineParse();
@@ -2507,6 +2506,38 @@ ${resultSummary}
       { id: 'template-layout' as const, title: '智能排版', desc: '模板样式一键规范排版', hint: '套模板、控格式、快交付', iconKey: 'feature-layout', tone: 'from-[#effaf7] via-[#eef8ff] to-[#f6f4ff]', iconTone: 'bg-[#e7faf2] text-[#16a085]', glow: 'bg-[#1abc9c]/16' },
       { id: 'check' as const, title: '智能校对', desc: '检查错漏、敏感表述与格式问题', hint: '交付前查错和规范检查', iconKey: 'feature-proofread', tone: 'from-[#f2f7ff] via-[#f5f1ff] to-[#fff4f6]', iconTone: 'bg-[#eaf1ff] text-[#4169d8]', glow: 'bg-[#6384ff]/16' },
     ];
+    const homeSkillTabs = [
+      { id: 'qa' as const, label: '智能问答', iconKey: 'qa', color: '#0f96b8' },
+      ...WRITING_MODE_OPTIONS.map((mode) => ({
+        id: mode.id,
+        label: mode.id,
+        iconKey: mode.iconKey,
+        color:
+          mode.id === '生成大纲'
+            ? '#3b82f6'
+            : mode.id === '大纲成文'
+              ? '#3ab7a2'
+              : mode.id === '继续写'
+                ? '#8b5cf6'
+                : mode.id === '生成结语'
+                  ? '#f97316'
+                  : '#e74d5e'
+      }))
+    ];
+    const handleSelectHomeSkill = (skillId: 'qa' | WritingMode) => {
+      if (skillId === 'qa') {
+        setHomeActiveCapability('qa');
+        setIsHomeUploadMenuOpen(false);
+        return;
+      }
+      setHomeActiveCapability('write');
+      setHomeSelectedSkill('AI写作');
+      setSelectedWritingMode(skillId);
+      setNeedOutline(skillId === '生成大纲');
+      setOutlineInputMode('ai');
+      resetOutlineParse();
+      setIsHomeUploadMenuOpen(false);
+    };
     return (
       <motion.div
         key={isQuickCreateHome ? 'quick-create' : 'home'}
@@ -2524,87 +2555,51 @@ ${resultSummary}
             </h1>
           </div>
 
+          {useDefaultHomeWritingControl ? (
+            <div className="home-skill-tabs relative z-30 mb-5 grid w-full max-w-[980px] grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
+              {homeSkillTabs.map((skill) => {
+                const isSelected =
+                  skill.id === 'qa'
+                    ? homeActiveCapability === 'qa'
+                    : homeActiveCapability === 'write' && selectedWritingMode === skill.id;
+                return (
+                  <button
+                    key={skill.id}
+                    type="button"
+                    onClick={() => handleSelectHomeSkill(skill.id)}
+                    className={`group flex h-14 items-center justify-center gap-3 rounded-[14px] border bg-white px-4 text-[15px] font-bold transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_38px_rgba(15,23,42,0.10)] ${
+                      isSelected
+                        ? 'border-[var(--gov-red-line)] text-[var(--gov-red-deep)] shadow-[0_18px_38px_rgba(190,51,62,0.13)] ring-4 ring-[rgba(231,77,94,0.07)]'
+                        : 'border-black/[0.06] text-[#344054] shadow-[0_12px_28px_rgba(15,23,42,0.06)] hover:border-black/[0.10]'
+                    }`}
+                  >
+                    <span
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] bg-white shadow-[0_8px_20px_rgba(15,23,42,0.08)] ring-1 ring-black/[0.04]"
+                      style={{ color: skill.color }}
+                    >
+                      {skill.id === 'qa' ? (
+                        <MessageCircle size={19} strokeWidth={2.1} />
+                      ) : (
+                        <PrototypeIcon name={skill.iconKey} size={30} alt={`${skill.label}图标`} />
+                      )}
+                    </span>
+                    <span className="truncate">{skill.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          ) : null}
+
           <div className="ai-prompt-shell relative z-30 w-full max-w-[980px] shrink-0 overflow-visible rounded-[16px] p-4 text-left">
             <div className={`home-prompt-main-row relative z-50 flex gap-4 ${isSourceBasedHomeWriting ? 'flex-col items-stretch' : 'items-start'}`}>
-              {useDefaultHomeWritingControl ? (
-                <div className={`relative z-[80] shrink-0 ${isSourceBasedHomeWriting ? 'flex w-full items-center gap-3' : 'w-[154px]'}`}>
-                  <button
-                    type="button"
-                    onClick={() => setIsHomeModeMenuOpen((value) => !value)}
-                    className={`flex h-10 items-center gap-2 rounded-[12px] border border-black/[0.06] bg-white px-3 text-left text-[13px] font-bold text-[#4169d8] shadow-[0_10px_24px_rgba(15,23,42,0.09)] transition hover:-translate-y-0.5 hover:border-[var(--gov-red-line)] hover:shadow-[0_16px_32px_rgba(15,23,42,0.12)] ${isSourceBasedHomeWriting ? 'w-[154px]' : 'w-full'}`}
-                  >
-                    {homeActiveCapability === 'write' ? (
-                      <PrototypeIcon name={WRITING_MODE_OPTIONS.find((mode) => mode.id === selectedWritingMode)?.iconKey ?? 'feature-ai-write'} size={24} alt={`${selectedWritingMode}图标`} />
-                    ) : (
-                      <Sparkles size={16} className="text-[var(--gov-red)]" />
-                    )}
-                    <span className="min-w-0 flex-1 truncate">{homeActiveCapability === 'write' ? selectedWritingMode : '智能问答'}</span>
-                    <ChevronDown size={14} className={`shrink-0 text-[#98a2b3] transition ${isHomeModeMenuOpen ? 'rotate-180' : ''}`} />
-                  </button>
-                  {isSourceBasedHomeWriting ? (
-                    <span className="min-w-0 flex-1 truncate text-[14px] font-medium text-[#4b5563]">
-                      {selectedHomeWritingCopy.inlineLead}
-                    </span>
-                  ) : null}
-                  {false ? (
-                    <div className="home-prompt-mode-menu absolute left-0 top-12 z-[120] w-full rounded-[14px] border border-black/[0.06] bg-white p-1.5 shadow-[0_22px_58px_rgba(15,23,42,0.18)]">
-                      {!isQuickCreateHome ? (
-                        <>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setHomeActiveCapability('qa');
-                              setIsHomeModeMenuOpen(false);
-                            }}
-                            className={`mb-1 flex h-8 w-full items-center gap-1.5 rounded-[9px] px-2 text-left text-[12px] font-semibold transition ${
-                              homeActiveCapability === 'qa'
-                                ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)] shadow-[inset_3px_0_0_var(--gov-red)]'
-                                : 'text-[#667085] hover:bg-[#f6f7fb] hover:text-[#344054]'
-                            }`}
-                          >
-                            <Sparkles size={14} className="text-[var(--gov-red)]" />
-                            <span className="truncate">智能问答</span>
-                          </button>
-                          <div className="my-1 h-px bg-black/[0.05]" />
-                        </>
-                      ) : null}
-                    {WRITING_MODE_OPTIONS.map((mode) => {
-                      const isSelected = homeActiveCapability === 'write' && selectedWritingMode === mode.id;
-                      return (
-                        <button
-                          key={mode.id}
-                          type="button"
-                          onClick={() => {
-                            setHomeActiveCapability('write');
-                            setHomeSelectedSkill('AI写作');
-                            setSelectedWritingMode(mode.id);
-                            setNeedOutline(mode.id === '生成大纲');
-                            setOutlineInputMode('ai');
-                            resetOutlineParse();
-                            setIsHomeModeMenuOpen(false);
-                          }}
-                          className={`flex h-8 w-full items-center gap-1.5 rounded-[9px] px-2 text-left text-[12px] font-semibold transition ${
-                            isSelected
-                              ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)] shadow-[inset_3px_0_0_var(--gov-red)]'
-                              : 'text-[#667085] hover:bg-[#f6f7fb] hover:text-[#344054]'
-                          }`}
-                        >
-                          <PrototypeIcon name={mode.iconKey} size={22} alt={`${mode.id}图标`} />
-                          <span className="truncate">{mode.id}</span>
-                        </button>
-                      );
-                    })}
-                    </div>
-                  ) : null}
-                </div>
-              ) : (
+              {!useDefaultHomeWritingControl ? (
                 <div className="flex shrink-0 justify-start">
                   <span className="inline-flex h-10 items-center gap-2 rounded-[11px] border border-[var(--gov-red-line)] bg-white px-3 text-[13px] font-semibold text-[var(--gov-red-deep)] shadow-[0_8px_22px_rgba(190,51,62,0.08)]">
                     <Bot size={15} />
                     {selectedHomeExpert.name}
                   </span>
                 </div>
-              )}
+              ) : null}
               <div className={`min-w-0 flex-1 ${isSourceBasedHomeWriting ? '-mt-1' : ''}`}>
                 {shouldUseStructuredHomeWriting ? (
                   <div className={`${isSourceBasedHomeWriting ? 'min-h-[118px]' : 'min-h-[104px]'} px-1 py-1`}>
@@ -2705,12 +2700,12 @@ ${resultSummary}
                           }
                         }}
                         rows={3}
-                        className="h-[104px] w-full resize-none bg-transparent px-1 py-2 pr-16 text-[15px] leading-7 text-[#202124] outline-none placeholder:text-[#9aa0a6]"
+                        className="h-[150px] w-full resize-none bg-transparent px-1 py-2 pr-16 text-[15px] leading-7 text-[#202124] outline-none placeholder:text-[#9aa0a6]"
                         placeholder={homePromptPlaceholder}
                       />
                       <span
                         className={`absolute bottom-2 right-1 rounded-full px-2 py-1 text-[11px] font-semibold ${
-                          homePromptLength > 260
+                          homePromptLength > 9000
                             ? 'bg-[#fff1f0] text-[var(--gov-red)]'
                             : 'bg-[#f5f6f8] text-[#98a2b3]'
                         }`}
@@ -2849,59 +2844,6 @@ ${resultSummary}
                 </button>
               </div>
             </div>
-            {useDefaultHomeWritingControl && isHomeModeMenuOpen ? (
-              <div
-                className="home-prompt-mode-floating absolute w-[154px] rounded-[14px] border border-black/[0.06] bg-white p-1.5 shadow-[0_24px_64px_rgba(15,23,42,0.20)]"
-                style={{ left: 16, top: 64, zIndex: 9999 }}
-              >
-                {!isQuickCreateHome ? (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setHomeActiveCapability('qa');
-                        setIsHomeModeMenuOpen(false);
-                      }}
-                      className={`mb-1 flex h-8 w-full items-center gap-1.5 rounded-[9px] px-2 text-left text-[12px] font-semibold transition ${
-                        homeActiveCapability === 'qa'
-                          ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)] shadow-[inset_3px_0_0_var(--gov-red)]'
-                          : 'text-[#667085] hover:bg-[#f6f7fb] hover:text-[#344054]'
-                      }`}
-                    >
-                      <Sparkles size={14} className="text-[var(--gov-red)]" />
-                      <span className="truncate">智能问答</span>
-                    </button>
-                    <div className="my-1 h-px bg-black/[0.05]" />
-                  </>
-                ) : null}
-                {WRITING_MODE_OPTIONS.map((mode) => {
-                  const isSelected = homeActiveCapability === 'write' && selectedWritingMode === mode.id;
-                  return (
-                    <button
-                      key={mode.id}
-                      type="button"
-                      onClick={() => {
-                        setHomeActiveCapability('write');
-                        setHomeSelectedSkill('AI写作');
-                        setSelectedWritingMode(mode.id);
-                        setNeedOutline(mode.id === '生成大纲');
-                        setOutlineInputMode('ai');
-                        resetOutlineParse();
-                        setIsHomeModeMenuOpen(false);
-                      }}
-                      className={`flex h-8 w-full items-center gap-1.5 rounded-[9px] px-2 text-left text-[12px] font-semibold transition ${
-                        isSelected
-                          ? 'bg-[var(--gov-red-soft)] text-[var(--gov-red-deep)] shadow-[inset_3px_0_0_var(--gov-red)]'
-                          : 'text-[#667085] hover:bg-[#f6f7fb] hover:text-[#344054]'
-                      }`}
-                    >
-                      <PrototypeIcon name={mode.iconKey} size={22} alt={`${mode.id}图标`} />
-                      <span className="truncate">{mode.id}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            ) : null}
           </div>
 
           {!isQuickCreateHome ? (

@@ -1468,15 +1468,6 @@ button:hover .ai-dimensional-icon,
   z-index: 160;
 }
 
-.home-prompt-mode-menu {
-  z-index: 120;
-}
-
-.home-prompt-mode-floating {
-  position: absolute !important;
-  z-index: 220 !important;
-}
-
 .home-prompt-reference-menu,
 .home-prompt-expert-menu {
   z-index: 320 !important;
