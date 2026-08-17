@@ -228,14 +228,6 @@ export default function App() {
       writingView: 'home'
     },
     {
-      id: 'quick-create',
-      label: '快速创作',
-      icon: PenTool,
-      iconKey: 'nav-ai-write',
-      tab: 'console-writing',
-      writingView: 'quick-create'
-    },
-    {
       id: 'write',
       label: '场景创作',
       icon: PenTool,
@@ -458,7 +450,7 @@ export default function App() {
     setSidebarMode('home');
     setFocusedBusinessNav(item.id);
     setActiveTab(item.tab);
-    setIsDocumentNavExpanded(['quick-create', 'write', 'copy', 'polish', 'template-layout', 'check'].includes(item.id));
+    setIsDocumentNavExpanded(['write', 'copy', 'polish', 'template-layout', 'check'].includes(item.id));
     if (item.writingView) {
       setWritingNavigation({ view: item.writingView, key: Date.now() });
     }
@@ -478,7 +470,7 @@ export default function App() {
     setSidebarMode('home');
     setActiveTab('console-writing');
     setFocusedBusinessNav(id);
-    setIsDocumentNavExpanded(['quick-create', 'write', 'copy', 'polish', 'template-layout', 'check'].includes(id));
+    setIsDocumentNavExpanded(['write', 'copy', 'polish', 'template-layout', 'check'].includes(id));
   };
 
   const openAiFeatureTab = (tab: AiFeatureNavItem['id']) => {
@@ -694,9 +686,8 @@ export default function App() {
         { id: 'documents' as const, label: '知识库', icon: Folder, iconKey: 'nav-knowledge' },
         { id: 'expert-management' as const, label: '专家市场', icon: Bot, iconKey: 'nav-expert' }
       ];
-      const documentFeatureIds: BusinessNavId[] = ['quick-create', 'write', 'copy', 'polish', 'template-layout', 'check'];
+      const documentFeatureIds: BusinessNavId[] = ['write', 'copy', 'polish', 'template-layout', 'check'];
       const documentFeatureItems = [
-        { id: 'quick-create' as const, label: '快速创作', icon: PenTool, iconKey: 'nav-ai-write' },
         { id: 'write' as const, label: '场景创作', icon: PenTool, iconKey: 'write-mode-outline' },
         { id: 'copy' as const, label: '以稿写稿', icon: Layers, iconKey: 'nav-ai-copy' },
         { id: 'polish' as const, label: '文风润色', icon: Sparkles, iconKey: 'nav-ai-polish' },
@@ -941,7 +932,6 @@ export default function App() {
 
   const businessHeaderTitles: Partial<Record<BusinessNavId, string>> = {
     home: '新建任务',
-    'quick-create': '快速创作',
     write: '场景创作',
     copy: '以稿写稿',
     polish: '文风润色',
