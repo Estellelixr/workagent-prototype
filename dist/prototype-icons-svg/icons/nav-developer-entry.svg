@@ -1,0 +1,27 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Developer entry icon">
+  <defs>
+    <linearGradient id="nav-developer-entry-bg" x1="12" y1="9" x2="52" y2="55" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset=".48" stop-color="#F0F6FF"/>
+      <stop offset="1" stop-color="#E8EEFF"/>
+    </linearGradient>
+    <radialGradient id="nav-developer-entry-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(28 23) rotate(47) scale(28 24)">
+      <stop stop-color="#FFFFFF" stop-opacity=".92"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="nav-developer-entry-shadow" x="0" y="0" width="64" height="64" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#5268D8" flood-opacity=".13"/>
+    </filter>
+  </defs>
+  <g filter="url(#nav-developer-entry-shadow)">
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="url(#nav-developer-entry-bg)"/>
+    <rect x="9.8" y="8.8" width="44.4" height="44.4" rx="14.2" stroke="#FFFFFF" stroke-opacity=".86" stroke-width="1.6"/>
+    <rect x="10.4" y="9.4" width="43.2" height="43.2" rx="13.6" stroke="#6E7CF6" stroke-opacity=".12" stroke-width=".8"/>
+    <rect x="9" y="8" width="46" height="46" rx="15" fill="url(#nav-developer-entry-glow)"/>
+    <path d="M25 24l-6 7 6 7" stroke="#6E7CF6" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M39 24l6 7-6 7" stroke="#6E7CF6" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M35 21l-6 22" stroke="#6E7CF6" stroke-width="2.75" stroke-linecap="round"/>
+    <path d="M21 45h22" stroke="#A6B0FF" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="46" cy="19" r="3.2" fill="#EEF1FF" stroke="#6E7CF6" stroke-width="2.2"/>
+  </g>
+</svg>

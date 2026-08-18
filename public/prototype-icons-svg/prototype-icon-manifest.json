@@ -95,6 +95,36 @@
       "usageZh": "知识库主菜单入口"
     },
     {
+      "key": "nav-data-connection",
+      "label": "Data connection",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 知识资源",
+      "tone": "teal",
+      "glyph": "nodes",
+      "file": "icons/nav-data-connection.svg",
+      "usageZh": "数据连接菜单入口"
+    },
+    {
+      "key": "nav-orchestration-library",
+      "label": "Orchestration library",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 场景化支持",
+      "tone": "violet",
+      "glyph": "workflow",
+      "file": "icons/nav-orchestration-library.svg",
+      "usageZh": "编排方案库菜单入口"
+    },
+    {
+      "key": "nav-developer-entry",
+      "label": "Developer entry",
+      "category": "navigation",
+      "categoryZh": "左侧导航 / 场景化支持",
+      "tone": "blue-violet",
+      "glyph": "code",
+      "file": "icons/nav-developer-entry.svg",
+      "usageZh": "开发者入口菜单入口"
+    },
+    {
       "key": "nav-expert",
       "label": "Expert management",
       "category": "navigation",

@@ -3,7 +3,7 @@ import { DocumentInfo, Role } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Plus, RefreshCw, Save, CheckCircle,
-  Clock, Folder, Database, Info,
+  Folder, Database, Info,
   ArrowLeft, ChevronDown, ChevronRight, Search, Upload, PenTool,
   MoreHorizontal, Eye, Pencil, MoveRight, Download, Trash2, Copy,
   X, Building2, Globe2, UserRound, FilePlus2, ShieldCheck
@@ -15,6 +15,7 @@ interface DocumentsViewProps {
   documents: DocumentInfo[];
   role: Role;
   onUpdateDocumentContent: (id: string, content: string) => void;
+  initialMenuId?: 'personal' | 'department' | 'public';
 }
 
 interface VisualDoc {
@@ -38,16 +39,16 @@ type PermissionPrincipal = {
   children?: PermissionPrincipal[];
 };
 
-export default function DocumentsView({ documents, role: _role, onUpdateDocumentContent }: DocumentsViewProps) {
+export default function DocumentsView({ documents, role: _role, onUpdateDocumentContent, initialMenuId = 'personal' }: DocumentsViewProps) {
   // Navigation State inside Documents Explorer matching the screenshot left navigation
-  const [activeMenuId, setActiveMenuId] = useState<string>('recent');
+  const [activeMenuId, setActiveMenuId] = useState<string>(initialMenuId);
   
   // Search query and filter states
   const [searchQuery, setSearchQuery] = useState('');
   const [fileTypeFilter, setFileTypeFilter] = useState<'all' | 'doc' | 'xls' | 'ppt'>('all');
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [expandedLibraryIds, setExpandedLibraryIds] = useState<Set<string>>(new Set(['personal']));
+  const [expandedLibraryIds, setExpandedLibraryIds] = useState<Set<string>>(new Set(['personal', 'department']));
   const [selectedFileIds, setSelectedFileIds] = useState<Set<string>>(new Set());
   const [openFileMenuId, setOpenFileMenuId] = useState<string | null>(null);
   const [libraryNotice, setLibraryNotice] = useState<string | null>(null);
@@ -73,6 +74,17 @@ export default function DocumentsView({ documents, role: _role, onUpdateDocument
   const [selectedDoc, setSelectedDoc] = useState<VisualDoc | null>(null);
   const [editorText, setEditorText] = useState('');
   const [showStatusMessage, setShowStatusMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    setActiveMenuId(initialMenuId);
+    setSelectedFileIds(new Set());
+    setOpenFileMenuId(null);
+    setSelectedDoc(null);
+    setExpandedLibraryIds((current) => {
+      if (initialMenuId === 'public') return current;
+      return new Set([...Array.from(current), 'personal', 'department', initialMenuId]);
+    });
+  }, [initialMenuId]);
 
   // Exact mock files from the provided layout image
   const [visualDocs, setVisualDocs] = useState<VisualDoc[]>([
@@ -343,7 +355,6 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
   ]);
 
   const librarySections = [
-    { id: 'recent', label: '最近', icon: Clock, folders: [] },
     {
       id: 'personal',
       label: '个人知识库',
@@ -361,15 +372,6 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
         { id: 'department-office', label: '办公室常用材料', docIds: ['vd-3', 'vd-5', 'vd-12'] },
         { id: 'department-policy', label: '政策制度汇编', docIds: ['vd-6', 'vd-13'] },
         ...departmentCustomFolders,
-      ],
-    },
-    {
-      id: 'public',
-      label: '公共素材库',
-      icon: Globe2,
-      folders: [
-        { id: 'public-cases', label: '优秀范文案例', docIds: ['vd-10', 'vd-11'] },
-        { id: 'public-data', label: '数据与图表', docIds: ['vd-6', 'vd-8', 'vd-9'] },
       ],
     },
   ];
@@ -435,11 +437,9 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
   const renderLibrarySectionIcon = (id: string, active: boolean) => {
     const iconClassName = `knowledge-tree-icon knowledge-tree-icon-${id} ${active ? 'knowledge-tree-icon-active' : ''}`;
     const iconNameById: Record<string, string> = {
-      recent: 'knowledge-recent',
       personal: 'knowledge-personal',
       department: 'knowledge-department',
       resource: 'knowledge-resource',
-      public: 'knowledge-public',
     };
     return (
       <span className={iconClassName}>
@@ -577,7 +577,7 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
       };
     }),
   ];
-  const activeDirectoryLabel = directoryMeta.find((item) => item.id === activeMenuId)?.label ?? '最近';
+  const activeDirectoryLabel = directoryMeta.find((item) => item.id === activeMenuId)?.label ?? '个人知识库';
 
   const isWritableDirectoryId = (id: string) => id === 'personal' || id === 'personal-drafts' || id.startsWith('department-');
   const actionDirectoryTree = librarySections
@@ -985,6 +985,100 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
     if (isDepartmentAdminLibrary(folderId)) return true;
     return isPersonalLibrary && !protectedPersonalFolderIds.has(folderId);
   };
+  const publicMaterialCards = [
+    { title: '廉政党课讲稿：加强党性修养，坚持廉洁从政', desc: '围绕全面从严治党、党风廉政建设与干部作风要求展开，适用于党课宣讲和专题学习材料。', type: '党课讲稿', industry: '纪委' },
+    { title: '领导讲话：在年度重点工作推进会上的讲话', desc: '适用于重点任务部署、阶段性工作推进、会议动员等场景，结构稳健、语气正式。', type: '领导讲话', industry: '组织' },
+    { title: '工作总结：政务服务质效提升专项总结', desc: '聚焦工作成效、问题分析与下一步计划，适合年度总结、专项总结和部门汇报。', type: '工作总结', industry: '政务' },
+    { title: '调研报告：基层治理数字化建设情况调研', desc: '包含调研背景、现状问题、原因分析和建议举措，适合专题调研和领导参阅材料。', type: '调研报告', industry: '政法' },
+    { title: '工作方案：机关作风建设专项行动方案', desc: '围绕目标要求、重点任务、实施步骤和保障措施展开，适合任务型工作部署。', type: '工作方案', industry: '党委' },
+    { title: '述职报告：履职尽责与重点工作落实情况', desc: '覆盖履职情况、主要成效、存在不足和改进方向，适合个人或部门述职场景。', type: '述职报告', industry: '组织' },
+    { title: '对照检查：专题民主生活会个人对照材料', desc: '面向组织生活会、民主生活会等场景，突出问题查摆、原因剖析和整改措施。', type: '对照检查', industry: '党委' },
+    { title: '公安材料：执法规范化建设经验交流稿', desc: '聚焦公安实战、规范执法、基层治理与队伍建设，适合交流发言和经验材料。', type: '经验材料', industry: '公安' },
+    { title: '政协发言：优化营商环境专题协商发言', desc: '适合政协协商、提案发言和专题座谈，表达客观、建议明确、层次清晰。', type: '发言材料', industry: '政协' }
+  ];
+  const filteredPublicMaterialCards = publicMaterialCards.filter((card) => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return true;
+    return `${card.title}${card.desc}${card.type}${card.industry}`.toLowerCase().includes(query);
+  });
+  const renderPublicMaterialLibrary = () => (
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-[#fcfdff]">
+      <div className="shrink-0 px-6 pb-3 pt-4">
+        <div className="relative overflow-hidden rounded-[16px] border border-[#f1f5ff] bg-[linear-gradient(135deg,#fbfdff_0%,#ffffff_54%,#fbfcff_100%)] px-6 py-5 shadow-[0_14px_34px_rgba(57,114,196,0.04)]">
+          <div className="pointer-events-none absolute -left-12 -top-8 h-32 w-40 rounded-full bg-[#eef8ff]/55 blur-3xl" />
+          <div className="pointer-events-none absolute right-16 -top-8 h-28 w-40 rounded-full bg-[#f3f6ff]/70 blur-3xl" />
+          <div className="relative">
+            <div className="flex items-center justify-between gap-6">
+              <div className="min-w-[220px]">
+                <p className="text-[20px] font-bold tracking-normal text-[#111827]">公文范文搜索</p>
+                <p className="mt-1 text-[12px] font-medium text-[#7b8798]">按行业、文种和关键词查找公共素材</p>
+              </div>
+              <div className="flex h-11 min-w-0 flex-1 overflow-hidden rounded-[12px] border border-[#d4e0ff] bg-white shadow-[0_10px_24px_rgba(83,118,230,0.045)]">
+              <button type="button" className="inline-flex w-[98px] items-center justify-center gap-2 border-r border-black/[0.08] text-[13px] font-semibold text-[#202124]">
+                全文
+                <ChevronDown size={14} className="text-[#667085]" />
+              </button>
+              <div className="relative min-w-0 flex-1">
+                <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#a8b0bd]" />
+                <input
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="输入关键词搜索"
+                  className="h-full w-full bg-transparent pl-10 pr-4 text-[13px] font-medium text-[#344054] outline-none placeholder:text-[#b5bdc9]"
+                />
+              </div>
+              <button type="button" onClick={() => showLibraryNotice('已按关键词检索公共素材')} className="w-[104px] bg-[#8eabff] text-[14px] font-semibold text-white transition hover:bg-[#7f9df4]">搜索</button>
+              </div>
+            </div>
+            <div className="mt-4 space-y-2.5">
+              {[
+                { label: '行业', values: ['全部', '党委', '法院', '政法', '组织', '安全', '纪检', '人大', '政协', '公安', '企业'] },
+                { label: '范文类型', values: ['全部', '讲话致辞', '领导讲话', '工作总结', '调研报告', '党课讲稿', '工作汇报', '述职报告', '工作方案', '对照检查'] }
+              ].map((row) => (
+                <div key={row.label} className="grid grid-cols-[76px_minmax(0,1fr)_34px] items-center gap-3">
+                  <span className="inline-flex h-8 items-center justify-center rounded-[8px] bg-white text-[12px] font-bold text-[#6f87dc] shadow-[0_6px_16px_rgba(61,102,245,0.035)]">{row.label}</span>
+                  <div className="flex flex-wrap gap-2">
+                    {row.values.map((value, index) => (
+                      <button key={value} type="button" className={`h-8 min-w-[62px] rounded-[8px] px-3 text-[12px] font-semibold transition ${index === 0 ? 'bg-[#8eabff] text-white shadow-[0_8px_18px_rgba(83,118,230,0.08)]' : 'bg-white text-[#202124] hover:bg-[#f5f8ff] hover:text-[#5d7ee2]'}`}>{value}</button>
+                    ))}
+                  </div>
+                  <button type="button" className="inline-flex h-8 w-8 items-center justify-center rounded-[8px] bg-white text-[#475467] shadow-[0_6px_16px_rgba(61,102,245,0.035)]">
+                    <ChevronDown size={15} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="min-h-0 flex-1 overflow-auto px-6 pb-8">
+        <div className="grid gap-4 xl:grid-cols-3">
+          {filteredPublicMaterialCards.map((card) => (
+            <button
+              key={card.title}
+              type="button"
+              onClick={() => showLibraryNotice('已打开公共素材预览')}
+              className="group rounded-[16px] border border-black/[0.045] bg-white p-5 text-left shadow-[0_14px_36px_rgba(40,91,160,0.045)] transition hover:-translate-y-0.5 hover:shadow-[0_20px_48px_rgba(40,91,160,0.08)]"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <p className="line-clamp-1 text-[15px] font-bold text-[#1f2937] transition group-hover:text-[#4f75e6]">{card.title}</p>
+                <span className="text-[#c5ccd6] transition group-hover:text-[#f0a33b]">☆</span>
+              </div>
+              <p className="mt-3 line-clamp-3 min-h-[66px] text-[13px] leading-[22px] text-[#7a8290]">{card.desc}</p>
+              <div className="mt-5 flex items-center gap-2">
+                <span className="rounded-[7px] bg-[#f2f7ff] px-2.5 py-1.5 text-[12px] font-semibold text-[#3f78c8]">{card.type}</span>
+                <span className="rounded-[7px] bg-[#fff7ed] px-2.5 py-1.5 text-[12px] font-semibold text-[#c56a17]">{card.industry}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="knowledge-footer flex h-10 shrink-0 items-center justify-between border-t border-black/[0.05] bg-white/70 px-6 text-[10px] text-[#98a2b3]">
+        <span className="inline-flex items-center gap-1.5"><Info size={11} />当前共 {filteredPublicMaterialCards.length} 条范文素材</span>
+        <span>公共素材库仅支持检索与引用</span>
+      </div>
+    </div>
+  );
   const getFolderCreator = (folderId: string) => isDepartmentAdminLibrary(folderId) ? '部门管理员' : '系统';
   const newItemOptions = [
     { id: 'doc', label: '新建文件', className: 'bg-[#2878f0] text-white' },
@@ -1133,12 +1227,12 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="knowledge-layout grid h-full min-h-0 grid-cols-[250px_minmax(0,1fr)] overflow-hidden"
+            className={`knowledge-layout grid h-full min-h-0 overflow-hidden ${isPublicLibrary ? 'grid-cols-1' : 'grid-cols-[250px_minmax(0,1fr)]'}`}
           >
-            <aside className="knowledge-sidebar flex min-h-0 flex-col border-r border-black/[0.06] bg-[#fafafa] px-3 py-4">
+            {!isPublicLibrary ? <aside className="knowledge-sidebar flex min-h-0 flex-col border-r border-black/[0.06] bg-[#fafafa] px-3 py-4">
               <div className="knowledge-sidebar-title mb-4 px-2">
-                <p className="text-[13px] font-bold text-[#202124]">知识库目录</p>
-                <p className="mt-1 text-[10px] text-[#98a2b3]">按归属与用途管理政务素材</p>
+                <p className="text-[13px] font-bold text-[#202124]">本地知识库目录</p>
+                <p className="mt-1 text-[10px] text-[#98a2b3]">仅展示个人与部门沉淀资料</p>
               </div>
               <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto" aria-label="知识库目录">
                 {librarySections.map((section) => {
@@ -1186,9 +1280,11 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
                 <div className="flex items-center justify-between text-[10px] text-[#98a2b3]"><span className="inline-flex items-center gap-1"><Database size={11} className="knowledge-storage-icon" />知识库空间</span><span>48.34 GB / 1 TB</span></div>
                 <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-black/[0.06]"><div className="h-full w-[18%] rounded-full bg-[var(--gov-red)]" /></div>
               </div>
-            </aside>
+            </aside> : null}
 
             <section className="knowledge-main relative flex min-h-0 min-w-0 flex-col overflow-hidden bg-white">
+              {isPublicLibrary ? renderPublicMaterialLibrary() : (
+                <>
               <div className="knowledge-header shrink-0 border-b border-black/[0.06] px-6 py-4">
                 <div className="flex min-h-10 items-center justify-between gap-5">
                   <div className="flex min-w-0 items-center gap-2 text-[13px] text-[#667085]"><span className="font-semibold text-[#202124]">知识库</span><ChevronRight size={14} className="text-[#c0c6d0]" /><span className="truncate">{activeDirectoryLabel}</span></div>
@@ -1284,6 +1380,8 @@ C区-12   | 70台       | 高可用备份   | 我收到的   | 郑健核对`
               </div>
 
               <div className="knowledge-footer flex h-10 shrink-0 items-center justify-between border-t border-black/[0.05] px-6 text-[10px] text-[#98a2b3]"><span className="inline-flex items-center gap-1.5"><Info size={11} />当前目录共 {visibleLibraryDocs.length + visibleFolderEntries.length} 项</span><span>内容存储于政务内网知识库</span></div>
+                </>
+              )}
               <AnimatePresence>{libraryNotice ? <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className="absolute bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-[9px] bg-[#202124] px-4 py-2 text-[12px] font-medium text-white shadow-xl">{libraryNotice}</motion.div> : null}</AnimatePresence>
             </section>
           </motion.div>

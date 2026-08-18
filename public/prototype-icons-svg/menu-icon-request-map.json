@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "size": 64,
+  "style": "soft-tile-line-icon",
+  "icons": [
+    {
+      "key": "nav-data-connection",
+      "name": "数据连接",
+      "tone": "teal",
+      "file": "icons/nav-data-connection.svg",
+      "usage": "左侧导航 / 知识资源模块 / 数据连接菜单"
+    },
+    {
+      "key": "nav-orchestration-library",
+      "name": "编排方案库",
+      "tone": "violet",
+      "file": "icons/nav-orchestration-library.svg",
+      "usage": "左侧导航 / 场景化支持模块 / 编排方案库菜单"
+    },
+    {
+      "key": "nav-developer-entry",
+      "name": "开发者入口",
+      "tone": "blue-violet",
+      "file": "icons/nav-developer-entry.svg",
+      "usage": "左侧导航 / 场景化支持模块 / 开发者入口菜单"
+    }
+  ]
+}

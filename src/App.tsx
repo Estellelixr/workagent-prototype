@@ -37,7 +37,7 @@ import PrototypeIcon from './components/PrototypeIcon';
 import { DEFAULT_HOME_EXPERT_ID, HOME_EXPERTS, HomeExpertId, HomeExpertMarketCategory } from './homeExperts';
 import { DEFAULT_PRODUCT_ICON_URL, resolvePublicAssetUrl } from './utils/publicAsset';
 
-import { Bell, Bot, CheckCircle, ChevronDown, ChevronRight, ClipboardList, Clock, Code2, Database, Eye, FileSearch, FileText, Folder, HardDrive, History, Home, KeyRound, Layers, Link2, LockKeyhole, LogOut, MessageCircle, MoreHorizontal, Network, PenTool, Pin, Plus, RefreshCw, Search, Settings, ShieldCheck, SlidersHorizontal, Sparkles, Stamp, Trash2, UserRound, Users } from 'lucide-react';
+import { Bell, Bot, CheckCircle, ChevronDown, ChevronRight, ClipboardList, Clock, Code2, Database, Eye, FileSearch, FileText, Folder, Globe2, HardDrive, History, Home, KeyRound, Layers, Link2, LockKeyhole, LogOut, MessageCircle, MoreHorizontal, Network, PenTool, Pin, Plus, RefreshCw, Search, Settings, ShieldCheck, SlidersHorizontal, Sparkles, Stamp, Trash2, UserRound, Users } from 'lucide-react';
 
 type SidebarMode = 'home' | 'ai';
 type ActiveTab =
@@ -55,7 +55,8 @@ type ActiveTab =
   | 'expert-management';
 
 type WritingShortcutView = 'home' | 'quick-create' | 'write' | 'copy' | 'polish' | 'template-layout' | 'check' | 'weboffice';
-type BusinessNavId = WritingShortcutView | 'documents' | 'local-resources' | 'connectors' | 'scenario-flows' | 'history' | 'expert-management';
+type KnowledgeNavId = 'knowledge-local' | 'knowledge-public';
+type BusinessNavId = WritingShortcutView | KnowledgeNavId | 'documents' | 'local-resources' | 'connectors' | 'scenario-flows' | 'history' | 'expert-management';
 
 type BusinessNavItem = {
   id: BusinessNavId;
@@ -280,17 +281,18 @@ export default function App() {
       writingView: 'weboffice'
     },
     {
-      id: 'documents',
-      label: '知识库',
+      id: 'knowledge-local',
+      label: '本地知识库',
       icon: Folder,
-      iconKey: 'nav-knowledge',
+      iconKey: 'knowledge-folder',
       tab: 'documents'
     },
     {
-      id: 'local-resources',
-      label: '本地资源',
-      icon: HardDrive,
-      tab: 'local-resources'
+      id: 'knowledge-public',
+      label: '公共素材库',
+      icon: Globe2,
+      iconKey: 'knowledge-public',
+      tab: 'documents'
     },
     {
       id: 'connectors',
@@ -719,8 +721,8 @@ export default function App() {
           key: 'knowledge',
           label: '知识资源',
           items: [
-            { id: 'documents' as const, label: '知识库', icon: Folder, iconKey: 'nav-knowledge' },
-            { id: 'local-resources' as const, label: '本地资源', icon: HardDrive },
+            { id: 'knowledge-local' as const, label: '本地知识库', icon: Folder, iconKey: 'knowledge-folder' },
+            { id: 'knowledge-public' as const, label: '公共素材库', icon: Globe2, iconKey: 'knowledge-public' },
             { id: 'connectors' as const, label: '数据连接', icon: Database }
           ]
         },
@@ -765,7 +767,8 @@ export default function App() {
                     !isDeveloperEntry &&
                     (focusedBusinessNav === item.id ||
                       (item.id === 'write' && (isDocumentNavExpanded || (focusedBusinessNav !== null && documentFeatureIds.includes(focusedBusinessNav)))) ||
-                      (item.id === 'documents' && activeTab === 'documents') ||
+                      (item.id === 'knowledge-local' && activeTab === 'documents' && focusedBusinessNav === 'knowledge-local') ||
+                      (item.id === 'knowledge-public' && activeTab === 'documents' && focusedBusinessNav === 'knowledge-public') ||
                       (item.id === 'local-resources' && activeTab === 'local-resources') ||
                       (item.id === 'connectors' && activeTab === 'connectors') ||
                       (item.id === 'scenario-flows' && activeTab === 'scenario-flows') ||
@@ -1007,6 +1010,8 @@ export default function App() {
     check: '智能校对',
     weboffice: '新建空白稿',
     documents: '知识库',
+    'knowledge-local': '本地知识库',
+    'knowledge-public': '公共素材库',
     'local-resources': '本地资源',
     connectors: '数据连接',
     'scenario-flows': '编排方案库',
@@ -1019,7 +1024,7 @@ export default function App() {
       : activeTab === 'console-writing'
         ? businessHeaderTitles[focusedBusinessNav ?? 'home'] ?? '首页'
           : activeTab === 'documents'
-            ? '知识库'
+            ? businessHeaderTitles[focusedBusinessNav ?? 'documents'] ?? '知识库'
             : viewTitles[activeTab];
   return (
     <div className="gov-shell flex h-screen w-screen select-none flex-col overflow-hidden antialiased">
@@ -1174,7 +1179,16 @@ export default function App() {
                   )}
 
                   {activeTab === 'documents' && (
-                    <DocumentsView documents={documents} role={role} onUpdateDocumentContent={handleUpdateDocumentContent} />
+                    <DocumentsView
+                      documents={documents}
+                      role={role}
+                      onUpdateDocumentContent={handleUpdateDocumentContent}
+                      initialMenuId={
+                        focusedBusinessNav === 'knowledge-public'
+                            ? 'public'
+                            : 'personal'
+                      }
+                    />
                   )}
 
                   {activeTab === 'local-resources' && (
